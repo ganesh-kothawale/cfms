@@ -1,4 +1,4 @@
 dependencies {
-  implementation(project(Modules.KPTR.domain))
-  implementation(project(Modules.KPTR.Api.models))
+  implementation(project(Modules.CFMS.domain))
+  implementation(project(Modules.CFMS.Api.models))
 }

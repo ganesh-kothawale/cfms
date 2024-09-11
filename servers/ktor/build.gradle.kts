@@ -10,10 +10,10 @@ plugins {
 val env = project.properties["env"] as String? ?: "dev"
 
 dependencies {
-  implementation(project(Modules.KPTR.domain))
-  implementation(project(Modules.KPTR.Data.psql))
-  implementation(project(Modules.KPTR.Api.service))
-  implementation(project(Modules.KPTR.Api.models))
+  implementation(project(Modules.CFMS.domain))
+  implementation(project(Modules.CFMS.Data.psql))
+  implementation(project(Modules.CFMS.Api.service))
+  implementation(project(Modules.CFMS.Api.models))
   implementation(project(Modules.Servers.commons))
   implementation(project(Modules.Servers.client))
 
@@ -85,5 +85,5 @@ tasks {
 }
 
 application {
-  mainClass.set("in.porter.kptr.servers.ktor.app.MainRunnerKt")
+  mainClass.set("in.porter.cfms.servers.ktor.app.MainRunnerKt")
 }

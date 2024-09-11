@@ -1,4 +1,4 @@
-val appName = "kptr-$env-ktor-external"
+val appName = "cfms-$env-ktor-external"
 
 val serverContainer = container {
   val appServerName = "$appName-server"
@@ -31,7 +31,7 @@ val serverContainer = container {
 
 val serverTask = ec2Task {
   name = appName
-  taskRole = "kptr-$env"
+  taskRole = "cfms-$env"
 
   containers {
     +serverContainer

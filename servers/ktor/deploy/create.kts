@@ -45,7 +45,7 @@ val serviceNetwork = network {
       +HostedZoneDSL.PorterInternalDSL
       if (env == "staging") +HostedZoneDSL.PorterExternalDSL
     }
-    name = "kptr-$env-ktor"
+    name = "cfms-$env-ktor"
   }
 }
 

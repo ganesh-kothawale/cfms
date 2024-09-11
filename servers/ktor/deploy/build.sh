@@ -16,7 +16,7 @@ aws s3 sync ${ECS_DEPLOYER_S3_FOLDER} . --exclude '*' --include ${ECS_DEPLOYER_S
 cp ${ECS_DEPLOYER_S3_JAR} ${ECS_DEPLOYER_LOCAL_JAR}
 
 # Downloading config logic goes here
-#aws s3 cp s3://porter-configs/${ENV}/kptr/psql_secrets.properties ${MODULE_PATH}/src/main/config/${ENV}/
+#aws s3 cp s3://porter-configs/${ENV}/cfms/psql_secrets.properties ${MODULE_PATH}/src/main/config/${ENV}/
 
 SHADOW_JAR_FILE="ktor-server-all.jar"
 JAR_FILE="ktor-server.jar"

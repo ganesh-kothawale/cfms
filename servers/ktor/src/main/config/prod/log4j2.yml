@@ -6,7 +6,7 @@ Configuration:
     Console:
       - name: ktor
         EcsLayout:
-          serviceName: "kptr"
+          serviceName: "cfms"
           stackTraceAsArray: false
           includeOrigin: true
           KeyValuePair:
@@ -15,7 +15,7 @@ Configuration:
 
       - name: exposed
         EcsLayout:
-          serviceName: "kptr"
+          serviceName: "cfms"
           stackTraceAsArray: false
           includeOrigin: true
           KeyValuePair:
@@ -24,7 +24,7 @@ Configuration:
 
       - name: hikari
         EcsLayout:
-          serviceName: "kptr"
+          serviceName: "cfms"
           stackTraceAsArray: false
           includeOrigin: true
           KeyValuePair:
@@ -33,7 +33,7 @@ Configuration:
 
       - name: metrics
         EcsLayout:
-          serviceName: "kptr"
+          serviceName: "cfms"
           stackTraceAsArray: false
           KeyValuePair:
             - key: "log.stream"

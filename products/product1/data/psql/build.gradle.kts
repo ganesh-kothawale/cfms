@@ -2,7 +2,7 @@ plugins {
   id(Plugins.kotlinKapt)
 }
 dependencies {
-  implementation(project(Modules.KPTR.domain))
+  implementation(project(Modules.CFMS.domain))
   implementation(Libs.KotlinUtils.openTracing)
   implementation(Libs.KotlinUtils.exposed)
 
