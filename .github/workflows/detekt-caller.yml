@@ -1,0 +1,16 @@
+# Workflow to trigger when dev region related components are updated
+
+name: 'Detekt Caller Workflow'
+on:
+  pull_request:
+    types: [ opened, synchronize ]
+
+
+jobs:
+  detekt_workflow:
+
+    if: github.event.pull_request.merged != true
+    uses: ./.github/workflows/build-gradle-project.yml
+    secrets:
+      aws_key_id: ${{ secrets.DETEKT_ACCESS_KEY_ID }}
+      aws_key: ${{ secrets.DETEKT_SECRET_ACCESS_KEY }}

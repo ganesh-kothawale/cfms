@@ -1,0 +1,65 @@
+Configuration:
+  name: Default
+  shutdownHook: disable
+
+  Appenders:
+    Console:
+      - name: application
+        EcsLayout:
+          serviceName: "kptr-external"
+          stackTraceAsArray: false
+          includeOrigin: true
+          KeyValuePair:
+            - key: "log.stream"
+              value: "application"
+
+      - name: exposed
+        EcsLayout:
+          serviceName: "kptr-external"
+          stackTraceAsArray: false
+          includeOrigin: true
+          KeyValuePair:
+            - key: "log.stream"
+              value: "exposed"
+
+      - name: hikari
+        EcsLayout:
+          serviceName: "kptr-external"
+          stackTraceAsArray: false
+          includeOrigin: true
+          KeyValuePair:
+            - key: "log.stream"
+              value: "hikari"
+
+      - name: metrics
+        EcsLayout:
+          serviceName: "kptr-external"
+          stackTraceAsArray: false
+          KeyValuePair:
+            - key: "log.stream"
+              value: "metrics"
+
+  Loggers:
+    Root:
+      level: info
+      AppenderRef:
+        - ref: application
+
+    logger:
+      - name: Exposed
+        level: debug
+        additivity: false
+        AppenderRef:
+          - ref: exposed
+
+      - name: com.zaxxer.hikari
+        level: debug
+        additivity: false
+        AppenderRef:
+          - ref: hikari
+
+      - name: io.micrometer.core.instrument.logging.LoggingMeterRegistry
+        level: debug
+        additivity: false
+        AppenderRef:
+          - ref: metrics
