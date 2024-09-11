@@ -19,6 +19,9 @@ object Plugins {
   const val mavenS3 = "com.github.brodziakm.maven-s3"
   const val mavenS3Version = "1.4.0"
 
+  const val artifactRegistry = "com.google.cloud.artifactregistry.gradle-plugin"
+  const val artifactRegistryVersion = "2.2.0"
+
   const val fatJarPlugin = "com.github.johnrengelman.shadow"
   const val fatJarPluginVersion = "8.1.1"
 

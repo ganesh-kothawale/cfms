@@ -1,24 +1,17 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jetbrains.kotlin.gradle.dsl.kotlinExtension
 
 plugins {
   id(Plugins.kotlinJvm) version Libs.kotlinVersion apply false
-  id(Plugins.Detekt.detektLib) version (Plugins.Detekt.version)
   id(Plugins.mavenS3) version Plugins.mavenS3Version
   id (Plugins.sonaTypePlugin) version Plugins.sonaTypePluginVersion
+  id(Plugins.artifactRegistry) version Plugins.artifactRegistryVersion apply true
   id(Plugins.Jacoco.plugin)
   id(Plugins.SonarQube.plugin) version (Plugins.SonarQube.version)
 }
 
 allprojects {
-  apply(plugin = Plugins.Detekt.detektLib)
   apply(plugin = Plugins.mavenS3)
-
-  detekt {
-    toolVersion = Plugins.Detekt.version
-    config = files("$rootDir/config/detekt/detekt.yml")
-    buildUponDefaultConfig = false
-  }
+  apply(plugin = Plugins.artifactRegistry)
 
   repositories {
     mavenCentral()
@@ -27,12 +20,14 @@ allprojects {
       url = uri("https://repos.spring.io/plugins-release")
     }
 
+    maven {
+      url = uri("https://packages.confluent.io/maven/")
+    }
 
     maven {
       url = uri("s3://porter-maven/releases")
       credentials(AwsCredentials::class, mavenS3.credentials())
     }
-
   }
 }
 
@@ -59,6 +54,15 @@ subprojects {
     finalizedBy("jacocoTestReport")
   }
 
+  sonar {
+    properties {
+      property("sonar.coverage.exclusions", buildString {
+        append("**/in/porter/cfms/servers/ktor/external/app/MainApplication.kt,")//make sure to add comma
+      })
+      property("sonar.gradle.skipCompile", true)
+    }
+  }
+
   tasks.withType<JacocoReport> {
     dependsOn("test") // Ensure tests are run before generating the report
 
@@ -66,6 +70,7 @@ subprojects {
       xml.required.set(true)
     }
   }
+
 
   kotlinExtension.jvmToolchain(11)
 }
