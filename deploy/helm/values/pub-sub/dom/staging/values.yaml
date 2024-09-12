@@ -1,0 +1,118 @@
+spec:
+  app:
+    metadata:
+      name: sfgw-job
+      repository: sf-gateway
+      env: staging
+      component: api-server
+    projectID: dom-sfgw-stag-c1f1
+    clusterProjectID: dom-cie-stag-68ef
+    clusterLocation: asia-south1-a
+    clusterName: dom-cie-stag-gke-cluster
+    serviceAccount:
+      gcpServiceAccount: sfgw-app
+      name: sf-gateway-job
+      annotations:
+        argocd.argoproj.io/sync-wave: "-5"
+      automount: true
+    configMap:
+      - name: sfgw-job-application-configs
+        mountPath: /home/app/configuration/properties
+        filePaths:
+          - values/common/dom/staging/configs/*
+          - values/sqs/dom/staging/configs/*
+      - name: sfgw-job-application-flyway-configs
+        annotations:
+          argocd.argoproj.io/sync-wave: "-2"
+        filePaths:
+          - values/common/dom/migrations
+    externalSecrets:
+      - name: sfgw-job-secrets
+        mountPath: /home/app/configuration/secrets
+        data:
+          - secretKey: salesforce_secrets.properties
+            remoteRefKey: salesforce-secrets-properties
+          - secretKey: psql_secrets.properties
+            remoteRefKey: psql-secrets-properties-job
+          - secretKey: flyway.conf
+            remoteRefKey: flyway-config-secrets
+          - secretKey: application_secrets.properties
+            remoteRefKey: application-secrets-properties
+    jobs:
+      - name: sfgw-job-flyway-migrate
+        containers:
+          name: flyway-migrations
+          image: flyway/flyway
+          resources:
+            limits:
+              cpu: 2560m
+              memory: 2048Mi
+            requests:
+              cpu: 256m
+              memory: 1024Mi
+          args: [ "migrate" ]
+        volumes:
+          - name: flyway-job-migrations
+            mountPath: /flyway/sql
+            configMap:
+              name: sfgw-job-application-flyway-configs
+          - name: sfgw-job-secrets-volume
+            mountPath: /flyway/conf
+            secret:
+              secretName: sfgw-job-secrets
+    deployment:
+      replicas: 2
+      containers:
+        - name: sfgw-job
+          image:
+            registry: dom-dpq-stag-ab34/dom-dpq-stag-gcr-application/job
+          envFile: values/sqs/dom/staging/env.yaml
+          ports:
+            - containerPort: 8080
+          resources:
+            limits:
+              cpu: 512m
+              memory: 2048Mi
+            requests:
+              cpu: 256m
+              memory: 1024Mi
+          probe:
+            default:
+              type:
+                exec:
+                  command:
+                    - /bin/true
+            startup:
+              type:
+                exec:
+                  command:
+                    - /bin/true
+              parameters:
+                initialDelaySeconds: 60
+                periodSeconds: 30
+    rollout:
+      enabled: true
+      job_subscription_ids:
+      - "dom-sfgw-stag-topic-jobs-subscription"
+    horizontalPodAutoScaler:
+      minReplicas: 2
+      maxReplicas: 8
+      metadata:
+        labels: {}
+      metrics:
+        - type: resource
+          name: cpu
+          value: 70.0
+      behavior:
+        scaleUp:
+          stabilizationWindowSeconds: 180
+          policies:
+            - type: Pods
+              value: 1
+              periodSeconds: 60
+        scaleDown:
+          stabilizationWindowSeconds: 180
+          policies:
+            - type: Pods
+              value: 1
+              periodSeconds: 60
