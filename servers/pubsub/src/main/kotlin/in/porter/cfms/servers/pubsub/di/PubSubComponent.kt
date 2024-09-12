@@ -1,23 +1,22 @@
 package `in`.porter.cfms.servers.pubsub.di
 
-import `in`.porter.kotlinutils.sqs.coroutines.drain.stream.StreamQueueDrainer
-import `in`.porter.cfms.api.models.async.AsyncJob
 import `in`.porter.cfms.data.di.PsqlDataComponent
 import `in`.porter.cfms.servers.commons.di.components.RootComponent
 import `in`.porter.cfms.servers.commons.usecases.external.Run
 import dagger.Component
+import `in`.porter.gcu.pubsub.subscriber.Subscriber
 
-@SQSScope
+@PubSubScope
 @Component(
   dependencies = [
     RootComponent::class,
     PsqlDataComponent::class
   ],
   modules = [
-    SQSModule::class
+    PubSubModule::class
   ]
 )
 interface PubSubComponent {
   val run: Run
-  val drainer: StreamQueueDrainer<AsyncJob>
+  val subscriber: Subscriber
 }

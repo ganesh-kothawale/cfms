@@ -17,7 +17,7 @@ dependencies {
   implementation(project(Modules.Servers.client))
 
   implementation(project(Modules.Servers.commons))
-  implementation(Libs.KotlinUtils.serdeJackson)
+
 
   implementation(Libs.Log4j.core)
   implementation(Libs.Log4j.slf4jImpl)
@@ -28,12 +28,12 @@ dependencies {
   implementation(Libs.Ktor.clientJson)
   implementation(Libs.Ktor.clientJackson)
 
-  implementation(Libs.KotlinUtils.exposed)
+
   implementation(Libs.hikariCP)
 
   implementation(Libs.sentry)
 
-  implementation(Libs.KotlinUtils.openTracing)
+
 
   implementation(Libs.Dagger.dagger)
   kapt(Libs.Dagger.compiler)
@@ -41,7 +41,12 @@ dependencies {
   implementation(Libs.elasticEcs)
   implementation(Libs.shadowTransformer)
 
+  implementation(Libs.KotlinUtils.serdeJackson)
+  implementation(Libs.KotlinUtils.exposed)
+  implementation(Libs.KotlinUtils.openTracing)
   implementation(Libs.KotlinUtils.awsSqs)
+  implementation(Libs.KotlinUtils.distributedlocksApi)
+  implementation(Libs.KotlinUtils.locksRedission)
 }
 
 val configFolder = "src/main/config"

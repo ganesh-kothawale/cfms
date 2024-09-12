@@ -3,7 +3,7 @@ object Libs {
 
   object KotlinUtils {
     private const val group = "in.porter.kotlinutils"
-    private const val version = "0.71.0"
+    private const val version = "0.77.8"
 
     const val serdeJackson = "$group:serde-jackson:$version"
     const val commons = "$group:commons:$version"
@@ -14,6 +14,8 @@ object Libs {
     const val ktorWebServer = "$group:webserver-ktor:$version"
     const val awsSqs = "$group:aws-sqs:$version"
     const val awsS3 = "$group:aws-s3:$version"
+    const val distributedlocksApi = "$group:distributedlocks-api:$version"
+    const val locksRedission = "$group:distributedlocks-redisson:$version"
     const val geos = "$group:geos:$version"
     const val ktorWebClient = "$group:webclient-ktor-features:$version"
   }
