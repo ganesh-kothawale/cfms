@@ -1,37 +1,35 @@
 spec:
   app:
     metadata:
-      name: sfgw-ktor
-      repository: sf-gateway
+      name: cfms-ktor
+      repository: cfms
       env: staging
       component: api-server
-    projectID: dom-sfgw-stag-c1f1
+    projectID: dom-cfms-stag-c1f1
     clusterProjectID: dom-cie-stag-68ef
     clusterLocation: asia-south1-a
     clusterName: dom-cie-stag-gke-cluster
     serviceAccount:
-      gcpServiceAccount: sfgw-app
-      name: sf-gateway-ktor
+      gcpServiceAccount: cfms-app
+      name: cfms-ktor
       annotations:
         argocd.argoproj.io/sync-wave: "-5"
       automount: true
     configMap:
-      - name: sfgw-ktor-application-configs
+      - name: cfms-ktor-application-configs
         mountPath: /home/app/configuration/properties
         filePaths:
           - values/common/dom/staging/configs/*
           - values/ktor/dom/staging/configs/*
-      - name: sfgw-ktor-application-flyway-configs
+      - name: cfms-ktor-application-flyway-configs
         annotations:
           argocd.argoproj.io/sync-wave: "-2"
         filePaths:
           - values/common/dom/migrations
     externalSecrets:
-      - name: sfgw-ktor-secrets
+      - name: cfms-ktor-secrets
         mountPath: /home/app/configuration/secrets
         data:
-          - secretKey: salesforce_secrets.properties
-            remoteRefKey: salesforce-secrets-properties
           - secretKey: psql_secrets.properties
             remoteRefKey: psql-secrets-properties-ktor
           - secretKey: flyway.conf
@@ -39,7 +37,7 @@ spec:
           - secretKey: application_secrets.properties
             remoteRefKey: application-secrets-properties
     jobs:
-      - name: sfgw-ktor-flyway-migrate
+      - name: cfms-ktor-flyway-migrate
         containers:
           name: flyway-migrations
           image: flyway/flyway
@@ -55,17 +53,17 @@ spec:
           - name: flyway-sql-migrations
             mountPath: /flyway/sql
             configMap:
-              name: sfgw-ktor-application-flyway-configs
-          - name: sfgw-ktor-secrets-volume
+              name: cfms-ktor-application-flyway-configs
+          - name: cfms-ktor-secrets-volume
             mountPath: /flyway/conf
             secret:
-              secretName: sfgw-ktor-secrets
+              secretName: cfms-ktor-secrets
     deployment:
       replicas: 2
       containers:
-        - name: sfgw-ktor
+        - name: cfms-ktor
           image:
-            registry: dom-dpq-stag-ab34/dom-dpq-stag-gcr-sf-gateway-application/ktor
+            registry: dom-dpq-stag-ab34/dom-dpq-stag-gcr-cfms-application/ktor
           envFile: values/ktor/dom/staging/env.yaml
           ports:
             - containerPort: 8080
@@ -126,4 +124,4 @@ spec:
     httproutes:
       private:
         - hostnames:
-            - sfgw-stag-ktor.prod-internal.porter.in
+            - cfms-stag-ktor.prod-internal.porter.in

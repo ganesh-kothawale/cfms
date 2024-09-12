@@ -1,37 +1,35 @@
 spec:
   app:
     metadata:
-      name: sfgw-job
-      repository: sf-gateway
+      name: cfms-job
+      repository: cfms
       env: staging
       component: api-server
-    projectID: dom-sfgw-stag-c1f1
+    projectID: dom-cfms-stag-c1f1
     clusterProjectID: dom-cie-stag-68ef
     clusterLocation: asia-south1-a
     clusterName: dom-cie-stag-gke-cluster
     serviceAccount:
-      gcpServiceAccount: sfgw-app
-      name: sf-gateway-job
+      gcpServiceAccount: cfms-app
+      name: cfms-job
       annotations:
         argocd.argoproj.io/sync-wave: "-5"
       automount: true
     configMap:
-      - name: sfgw-job-application-configs
+      - name: cfms-job-application-configs
         mountPath: /home/app/configuration/properties
         filePaths:
           - values/common/dom/staging/configs/*
           - values/sqs/dom/staging/configs/*
-      - name: sfgw-job-application-flyway-configs
+      - name: cfms-job-application-flyway-configs
         annotations:
           argocd.argoproj.io/sync-wave: "-2"
         filePaths:
           - values/common/dom/migrations
     externalSecrets:
-      - name: sfgw-job-secrets
+      - name: cfms-job-secrets
         mountPath: /home/app/configuration/secrets
         data:
-          - secretKey: salesforce_secrets.properties
-            remoteRefKey: salesforce-secrets-properties
           - secretKey: psql_secrets.properties
             remoteRefKey: psql-secrets-properties-job
           - secretKey: flyway.conf
@@ -39,7 +37,7 @@ spec:
           - secretKey: application_secrets.properties
             remoteRefKey: application-secrets-properties
     jobs:
-      - name: sfgw-job-flyway-migrate
+      - name: cfms-job-flyway-migrate
         containers:
           name: flyway-migrations
           image: flyway/flyway
@@ -55,15 +53,15 @@ spec:
           - name: flyway-job-migrations
             mountPath: /flyway/sql
             configMap:
-              name: sfgw-job-application-flyway-configs
-          - name: sfgw-job-secrets-volume
+              name: cfms-job-application-flyway-configs
+          - name: cfms-job-secrets-volume
             mountPath: /flyway/conf
             secret:
-              secretName: sfgw-job-secrets
+              secretName: cfms-job-secrets
     deployment:
       replicas: 2
       containers:
-        - name: sfgw-job
+        - name: cfms-job
           image:
             registry: dom-dpq-stag-ab34/dom-dpq-stag-gcr-application/job
           envFile: values/sqs/dom/staging/env.yaml
@@ -93,7 +91,7 @@ spec:
     rollout:
       enabled: true
       job_subscription_ids:
-      - "dom-sfgw-stag-topic-jobs-subscription"
+      - "dom-cfms-stag-topic-jobs-subscription"
     horizontalPodAutoScaler:
       minReplicas: 2
       maxReplicas: 8
