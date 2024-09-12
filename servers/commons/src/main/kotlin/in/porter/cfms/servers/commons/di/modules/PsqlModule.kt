@@ -1,10 +1,10 @@
 package `in`.porter.cfms.servers.commons.di.modules
 
-import `in`.porter.cfms.servers.commons.extensions.loadResource
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import dagger.Module
 import dagger.Provides
+import `in`.porter.cfms.servers.commons.extensions.loadFile
 import io.micrometer.core.instrument.Meter
 import io.micrometer.core.instrument.MeterRegistry
 import io.micrometer.core.instrument.config.MeterFilter
@@ -40,8 +40,10 @@ class PsqlModule {
     )
 
 
-    val properties = Properties().loadResource(this, "psql.properties")
-      .loadResource(this, "psql_secrets.properties")
+    val properties = Properties().apply {
+      loadFile("psql.properties")
+      loadFile("psql_secrets.properties")
+    }
 
     val hikariConfig = HikariConfig(properties).apply {
       poolName = properties.getProperty("poolName")
