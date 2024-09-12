@@ -55,21 +55,29 @@ dependencies {
   implementation(Libs.shadowTransformer)
 }
 
-val configFolder = "src/main/config"
-val resourcesFolder = "src/main/resources"
-
-tasks.register<Copy>("copyResources") {
-  from("$configFolder/$env")
-  into(resourcesFolder)
-}
-tasks.findByName("processResources")?.dependsOn("copyResources")
-
 tasks.register<Delete>("cleanResources") {
-  File("$projectDir/$resourcesFolder").listFiles()
-    ?.forEach { it.delete() }
+  delete("build/config")
 }
-tasks.findByName("clean")?.dependsOn("cleanResources")
 
+tasks.register<Copy>("copyConfig") {
+  doLast {
+    val configPath = File("build/config")
+    delete(configPath)
+
+    mapOf(
+      "config/dev/dom/common" to "dom/properties",
+      "config/dev/dom/ktor" to "dom/properties",
+    ).forEach { (from, to) ->
+      copy {
+        from(project.rootDir.resolve(from))
+        into(configPath.resolve(to))
+      }
+    }
+  }
+}
+
+tasks.findByName("clean")?.dependsOn("cleanResources")
+tasks.findByName("processResources")?.dependsOn("copyConfig")
 
 // Adding transformer because of the following issues
 // https://github.com/johnrengelman/shadow/issues/207

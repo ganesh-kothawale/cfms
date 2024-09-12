@@ -1,20 +1,16 @@
 package `in`.porter.cfms.servers.commons.extensions
 
 import java.io.FileReader
-import java.nio.file.Path
 import java.util.*
+import kotlin.io.path.Path
 
-fun Properties.loadResource(clazz: Any, file: String): Properties {
-  val inputStream = clazz.javaClass.classLoader.getResourceAsStream(file)
-  load(inputStream)
-  return this
+enum class Dir(val dirName: String) {
+  PROPERTIES("properties"),
+  SECRETS("secrets")
 }
 
-fun Properties.loadFile(vararg paths: String): Properties = this.apply {
-  /* configuration path can be provided; defaults to /home/app/config */
-  val path = System.getenv("CONFIG_PATH") ?: "/home/app/config"
-  val filePath = Path.of(path, *paths).toString()
-  FileReader(filePath).use {
-    load(it)
-  }
+fun Properties.loadFile(dir: Dir, vararg paths: String): Properties = this.apply {
+  val path = System.getenv("CONFIG_PATH")?:""
+  val filePath = Path(path, dir.dirName, *paths).toString()
+  FileReader(filePath).use { load(it) }
 }

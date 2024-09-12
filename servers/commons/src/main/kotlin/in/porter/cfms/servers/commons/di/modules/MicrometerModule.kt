@@ -1,8 +1,9 @@
 package `in`.porter.cfms.servers.commons.di.modules
 
-import `in`.porter.cfms.servers.commons.extensions.loadResource
 import dagger.Module
 import dagger.Provides
+import `in`.porter.cfms.servers.commons.extensions.Dir
+import `in`.porter.cfms.servers.commons.extensions.loadFile
 import io.micrometer.cloudwatch2.CloudWatchConfig
 import io.micrometer.cloudwatch2.CloudWatchMeterRegistry
 import io.micrometer.core.instrument.Clock
@@ -11,7 +12,6 @@ import io.micrometer.core.instrument.composite.CompositeMeterRegistry
 import io.micrometer.core.instrument.logging.LoggingMeterRegistry
 import io.micrometer.core.instrument.logging.LoggingRegistryConfig
 import io.micrometer.core.instrument.step.StepMeterRegistry
-import org.apache.logging.log4j.kotlin.Logging
 import software.amazon.awssdk.services.cloudwatch.CloudWatchAsyncClient
 import java.time.Duration
 import java.util.*
@@ -27,7 +27,7 @@ class MicrometerModule {
   }
 
   private val config: Properties =
-    Properties().loadResource(this, "micrometer.properties")
+    Properties().loadFile(Dir.PROPERTIES, "micrometer.properties")
 
   @Provides
   @Singleton

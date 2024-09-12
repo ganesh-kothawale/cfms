@@ -8,10 +8,11 @@ import `in`.porter.kotlinutils.serde.jackson.custom.MoneySerde
 import `in`.porter.kotlinutils.serde.jackson.custom.UrlSerde
 import `in`.porter.kotlinutils.webclient.ktor.features.CountryClientFeature
 import `in`.porter.kotlinutils.webclient.ktor.features.LanguageClientFeature
-import `in`.porter.cfms.servers.commons.extensions.loadResource
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import dagger.Module
 import dagger.Provides
+import `in`.porter.cfms.servers.commons.extensions.Dir
+import `in`.porter.cfms.servers.commons.extensions.loadFile
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.serialization.jackson.*
@@ -45,7 +46,7 @@ class UtilsModule {
   @Provides
   @Singleton
   fun provideEnvironment(): Environment =
-    Properties().loadResource(this::javaClass, "application.properties")
+    Properties().loadFile(Dir.PROPERTIES, "application.properties")
       .getProperty("env")
       .let { Environment.valueOf(it) }
 }

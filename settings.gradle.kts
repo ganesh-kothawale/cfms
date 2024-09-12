@@ -5,16 +5,16 @@ plugins {
 }
 
 include(":domain")
-project(":domain").projectDir = File("products/product1/domain")
+project(":domain").projectDir = File("products/cfms/domain")
 
 include("data-psql")
-project(":data-psql").projectDir = File("products/product1/data/psql")
+project(":data-psql").projectDir = File("products/cfms/data/psql")
 
 include("api-models")
-project(":api-models").projectDir = File("products/product1/api/models")
+project(":api-models").projectDir = File("products/cfms/api/models")
 
 include("api-service")
-project(":api-service").projectDir = File("products/product1/api/service")
+project(":api-service").projectDir = File("products/cfms/api/service")
 
 include(":server-commons")
 project(":server-commons").projectDir = File("servers/commons")
