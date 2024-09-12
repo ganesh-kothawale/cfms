@@ -17,7 +17,7 @@ import dagger.Component
     SQSModule::class
   ]
 )
-interface SQSComponent {
+interface PubSubComponent {
   val run: Run
   val drainer: StreamQueueDrainer<AsyncJob>
 }

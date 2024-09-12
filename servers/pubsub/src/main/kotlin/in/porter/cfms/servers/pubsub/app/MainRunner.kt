@@ -4,7 +4,7 @@ import `in`.porter.kotlinutils.serde.jackson.json.JsonMapper
 import `in`.porter.cfms.api.models.async.AsyncJob
 import `in`.porter.cfms.servers.pubsub.configs.customConfigure
 import `in`.porter.cfms.servers.pubsub.consumers.AsyncSQSConfig
-import `in`.porter.cfms.servers.pubsub.di.SQSComponentFactory
+import `in`.porter.cfms.servers.pubsub.di.PubSubComponentFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -15,7 +15,7 @@ private val logger = logger("in.porter.cfms.servers.sqs.app.MainRunnerKt")
 suspend fun main() {
     JsonMapper.configure { customConfigure() }
 
-    SQSComponentFactory.build().run.invoke(
+    PubSubComponentFactory.build().run.invoke(
         initApplication = { initApplication() },
         startApplication = { startApplication(it) },
         stopApplication = { stopApplication(it) }
@@ -23,7 +23,7 @@ suspend fun main() {
 }
 
 private fun initApplication(): List<Looper<AsyncJob>> {
-    val sqsComponent = SQSComponentFactory.build()
+    val sqsComponent = PubSubComponentFactory.build()
     val looper = Looper(AsyncSQSConfig.sqsConfig.queueUrl, sqsComponent.drainer, AsyncSQSConfig.sqsConfig.looperConfig)
     return listOf(looper)
 }

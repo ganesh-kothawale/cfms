@@ -1,12 +1,11 @@
 package `in`.porter.cfms.servers.pubsub.di
 
 import `in`.porter.cfms.servers.commons.di.factories.ComponentsFactory
-import `in`.porter.cfms.servers.sqs.di.DaggerSQSComponent
 
-object SQSComponentFactory {
+object PubSubComponentFactory {
 
-  fun build(): SQSComponent =
-    DaggerSQSComponent.builder()
+  fun build(): PubSubComponent =
+    DaggerPubSubComponent.builder()
       .rootComponent(ComponentsFactory.rootComponent)
       .psqlDataComponent(ComponentsFactory.psqlDataComponent)
       .build()
