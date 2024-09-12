@@ -25,8 +25,8 @@ project(":ktor-server").projectDir = File("servers/ktor")
 include(":ktor-external")
 project(":ktor-external").projectDir = File("servers/ktor-external")
 
-include(":sqs-server")
-project(":sqs-server").projectDir = File("servers/sqs")
+include(":pubsub-server")
+project(":pubsub-server").projectDir = File("servers/pubsub")
 
 include(":client")
 project(":client").projectDir = File("servers/client")
