@@ -1,4 +1,4 @@
-package `in`.porter.cfms.servers.sqs.di
+package `in`.porter.cfms.servers.pubsub.di
 
 import javax.inject.Scope
 

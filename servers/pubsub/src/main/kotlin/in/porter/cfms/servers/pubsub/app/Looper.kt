@@ -1,9 +1,9 @@
-package `in`.porter.cfms.servers.sqs.app
+package `in`.porter.cfms.servers.pubsub.app
 
 import `in`.porter.kotlinutils.commons.extensions.random
 import `in`.porter.kotlinutils.commons.logging.logObjId
 import `in`.porter.kotlinutils.sqs.coroutines.drain.stream.StreamQueueDrainer
-import `in`.porter.cfms.servers.sqs.configs.SQSDrainerConfig.LooperConfig
+import `in`.porter.cfms.servers.pubsub.configs.SQSDrainerConfig.LooperConfig
 import kotlinx.coroutines.time.delay
 import org.apache.logging.log4j.kotlin.Logging
 import java.time.Duration

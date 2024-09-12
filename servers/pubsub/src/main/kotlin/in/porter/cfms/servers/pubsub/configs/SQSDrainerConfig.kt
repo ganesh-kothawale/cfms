@@ -1,12 +1,12 @@
-package `in`.porter.cfms.servers.sqs.configs
+package `in`.porter.cfms.servers.pubsub.configs
 
 import java.time.Duration
 
 data class SQSDrainerConfig(
-  val queueUrl: String,
-  val fetcherConfig: FetcherConfig,
-  val deleterConfig: DeleterConfig,
-  val looperConfig: LooperConfig
+    val queueUrl: String,
+    val fetcherConfig: FetcherConfig,
+    val deleterConfig: DeleterConfig,
+    val looperConfig: LooperConfig
 ) {
 
   data class FetcherConfig(

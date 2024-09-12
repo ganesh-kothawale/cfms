@@ -1,4 +1,4 @@
-package `in`.porter.cfms.servers.sqs.di
+package `in`.porter.cfms.servers.pubsub.di
 
 import `in`.porter.kotlinutils.sqs.coroutines.drain.stream.StreamQueueDrainer
 import `in`.porter.cfms.api.models.async.AsyncJob

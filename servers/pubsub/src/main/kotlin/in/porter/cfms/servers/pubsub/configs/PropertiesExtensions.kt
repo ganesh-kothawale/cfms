@@ -1,4 +1,4 @@
-package `in`.porter.cfms.servers.sqs.configs
+package `in`.porter.cfms.servers.pubsub.configs
 
 import java.util.*
 

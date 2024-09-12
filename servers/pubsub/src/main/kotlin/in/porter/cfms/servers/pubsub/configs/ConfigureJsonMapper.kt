@@ -1,4 +1,4 @@
-package `in`.porter.cfms.servers.sqs.configs
+package `in`.porter.cfms.servers.pubsub.configs
 
 import `in`.porter.kotlinutils.serde.jackson.custom.DurationSerde
 import `in`.porter.kotlinutils.serde.jackson.custom.InstantSerde

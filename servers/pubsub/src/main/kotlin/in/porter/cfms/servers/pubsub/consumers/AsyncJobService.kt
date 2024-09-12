@@ -1,4 +1,4 @@
-package `in`.porter.cfms.servers.sqs.consumers
+package `in`.porter.cfms.servers.pubsub.consumers
 
 import `in`.porter.cfms.api.models.async.AsyncJob
 import javax.inject.Inject

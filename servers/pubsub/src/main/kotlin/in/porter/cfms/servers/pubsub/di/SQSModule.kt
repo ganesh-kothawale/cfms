@@ -1,4 +1,4 @@
-package `in`.porter.cfms.servers.sqs.di
+package `in`.porter.cfms.servers.pubsub.di
 
 import `in`.porter.kotlinutils.sqs.coroutines.client.SQSClient
 import `in`.porter.kotlinutils.sqs.coroutines.drain.stream.StreamQueueDrainer
@@ -6,8 +6,8 @@ import `in`.porter.kotlinutils.sqs.coroutines.drain.stream.StreamQueueDrainerCon
 import `in`.porter.kotlinutils.sqs.coroutines.drain.stream.StreamQueueDrainerFactory
 import `in`.porter.kotlinutils.sqs.coroutines.drain.stream.delete.StreamMessagesDeleterImpl
 import `in`.porter.cfms.api.models.async.AsyncJob
-import `in`.porter.cfms.servers.sqs.consumers.AsyncEventConsumeAction
-import `in`.porter.cfms.servers.sqs.consumers.AsyncSQSConfig
+import `in`.porter.cfms.servers.pubsub.consumers.AsyncEventConsumeAction
+import `in`.porter.cfms.servers.pubsub.consumers.AsyncSQSConfig
 import dagger.Module
 import dagger.Provides
 

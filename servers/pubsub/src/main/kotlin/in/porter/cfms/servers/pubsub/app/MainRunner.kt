@@ -1,10 +1,10 @@
-package `in`.porter.cfms.servers.sqs.app
+package `in`.porter.cfms.servers.pubsub.app
 
 import `in`.porter.kotlinutils.serde.jackson.json.JsonMapper
 import `in`.porter.cfms.api.models.async.AsyncJob
-import `in`.porter.cfms.servers.sqs.configs.customConfigure
-import `in`.porter.cfms.servers.sqs.consumers.AsyncSQSConfig
-import `in`.porter.cfms.servers.sqs.di.SQSComponentFactory
+import `in`.porter.cfms.servers.pubsub.configs.customConfigure
+import `in`.porter.cfms.servers.pubsub.consumers.AsyncSQSConfig
+import `in`.porter.cfms.servers.pubsub.di.SQSComponentFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext

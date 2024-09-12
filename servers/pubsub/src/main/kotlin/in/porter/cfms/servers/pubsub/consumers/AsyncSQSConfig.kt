@@ -1,7 +1,7 @@
-package `in`.porter.cfms.servers.sqs.consumers
+package `in`.porter.cfms.servers.pubsub.consumers
 
-import `in`.porter.cfms.servers.sqs.configs.SQSDrainerConfig
-import `in`.porter.cfms.servers.sqs.configs.loadResource
+import `in`.porter.cfms.servers.pubsub.configs.SQSDrainerConfig
+import `in`.porter.cfms.servers.pubsub.configs.loadResource
 import java.time.Duration
 import java.util.*
 

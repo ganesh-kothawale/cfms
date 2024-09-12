@@ -1,4 +1,4 @@
-package `in`.porter.cfms.servers.sqs.consumers
+package `in`.porter.cfms.servers.pubsub.consumers
 
 import `in`.porter.kotlinutils.commons.country.entities.CountryContext
 import `in`.porter.kotlinutils.commons.workerpools.stream.WorkAction
