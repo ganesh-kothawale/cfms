@@ -1,0 +1,37 @@
+service:
+  name: ktor
+runtime_version:
+  gradle: "8.5"
+  java: 11
+aws:
+  configure: true
+  region: ap-southeast-1
+  role_to_assume: arn:aws:iam::978222968597:role/common-github-actions-role
+
+environment:
+  path: servers/ktor/deploy/build.sh
+
+docker: #docker files path and context during build
+  env: "prod"
+  region: "dom"
+  context: "servers/ktor/deploy/server"
+  path: "servers/ktor/deploy/server/Dockerfile"
+  build_arg:
+    - "ENV=prod"
+    - "STACK=india"
+
+gcp:
+  project_name: "dom-cfms-prod"
+  project_id: dom-cfms-prod-7a42
+  region: "asia-south1"
+  registry_name: "dom-cfms-prod-gcr-ktor"
+  service_account: "dom-cfms-prod-app-ci@dom-cfms-prod-7a42.iam.gserviceaccount.com"
+  workload_identity_provider: "projects/34920606741/locations/global/workloadIdentityPools/dom-cfms-prod-wip-pool/providers/dom-cfms-prod-wip-pvd"
+  artifacts:
+    helm: dom-dpq-prod-cfms-helm
+    application: dom-dpq-prod-cfms-application
+
+argocd:
+  helm-file:
+    path: "deploy/helm/values"
+  chart_file_path: "deploy/helm/Chart.yaml"
