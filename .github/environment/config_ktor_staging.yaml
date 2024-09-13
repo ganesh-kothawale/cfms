@@ -26,8 +26,8 @@ gcp:
   project_id: dom-cfms-stag-c1f1
   region: "asia-south1"
   registry_name: "dom-cfms-stag-gcr-ktor"
-  service_account: "dom-cfms-stag-app-ci@dom-cfms-stag-c1f1.iam.gserviceaccount.com"
-  workload_identity_provider: "projects/618421805617/locations/global/workloadIdentityPools/dom-cfms-stag-wip-pool/providers/dom-cfms-stag-wip-pvd"
+  service_account: "dom-cfms-stag-app-ci@dom-cfms-stag-23ad.iam.gserviceaccount.com"
+  workload_identity_provider: "projects/691407518112/locations/global/workloadIdentityPools/dom-cfms-stag-wip-pool/providers/dom-cfms-stag-wip-pvd"
   artifacts:
     helm: dom-dpq-stag-gcr-cfms-helm
     application: dom-dpq-stag-gcr-cfms-application
