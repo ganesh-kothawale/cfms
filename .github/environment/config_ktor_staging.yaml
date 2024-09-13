@@ -23,7 +23,7 @@ docker: #docker files path and context during build
 
 gcp:
   project_name: "dom-cfms-stag"
-  project_id: dom-cfms-stag-c1f1
+  project_id: dom-cfms-stag-23ad
   region: "asia-south1"
   registry_name: "dom-cfms-stag-gcr-ktor"
   service_account: "dom-cfms-stag-app-ci@dom-cfms-stag-23ad.iam.gserviceaccount.com"
