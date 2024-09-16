@@ -21,7 +21,7 @@ cp ${ECS_DEPLOYER_S3_JAR} ${ECS_DEPLOYER_LOCAL_JAR}
 SHADOW_JAR_FILE="sqs-server-all.jar"
 JAR_FILE="sqs-server.jar"
 
-./gradlew --console=plain -Penv=${ENV} clean sqs-server:shadowJar
+./gradlew --console=plain -Penv=${ENV} clean pubsub-server:shadowJar
 cp ${MODULE_PATH}/build/libs/${SHADOW_JAR_FILE} ${MODULE_PATH}/deploy/server/${JAR_FILE}
 
 
