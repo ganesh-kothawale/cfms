@@ -4,7 +4,7 @@ set -x
 set -e
 
 ENV=$1
-MODULE_PATH="servers/sqs"
+MODULE_PATH="servers/pubsub"
 SERVER_COMMONS_PATH="servers/commons"
 
 ECS_DEPLOYER_VERSION="0.7.0"
@@ -18,8 +18,8 @@ cp ${ECS_DEPLOYER_S3_JAR} ${ECS_DEPLOYER_LOCAL_JAR}
 # Downloading config logic goes here
 #aws s3 cp s3://porter-configs/${ENV}/cfms/psql_secrets.properties ${MODULE_PATH}/src/main/config/${ENV}/
 
-SHADOW_JAR_FILE="sqs-server-all.jar"
-JAR_FILE="sqs-server.jar"
+SHADOW_JAR_FILE="pubsub-server-all.jar"
+JAR_FILE="pubsub-server.jar"
 
 ./gradlew --console=plain -Penv=${ENV} clean pubsub-server:shadowJar
 cp ${MODULE_PATH}/build/libs/${SHADOW_JAR_FILE} ${MODULE_PATH}/deploy/server/${JAR_FILE}
