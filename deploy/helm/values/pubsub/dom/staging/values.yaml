@@ -63,7 +63,7 @@ spec:
       containers:
         - name: cfms-job
           image:
-            registry: dom-dpq-stag-ab34/dom-dpq-stag-gcr-application/job
+            registry: dom-dpq-stag-ab34/dom-dpq-stag-gcr-application/sqs
           envFile: values/pubsub/dom/staging/env.yaml
           ports:
             - containerPort: 8080
