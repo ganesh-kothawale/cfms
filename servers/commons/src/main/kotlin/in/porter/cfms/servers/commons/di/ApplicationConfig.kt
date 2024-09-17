@@ -13,7 +13,6 @@ object ApplicationConfig {
 
   val Stack: String = System.getenv("INFRA_STACK")
   private val properties = Properties().loadFile(Dir.PROPERTIES,"application.properties")
-  private val hosts = Properties().loadFile(Dir.PROPERTIES,"hosts.properties")
 
   val env: Environment = Environment.valueOf(properties.getProperty("env"))
   val queueUrl: String = properties.getProperty("queue_url")
@@ -33,10 +32,4 @@ object ApplicationConfig {
   val pubsubTopic: String = properties.getProperty("jobs.pubsub.topic")
 
   val pubsubSubscription: String = properties.getProperty("jobs.pubsub.subscription")
-
-  val pfbQueueUrl: String = hosts.getProperty("pfb.queueUrl")
-  val pfbPubsubTopic: String = hosts.getProperty("pfb.topic")
-
-  val vpQueueUrl: String = hosts.getProperty("vp.queueUrl")
-  val vpPubSubTopic: String = hosts.getProperty("vp.topic")
 }
