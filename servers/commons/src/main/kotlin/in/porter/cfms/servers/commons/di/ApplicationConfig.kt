@@ -14,5 +14,5 @@ object ApplicationConfig {
 
   val tasksProject: String = properties.getProperty("jobs.tasks.project")
 
-  val pubsubSubscription: String = properties.getProperty("jobs.pubsub.subscription")
+  val pubsubSubscription: String = properties.getProperty("jobs.tasks.subscription")
 }
