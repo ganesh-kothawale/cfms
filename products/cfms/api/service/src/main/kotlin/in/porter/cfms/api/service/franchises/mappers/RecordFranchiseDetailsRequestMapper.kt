@@ -57,7 +57,7 @@ constructor(
     }
 
 
-    private fun mapModelToDomainStatus(status: ModelFranchiseStatus): DomainFranchiseStatus =
+    fun mapModelToDomainStatus(status: ModelFranchiseStatus): DomainFranchiseStatus =
         when (status) {
             ModelFranchiseStatus.Active -> DomainFranchiseStatus.Active
             ModelFranchiseStatus.Inactive -> DomainFranchiseStatus.Inactive
@@ -65,7 +65,7 @@ constructor(
         }
 
     // Mapping DomainFranchiseStatus to ModelFranchiseStatus
-    private fun mapDomainToModelStatus(status: DomainFranchiseStatus): ModelFranchiseStatus =
+    fun mapDomainToModelStatus(status: DomainFranchiseStatus): ModelFranchiseStatus =
         when (status) {
             DomainFranchiseStatus.Active -> ModelFranchiseStatus.Active
             DomainFranchiseStatus.Inactive -> ModelFranchiseStatus.Inactive

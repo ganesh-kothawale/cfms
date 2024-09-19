@@ -1,7 +1,7 @@
+import `in`.porter.cfms.domain.franchise.factories.FranchiseBuilderFactory
 import `in`.porter.cfms.domain.franchise.factories.RecordFranchiseDetailsRequestFactory
 import `in`.porter.cfms.domain.franchise.repos.FranchiseRepo
 import `in`.porter.cfms.domain.franchise.usecases.internal.CreateFranchise
-import `in`.porter.cfms.domain.utils.builders.FranchiseBuilder
 import io.mockk.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runTest
@@ -28,7 +28,7 @@ class CreateFranchiseTest {
         val request = requestBuilder.build()
 
         // Create a mock Franchise instance
-        val franchise = mockk<FranchiseBuilder> {
+        val franchise = mockk<FranchiseBuilderFactory> {
             every { buildFromRequest(request) } returns mockk()
         }
 
