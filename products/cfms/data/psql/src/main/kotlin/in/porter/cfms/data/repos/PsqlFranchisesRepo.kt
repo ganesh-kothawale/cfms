@@ -20,10 +20,17 @@ class PsqlFranchisesRepo
         }
 
 
-  override suspend fun getByCode(franchiseCodes: String): Franchise? =
-    trace("getByCode") {
-      queries.getByCode(franchiseCodes)
-        ?.let { mapper.fromRecord(it) }
-    }
+    override suspend fun getByCode(franchiseCodes: String): Franchise? =
+        trace("getByCode") {
+            queries.getByCode(franchiseCodes)
+                ?.let { mapper.fromRecord(it) }
+        }
+
+    override suspend fun getByEmail(email: String): Franchise? =
+        trace("getByEmail") {
+            queries.getByEmail( email)
+                ?.let{mapper.fromRecord(it)}
+        }
+
 
 }

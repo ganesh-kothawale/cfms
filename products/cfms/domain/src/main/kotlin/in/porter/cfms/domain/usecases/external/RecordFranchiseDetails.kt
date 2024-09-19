@@ -1,5 +1,6 @@
 package `in`.porter.cfms.domain.usecases.external
 
+import `in`.porter.cfms.domain.exceptions.CfmsException
 import `in`.porter.cfms.domain.exceptions.FranchiseAlreadyExistsException
 import `in`.porter.cfms.domain.franchise.repos.FranchiseRepo
 import `in`.porter.cfms.domain.franchise.usecases.internal.CreateFranchise
@@ -14,9 +15,14 @@ constructor(
     private val createFranchise: CreateFranchise
 ):Traceable {
     suspend fun invoke(req: RecordFranchiseDetailsRequest) {
-        repo.getByCode(req.franchiseId)
-            ?.let { throw FranchiseAlreadyExistsException(req.franchiseId) }
-        createFranchise.invoke(req)
+        repo.getByEmail(req.poc.email)?.let {
+            throw FranchiseAlreadyExistsException(req.poc.email)
+        }
+        try {
+            createFranchise.invoke(req)
+        } catch (e: CfmsException) {
+            e.printStackTrace()
+        }
     }
 }
 

@@ -47,11 +47,18 @@ constructor(
             it[longitude] = req.longitude
             it[latitude] = req.latitude
             it[radiusCoverage] = req.radiusCoverage
+            it[teamId] = req.teamId ?: 0
         }.value
     }
 
     suspend fun getByCode(code: String) = transact {
-        FranchisesTable.select { FranchisesTable.franchiseId eq code }
+        FranchisesTable.select { FranchisesTable.email eq code }
+            .firstOrNull()
+            ?.let { mapper.toRecord(it) }
+    }
+
+    suspend fun getByEmail(email: String) = transact {
+        FranchisesTable.select { FranchisesTable.email eq email }
             .firstOrNull()
             ?.let { mapper.toRecord(it) }
     }

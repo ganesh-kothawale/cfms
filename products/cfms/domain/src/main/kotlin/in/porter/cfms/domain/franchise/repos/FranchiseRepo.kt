@@ -6,4 +6,5 @@ interface FranchiseRepo {
 
     suspend fun create(franchise: Franchise): Unit
     suspend fun getByCode(franchiseCodes: String): Franchise?
+    suspend fun getByEmail(email: String): Franchise?
 }
