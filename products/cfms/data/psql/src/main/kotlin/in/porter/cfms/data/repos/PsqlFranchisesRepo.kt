@@ -9,15 +9,15 @@ import javax.inject.Inject
 
 class PsqlFranchisesRepo
 @Inject constructor(
-  private val queries: FranchiseQueries,
-  private val mapper: FranchiseRecordMapper
+    private val queries: FranchiseQueries,
+    private val mapper: FranchiseRecordMapper
 ) : Traceable, FranchiseRepo {
 
-  override suspend fun create(franchiseRequest: Franchise): Int =
-    trace("create") {
-      mapper.toRecord(franchiseRequest)
-        .let { queries.save(it) }
-    }
+    override suspend fun create(franchiseRequest: Franchise): Unit =
+        trace("create") {
+            mapper.toRecord(franchiseRequest)
+                .let { queries.save(it) }
+        }
 
 
   override suspend fun getByCode(franchiseCodes: String): Franchise? =

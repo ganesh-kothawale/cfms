@@ -44,6 +44,5 @@ constructor() {
         kamUser = resultRow[FranchisesTable.kamUser],
         showCrNumber = resultRow[FranchisesTable.showCrNumber],
         franchiseId =resultRow[FranchisesTable.franchiseId]
-
     )
 }
