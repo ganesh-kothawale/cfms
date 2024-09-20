@@ -1,4 +1,4 @@
-package orders.mappers
+package `in`.porter.cfms.api.service.orders.mappers
 
 import `in`.porter.cfms.api.models.orders.AddressDetails
 import `in`.porter.cfms.domain.orders.entities.AddressDetails as DomainAddressDetails

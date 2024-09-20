@@ -1,4 +1,4 @@
-package orders.mappers
+package `in`.porter.cfms.api.service.orders.mappers
 
 import `in`.porter.cfms.api.models.orders.*
 import javax.inject.Inject
@@ -35,11 +35,13 @@ class CreateOrderApiRequestMapper
                     cityName = request.date.senderCityName,
                     stateName = request.date.senderStateName,
                     pincode = request.date.senderPincode,
-                    location = Location(
-                        latitude = request.date.senderLat,
-                        longitude = request.date.senderLong
-                    )
+                ),
+                location = Location(
+                    latitude = request.date.senderLat,
+                    longitude = request.date.senderLong
                 )
+
+
             ),
             receiverDetails = ReceiverDetails(
                 personalInfo = PersonalInfo(
@@ -52,8 +54,8 @@ class CreateOrderApiRequestMapper
                     cityName = request.date.receiverCityName,
                     stateName = request.date.receiverStateName,
                     pincode = request.date.senderPincode,
-                    location = null  // Assuming receiver location is not provided
-                )
+                ),
+                location = null
             )
         )
 

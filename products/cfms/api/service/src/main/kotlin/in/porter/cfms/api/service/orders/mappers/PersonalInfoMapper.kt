@@ -1,9 +1,11 @@
-package orders.mappers
+package `in`.porter.cfms.api.service.orders.mappers
 
 import `in`.porter.cfms.api.models.orders.PersonalInfo
+import javax.inject.Inject
 import `in`.porter.cfms.domain.orders.entities.PersonalInfo as DomainPersonalInfo
 
-class PersonalInfoMapper {
+class PersonalInfoMapper
+@Inject constructor() {
     fun map(personalInfo: PersonalInfo): DomainPersonalInfo {
         return DomainPersonalInfo(
             name = personalInfo.name,

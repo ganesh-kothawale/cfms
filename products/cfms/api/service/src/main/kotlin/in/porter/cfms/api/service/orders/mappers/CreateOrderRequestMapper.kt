@@ -1,4 +1,4 @@
-package orders.mappers
+package `in`.porter.cfms.api.service.orders.mappers
 
 import `in`.porter.cfms.api.models.orders.CreateOrderApiRequestV1
 import `in`.porter.cfms.domain.orders.entities.CreateOrderRequest
@@ -11,7 +11,7 @@ class CreateOrderRequestMapper
     private val itemDetailsMapper: ItemDetailsMapper,
     private val shippingDetailsMapper: ShippingDetailsMapper
 ) {
-    fun map(requestV1: CreateOrderApiRequestV1): CreateOrderRequest {
+    fun toDomain(requestV1: CreateOrderApiRequestV1): CreateOrderRequest {
         return CreateOrderRequest(
             basicDetails = basicDetailsMapper.map(requestV1.basicDetails),
             addressDetails = addressDetailsMapper.map(requestV1.addressDetails),

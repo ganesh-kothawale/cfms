@@ -1,13 +1,15 @@
-package orders.mappers
+package `in`.porter.cfms.api.service.orders.mappers
 
 import `in`.porter.cfms.api.models.orders.AssociationDetails
+import javax.inject.Inject
 import `in`.porter.cfms.domain.orders.entities.AssociationDetails as DomainAssociationDetails
 
-class AssociationDetailsMapper {
+class AssociationDetailsMapper
+@Inject constructor() {
     fun map(associationDetails: AssociationDetails): DomainAssociationDetails {
         return DomainAssociationDetails(
-            franchiseId  = associationDetails.franchiseId,
-         teamId= associationDetails.teamId
-                    )
+            franchiseId = associationDetails.franchiseId,
+            teamId = associationDetails.teamId
+        )
     }
 }

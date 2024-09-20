@@ -1,9 +1,11 @@
-package orders.mappers
+package `in`.porter.cfms.api.service.orders.mappers
 
 import `in`.porter.cfms.api.models.orders.CourierTransportDetails
+import javax.inject.Inject
 import `in`.porter.cfms.domain.orders.entities.CourierTransportDetails as DomainCourierTransportDetails
 
-class CourierTransportDetailsMapper {
+class CourierTransportDetailsMapper
+@Inject constructor() {
     fun map(courierTransportDetails: CourierTransportDetails): DomainCourierTransportDetails {
         return DomainCourierTransportDetails(
             courierPartnerName = courierTransportDetails.courierPartnerName,
