@@ -94,5 +94,8 @@ fun Application.main() {
 
   routing {
     get("/") { call.respond(HttpStatusCode.OK, Unit) }
+    get("/cfms/private/users") { call.respond(HttpStatusCode.OK, Unit) }
+
+
   }
 }
