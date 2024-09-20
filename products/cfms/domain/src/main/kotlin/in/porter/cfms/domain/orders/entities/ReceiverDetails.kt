@@ -1,4 +1,4 @@
-package `in`.porter.cfms.api.models.orders
+package `in`.porter.cfms.domain.orders.entities
 
 data class ReceiverDetails(
     val personalInfo: PersonalInfo,
