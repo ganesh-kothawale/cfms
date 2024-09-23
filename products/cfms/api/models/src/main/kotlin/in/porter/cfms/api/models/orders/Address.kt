@@ -6,5 +6,4 @@ data class Address(
     val cityName: String,
     val stateName: String,
     val pincode: Int,
-    val location: Location?
 )
