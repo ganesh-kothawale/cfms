@@ -8,5 +8,5 @@ data class BasicDetails(
     val accountId: Int?,  // nullable
     val accountCode: String?,  // nullable
     val courierTransportDetails: CourierTransportDetails,
-    val orderStatus: List<String>
+    val orderStatus: String
 )

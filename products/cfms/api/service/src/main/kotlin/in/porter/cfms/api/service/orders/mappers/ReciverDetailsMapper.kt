@@ -14,7 +14,6 @@ class ReceiverDetailsMapper
         return DomainReceiverDetails(
             personalInfo = personalInfoMapper.map(receiverDetails.personalInfo),
             address = addressMapper.map(receiverDetails.address),
-            location = receiverDetails.location?.let { locationMapper.map(it) },
         )
     }
 }

@@ -6,6 +6,5 @@ import `in`.porter.cfms.domain.orders.entities.Order
 interface OrderDetailsRepo {
     suspend fun createOrder(order: CreateOrderRequest)
     suspend fun fetchOrderByCourierId(orderId: String): Order?
-    suspend fun updateOrder(order: Order): Order
 
 }

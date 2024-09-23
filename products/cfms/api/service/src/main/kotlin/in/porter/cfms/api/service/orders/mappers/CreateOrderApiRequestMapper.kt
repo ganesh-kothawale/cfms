@@ -20,7 +20,7 @@ class CreateOrderApiRequestMapper
                 courierPartnerName = request.date.courierPartnerName,
                 modeOfTransport = request.date.modeOfTransport
             ),
-            orderStatus = request.date.orderStatus
+            orderStatus = request.date.orderStatus.first()
         )
 
         val addressDetails = AddressDetails(
