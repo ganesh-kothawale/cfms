@@ -7,7 +7,6 @@ function _log {
 _log "starting the server"
 
 
-
 DD_AGENT_HOST=$(curl http://169.254.169.254/latest/meta-data/local-ipv4)
 export DD_AGENT_HOST
 
