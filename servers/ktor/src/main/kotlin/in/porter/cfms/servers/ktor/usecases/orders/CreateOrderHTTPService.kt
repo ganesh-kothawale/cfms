@@ -1,6 +1,7 @@
 package `in`.porter.cfms.servers.ktor.usecases.orders
 
 import `in`.porter.cfms.api.models.orders.CreateOrderApiRequest
+import `in`.porter.cfms.api.service.orders.usecases.CreateOrderService
 import `in`.porter.kotlinutils.instrumentation.opentracing.Traceable
 import `in`.porter.kotlinutils.instrumentation.opentracing.trace
 import io.ktor.server.application.*
@@ -13,7 +14,7 @@ import javax.inject.Inject
 class CreateOrderHTTPService
 @Inject
 constructor(
-    private val orderApiService: OrderApiService,
+    private val orderApiService:CreateOrderService ,
 ) : Traceable {
 
     companion object : Logging
@@ -23,14 +24,13 @@ constructor(
             try {
                 call.receive<CreateOrderApiRequest>()
                     .also { logger.info { "Request payload for CreateOrder: $it" } }
-                    .let { orderApiService.createOrder(it) }
-                    .let { call.respond(HttpStatusCode.OK, it) }
+                    .let { orderApiService.invoke(it) }
+                    .let { call.respond(HttpStatusCode.OK) }
             } catch (e: Exception) {
-                call.respond(HttpStatusCode.BAD_REQUEST, e.message)
+                call.respond(HttpStatusCode.BAD_REQUEST)
             } catch (e: Exception) {
-                call.respond(HttpStatusCode.INTERNAL_SERVER_ERROR, e.message)
+                call.respond(HttpStatusCode.INTERNAL_SERVER_ERROR)
             }
         }
     }
 }
-

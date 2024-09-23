@@ -5,4 +5,5 @@ import io.ktor.server.application.*
 import io.ktor.server.routing.*
 
 fun Route.userROutes(httpComponent: HttpComponent) {
-    post("/create_order") { httpComponent..invoke(call) }
+    post("/create_order") { httpComponent.createOrderHTTPService.invoke(call) }
+}
