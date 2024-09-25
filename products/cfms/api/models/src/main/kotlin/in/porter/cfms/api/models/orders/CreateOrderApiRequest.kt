@@ -20,6 +20,7 @@ data class OrderData(
     val senderCityName: String,
     val senderStateName: String,
     val senderPincode: Int,
+    val receiverPincode: Int,
     val senderLat: Double,
     val senderLong: Double,
     val receiverName: String,
