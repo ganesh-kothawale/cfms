@@ -7,11 +7,9 @@ import javax.inject.Inject
 class CreateOrderService
 @Inject constructor(
     private val repo: OrderDetailsRepo,
-    private val validateOrderDetails: ValidateOrderDetails,
 ) {
-   suspend fun invoke(createOrderRequest: CreateOrderRequest) {
+    suspend fun invoke(createOrderRequest: CreateOrderRequest) {
         try {
-            validateOrderDetails.validateOrderRequest(createOrderRequest)
             repo.createOrder(createOrderRequest)
         } catch (e: IllegalArgumentException) {
             throw e
