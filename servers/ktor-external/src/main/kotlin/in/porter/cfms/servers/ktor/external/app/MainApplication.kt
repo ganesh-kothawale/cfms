@@ -92,5 +92,7 @@ fun Application.main() {
 
     routing {
         get("/") { call.respond(HttpStatusCode.OK, Unit) }
+        //get("/courier_partner") { }
+
     }
 }
