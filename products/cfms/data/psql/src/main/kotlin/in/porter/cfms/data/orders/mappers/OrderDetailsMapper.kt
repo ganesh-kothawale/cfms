@@ -21,6 +21,6 @@ class OrderDetailsMapper @Inject constructor(
         )
     }
     fun mapOrders (query: Query): List<Order> {
-        val orders = query.map { row: ResultRow -> toDomain(row) }
+       return query.map { row: ResultRow -> toDomain(row) }
     }
 }

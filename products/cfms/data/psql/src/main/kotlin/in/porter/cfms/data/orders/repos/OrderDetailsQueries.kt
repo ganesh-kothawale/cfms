@@ -64,7 +64,14 @@ class OrderDetailsQueries
 
     suspend fun fetchOrders(limit: Int, offset: Int): Query {
         return transaction {
-            OrdersTable.selectAll().limit(limit, offset)
+            OrdersTable.selectAll()
+                .orderBy(OrdersTable.createdAt, SortOrder.DESC)
+                .limit(limit, offset)
+        }
+    }
+    suspend fun getOrderCount(): Int {
+        return transaction {
+            OrdersTable.selectAll().count()
         }
     }
 }

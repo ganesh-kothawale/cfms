@@ -5,6 +5,7 @@ import `in`.porter.cfms.domain.orders.entities.FetchOrdersRequest
 import `in`.porter.cfms.domain.orders.entities.FetchOrdersResponse
 import `in`.porter.cfms.domain.orders.entities.Order
 import `in`.porter.cfms.domain.orders.repos.OrderDetailsRepo
+import org.jetbrains.exposed.sql.Query
 import org.jetbrains.exposed.sql.ResultRow
 import javax.inject.Inject
 
@@ -23,10 +24,13 @@ class PsqlOrderDetailsRepo
         return query?.mapNotNull { row: ResultRow -> mapper.toDomain(row) }?.singleOrNull()
     }
 
-    override suspend fun fetchOrders(request: FetchOrdersRequest): FetchOrdersResponse {
-        queries.fetchOrders(request.limit, request.limit * (request.page + 1))
+    override suspend fun fetchOrders(request: FetchOrdersRequest): List<Order> {
+       val orders= queries.fetchOrders(request.limit, request.limit * (request.page - 1))
             .let  {mapper.mapOrders(it)}
-        val orders = query.map { row: ResultRow -> mapper.toDomain(row) }
-        return FetchOrdersResponse(orders = orders)
+        return  orders
+    }
+
+    override suspend fun getOrderCount(request: FetchOrdersRequest): Int {
+       return  queries.getOrderCount()
     }
 }
