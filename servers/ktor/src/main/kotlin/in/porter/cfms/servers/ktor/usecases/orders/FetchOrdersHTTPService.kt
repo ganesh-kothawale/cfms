@@ -1,3 +1,5 @@
+package `in`.porter.cfms.servers.ktor.usecases.orders
+
 import com.google.api.Logging
 import `in`.porter.cfms.api.models.orders.FetchOrderApiRequest
 import `in`.porter.cfms.api.service.orders.usecases.FetchOrdersApiService
@@ -8,10 +10,10 @@ import io.ktor.server.response.*
 import io.ktor.http.HttpStatusCode
 import javax.inject.Inject
 
-class FetchOrdersHTTPService @Inject constructor(
+class FetchOrdersHTTPService
+@Inject constructor(
     private val fetchOrdersApiService: FetchOrdersApiService
 ) : Traceable {
-
 
     suspend fun invoke(call: ApplicationCall) {
         trace {
