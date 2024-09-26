@@ -1,9 +1,9 @@
 package `in`.porter.cfms.domain.orders.entities
 
-import `in`.porter.cfms.domain.common.entities.Pagination
+import `in`.porter.cfms.domain.common.entities.paginationToken
 
 data class FetchOrdersResponse(
-    val pagination: Pagination,
+    val pagination: paginationToken,
     val orders: List<Order>
 )
 

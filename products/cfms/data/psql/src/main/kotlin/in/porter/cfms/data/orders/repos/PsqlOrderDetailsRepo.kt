@@ -1,6 +1,8 @@
 package `in`.porter.cfms.data.orders.repos
 
 import `in`.porter.cfms.domain.orders.entities.CreateOrderRequest
+import `in`.porter.cfms.domain.orders.entities.FetchOrdersRequest
+import `in`.porter.cfms.domain.orders.entities.FetchOrdersResponse
 import `in`.porter.cfms.domain.orders.entities.Order
 import `in`.porter.cfms.domain.orders.repos.OrderDetailsRepo
 import org.jetbrains.exposed.sql.ResultRow
@@ -19,5 +21,9 @@ class PsqlOrderDetailsRepo
     override suspend fun fetchOrderByCourierId(orderId: String): Order? {
         val query = queries.fetchOrderDetailsByOrderNumber(orderId)
         return query?.mapNotNull { row: ResultRow -> mapper.toDomain(row) }?.singleOrNull()
+    }
+
+    override suspend fun fetchOrders(request: FetchOrdersRequest): FetchOrdersResponse {
+        TODO("Not yet implemented")
     }
 }
