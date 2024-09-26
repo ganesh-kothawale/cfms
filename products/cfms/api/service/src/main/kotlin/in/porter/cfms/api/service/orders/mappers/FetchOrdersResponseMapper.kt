@@ -3,19 +3,16 @@ package `in`.porter.cfms.api.service.orders.mappers
 import `in`.porter.cfms.api.models.orders.FetchOrderResponse
 import `in`.porter.cfms.api.models.orders.Order
 import `in`.porter.cfms.api.models.common.Pagination
-import `in`.porter.cfms.domain.orders.entities.Order as DomainOrder
-import `in`.porter.cfms.domain.common.entities.Pagination as DomainPagination
+import `in`.porter.cfms.domain.orders.entities.FetchOrdersResponse as DomainFetchOrdersResponse
 
-class FetchOrdersResponseMapper {
-    companion object {
-        fun fromDomain(domainOrders: List<DomainOrder>, domainPagination: DomainPagination): FetchOrderResponse =
-            FetchOrderResponse(
-                orders = domainOrders.map { OrderMapper.fromDomain(it) },
-                pagination = Pagination(
-                    page = domainPagination.page,
-                    totalPages = domainPagination.totalPages,
-                    limit = domainPagination.limit
-                )
+object FetchOrdersResponseMapper {
+    fun fromDomain(domainResponse: DomainFetchOrdersResponse): FetchOrderResponse =
+        FetchOrderResponse(
+            orders = domainResponse.orders.map { OrderMapper.fromDomain(it) },
+            pagination = Pagination(
+                page = domainResponse.pagination.page,
+                totalPages = domainResponse.pagination.totalPages,
+                limit = domainResponse.pagination.limit
             )
-    }
+        )
 }
