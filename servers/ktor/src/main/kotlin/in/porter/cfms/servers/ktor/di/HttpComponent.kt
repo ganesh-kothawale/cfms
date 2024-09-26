@@ -1,5 +1,6 @@
 package `in`.porter.cfms.servers.ktor.di
 
+import FetchOrdersHTTPService
 import `in`.porter.cfms.servers.commons.di.components.RootComponent
 import `in`.porter.cfms.servers.commons.usecases.external.Run
 import `in`.porter.cfms.data.di.PsqlDataComponent
