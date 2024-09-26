@@ -15,4 +15,16 @@ class AddressMapper
             pincode = address.pincode
         )
     }
+
+    companion object {
+        fun fromDomain(domainAddress: DomainAddress): Address {
+            return Address(
+                houseNumber = domainAddress.houseNumber,
+                addressDetails = domainAddress.addressDetails,
+                cityName = domainAddress.cityName,
+                stateName = domainAddress.stateName,
+                pincode = domainAddress.pincode
+            )
+        }
+    }
 }

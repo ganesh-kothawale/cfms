@@ -15,4 +15,13 @@ class AddressDetailsMapper
             receiverDetails = receiverDetailsMapper.map(addressDetails.receiverDetails)
         )
     }
+
+    companion object {
+        fun fromDomain(domainAddressDetails: DomainAddressDetails): AddressDetails {
+            return AddressDetails(
+                senderDetails = SenderDetailsMapper.fromDomain(domainAddressDetails.senderDetails),
+                receiverDetails = ReceiverDetailsMapper.fromDomain(domainAddressDetails.receiverDetails)
+            )
+        }
+    }
 }

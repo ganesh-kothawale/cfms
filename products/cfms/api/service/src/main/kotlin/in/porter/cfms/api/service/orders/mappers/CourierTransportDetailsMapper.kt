@@ -12,4 +12,13 @@ class CourierTransportDetailsMapper
             modeOfTransport = courierTransportDetails.modeOfTransport
         )
     }
+
+    companion object {
+        fun fromDomain(domainCourierTransportDetails: DomainCourierTransportDetails): CourierTransportDetails {
+            return CourierTransportDetails(
+                courierPartnerName = domainCourierTransportDetails.courierPartnerName,
+                modeOfTransport = domainCourierTransportDetails.modeOfTransport
+            )
+        }
+    }
 }

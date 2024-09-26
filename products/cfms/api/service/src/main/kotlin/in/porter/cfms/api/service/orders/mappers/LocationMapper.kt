@@ -12,4 +12,13 @@ class LocationMapper
             longitude = location.longitude
         )
     }
+
+    companion object {
+        fun fromDomain(domainLocation: DomainLocation): Location {
+            return Location(
+                latitude = domainLocation.latitude,
+                longitude = domainLocation.longitude
+            )
+        }
+    }
 }

@@ -20,4 +20,18 @@ class BasicDetailsMapper
             orderStatus = basicDetails.orderStatus
         )
     }
+
+    companion object {
+        fun fromDomain(domainBasicDetails: DomainBasicDetails): BasicDetails {
+            return BasicDetails(
+                associationDetails = AssociationDetailsMapper.fromDomain(domainBasicDetails.associationDetails),
+                orderNumber = domainBasicDetails.orderNumber,
+                awbNumber = domainBasicDetails.awbNumber,
+                accountId = domainBasicDetails.accountId,
+                accountCode = domainBasicDetails.accountCode,
+                courierTransportDetails = CourierTransportDetailsMapper.fromDomain(domainBasicDetails.courierTransportDetails),
+                orderStatus = domainBasicDetails.orderStatus
+            )
+        }
+    }
 }
