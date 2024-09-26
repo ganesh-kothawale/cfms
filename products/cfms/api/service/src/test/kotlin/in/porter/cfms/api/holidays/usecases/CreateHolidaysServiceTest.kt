@@ -36,8 +36,21 @@ class CreateHolidaysServiceTest {
 
     @Test
     fun `should successfully create a holiday`() = runBlocking {
-        val request = CreateHolidaysRequestTestFactory.buildCreateHolidaysRequest()
+        val request = CreateHolidaysRequestTestFactory.buildCreateHolidaysRequest(
+            holidayName = null,  // Now nullable
+            backupFranchiseIds = null  // Now nullable
+        )
 
+        val expectedHoliday = Holiday(
+            franchiseId = request.franchise_id,
+            startDate = request.start_date,
+            endDate = request.end_date,
+            holidayName = null,  // Now nullable
+            leaveType = LeaveType.Normal,
+            backupFranchiseIds = null,  // Now nullable
+            createdAt = mockk(),
+            updatedAt = mockk()
+        )
         coEvery { holidayRepo.getByIdAndDate(any(), any(), any()) } returns null
         coEvery { holidayRepo.record(any()) } returns 1L
 
