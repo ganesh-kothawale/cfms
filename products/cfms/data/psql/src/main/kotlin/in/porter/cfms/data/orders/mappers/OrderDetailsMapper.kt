@@ -1,7 +1,9 @@
 package `in`.porter.cfms.data.orders.repos
 
 import `in`.porter.cfms.domain.orders.entities.Order
+import org.jetbrains.exposed.sql.Query
 import org.jetbrains.exposed.sql.ResultRow
+import software.amazon.awssdk.core.pagination.async.PaginationSubscription
 import javax.inject.Inject
 
 class OrderDetailsMapper @Inject constructor(
@@ -17,5 +19,8 @@ class OrderDetailsMapper @Inject constructor(
             itemDetails = itemDetailsMapper.fromResultRow(row),
             shippingDetails = shippingDetailsMapper.fromResultRow(row)
         )
+    }
+    fun mapOrders (query: Query): List<Order> {
+        val orders = query.map { row: ResultRow -> toDomain(row) }
     }
 }

@@ -61,4 +61,10 @@ class OrderDetailsQueries
             OrdersTable.select { OrdersTable.awbNumber eq orderNumber }
         }
     }
+
+    suspend fun fetchOrders(limit: Int, offset: Int): Query {
+        return transaction {
+            OrdersTable.selectAll().limit(limit, offset)
+        }
+    }
 }

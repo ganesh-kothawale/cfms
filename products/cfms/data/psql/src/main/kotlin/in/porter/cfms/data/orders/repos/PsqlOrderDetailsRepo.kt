@@ -24,6 +24,9 @@ class PsqlOrderDetailsRepo
     }
 
     override suspend fun fetchOrders(request: FetchOrdersRequest): FetchOrdersResponse {
-        TODO("Not yet implemented")
+        queries.fetchOrders(request.limit, request.limit * (request.page + 1))
+            .let  {mapper.mapOrders(it)}
+        val orders = query.map { row: ResultRow -> mapper.toDomain(row) }
+        return FetchOrdersResponse(orders = orders)
     }
 }
