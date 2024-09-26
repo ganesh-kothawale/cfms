@@ -54,8 +54,7 @@ class CreateOrderApiRequestMapper
                     cityName = request.date.receiverCityName,
                     stateName = request.date.receiverStateName,
                     pincode = request.date.senderPincode,
-                ),
-                location = null
+                )
             )
         )
 
