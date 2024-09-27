@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.module.kotlin.KotlinModule
+import courierPartnerRoutes
 import io.ktor.server.application.*
 import io.ktor.http.*
 import io.ktor.server.response.*
@@ -92,7 +93,6 @@ fun Application.main() {
 
     routing {
         get("/") { call.respond(HttpStatusCode.OK, Unit) }
-        //get("/courier_partner") { }
-
+        route("courier_partner") { courierPartnerRoutes(httpComponent) }
     }
 }
