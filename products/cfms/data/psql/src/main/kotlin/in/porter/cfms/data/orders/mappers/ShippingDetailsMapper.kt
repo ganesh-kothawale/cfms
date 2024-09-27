@@ -6,6 +6,7 @@ import javax.inject.Inject
 
 class ShippingDetailsMapper @Inject constructor() {
     fun fromResultRow(row: ResultRow): ShippingDetails {
+        print("this is query result")
         return ShippingDetails(
             shippingLabelLink = row[OrdersTable.shippingLabelLink],
             pickUpDate = row[OrdersTable.pickupDate],

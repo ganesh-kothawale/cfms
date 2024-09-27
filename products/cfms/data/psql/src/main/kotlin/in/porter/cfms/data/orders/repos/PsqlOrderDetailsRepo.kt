@@ -26,7 +26,7 @@ class PsqlOrderDetailsRepo
 
     override suspend fun fetchOrders(request: FetchOrdersRequest): List<Order> {
        val orders= queries.fetchOrders(request.limit, request.limit * (request.page - 1))
-            .let  {mapper.mapOrders(it)}
+//            .let  {mapper.mapOrders(it)}
         return  orders
     }
 

@@ -13,6 +13,7 @@ class OrderDetailsMapper @Inject constructor(
     private val shippingDetailsMapper: ShippingDetailsMapper
 ) {
     fun toDomain(row: ResultRow): Order {
+        print("this is query result")
         return Order(
             basicDetails = basicDetailsMapper.fromResultRow(row),
             addressDetails = addressDetailsMapper.fromResultRow(row),
@@ -21,6 +22,8 @@ class OrderDetailsMapper @Inject constructor(
         )
     }
     fun mapOrders (query: Query): List<Order> {
-       return query.map { row: ResultRow -> toDomain(row) }
+        print("this is query result")
+        return query
+            .map { row: ResultRow -> toDomain(row) }
     }
 }

@@ -29,74 +29,73 @@ import java.time.Duration
 
 fun Application.main() {
 
-  install(ContentNegotiation) {
-    jackson {
-      propertyNamingStrategy = PropertyNamingStrategies.SNAKE_CASE
-      configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
-      enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS)
-      configure(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, true)
-      registerModules(
-        KotlinModule.Builder().build(),
-        InstantSerde.millisModule,
-        LocalDateSerde.localDateModule,
-        LocalTimeSerde.localTimeSerde,
-        DurationSerde.millisModule,
-        MoneySerde.moneyModule,
-        UrlSerde.urlModule
-      )
-    }
-  }
-
-  install(XForwardedHeaders)
-
-  install(DoubleReceive)
-
-  install(CallTracingFeature)
-
-  install(CountryServerFeature)
-
-  install(LanguageServerFeature)
-
-  install(TimeoutFeature) {
-    duration = Duration.ofSeconds(20)
-  }
-
-  install(SentryKtorFeature) {
-    sentryTagsProvider = {
-      val tags = mutableListOf<SentryKtorFeature.SentryTag>()
-      it.traceId?.also { traceId ->
-        tags.add(SentryKtorFeature.SentryTag("traceId", traceId))
-      }
-      it.requestId?.also { requestId ->
-        tags.add(SentryKtorFeature.SentryTag("requestId", requestId))
-      }
-
-      tags
-    }
-  }
-
-  install(StatusPages) {
-    @Suppress("EXPERIMENTAL_API_USAGE")
-    exception<MissingRequestParameterException> { call, exception ->
-      call.respond(
-        HttpStatusCode.BadRequest,
-        mapOf("message" to "Request parameter ${exception.parameterName} is missing")
-      )
-      throw exception
+    install(ContentNegotiation) {
+        jackson {
+            propertyNamingStrategy = PropertyNamingStrategies.SNAKE_CASE
+            configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+            enable(MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS)
+            configure(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, true)
+            registerModules(
+                KotlinModule.Builder().build(),
+                InstantSerde.millisModule,
+                LocalDateSerde.localDateModule,
+                LocalTimeSerde.localTimeSerde,
+                DurationSerde.millisModule,
+                MoneySerde.moneyModule,
+                UrlSerde.urlModule
+            )
+        }
     }
 
-    exception<JsonProcessingException> { call, exception ->
-      call.respond(HttpStatusCode.BadRequest, mapOf("message" to exception.originalMessage))
-      throw exception
+    install(XForwardedHeaders)
+
+    install(DoubleReceive)
+
+    install(CallTracingFeature)
+
+    install(CountryServerFeature)
+
+    install(LanguageServerFeature)
+
+    install(TimeoutFeature) {
+        duration = Duration.ofSeconds(20)
     }
-  }
 
-  val httpComponent = HttpComponentFactory.build()
+    install(SentryKtorFeature) {
+        sentryTagsProvider = {
+            val tags = mutableListOf<SentryKtorFeature.SentryTag>()
+            it.traceId?.also { traceId ->
+                tags.add(SentryKtorFeature.SentryTag("traceId", traceId))
+            }
+            it.requestId?.also { requestId ->
+                tags.add(SentryKtorFeature.SentryTag("requestId", requestId))
+            }
 
-  routing {
-    get("/") { call.respond(HttpStatusCode.OK, Unit) }
-    route("cfms/private/orders") { ordersRoutes(httpComponent) }
+            tags
+        }
+    }
 
+    install(StatusPages) {
+        @Suppress("EXPERIMENTAL_API_USAGE")
+        exception<MissingRequestParameterException> { call, exception ->
+            call.respond(
+                HttpStatusCode.BadRequest,
+                mapOf("message" to "Request parameter ${exception.parameterName} is missing")
+            )
+            throw exception
+        }
 
-  }
+        exception<JsonProcessingException> { call, exception ->
+            call.respond(HttpStatusCode.BadRequest, mapOf("message" to exception.originalMessage))
+            throw exception
+        }
+    }
+
+    val httpComponent = HttpComponentFactory.build()
+
+    routing {
+        get("/") { call.respond(HttpStatusCode.OK, Unit) }
+        route("cfms/private/orders") { ordersRoutes(httpComponent) }
+
+    }
 }

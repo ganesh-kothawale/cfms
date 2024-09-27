@@ -6,8 +6,8 @@ import `in`.porter.cfms.api.models.common.Pagination
 import `in`.porter.cfms.domain.orders.entities.FetchOrdersResponse as DomainFetchOrdersResponse
 
 object FetchOrdersResponseMapper {
-    fun fromDomain(domainResponse: DomainFetchOrdersResponse): FetchOrderResponse =
-        FetchOrderResponse(
+    fun fromDomain(domainResponse: DomainFetchOrdersResponse): FetchOrderResponse {
+        return FetchOrderResponse(
             orders = domainResponse.orders.map { OrderMapper.fromDomain(it) },
             pagination = Pagination(
                 page = domainResponse.pagination.page,
@@ -15,4 +15,5 @@ object FetchOrdersResponseMapper {
                 limit = domainResponse.pagination.limit
             )
         )
+    }
 }

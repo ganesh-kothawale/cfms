@@ -1,20 +1,21 @@
 package `in`.porter.cfms.data.orders.repos
 
-import `in`.porter.cfms.domain.orders.entities.CreateOrderRequest
-import `in`.porter.cfms.domain.orders.entities.AddressDetails
-import `in`.porter.cfms.domain.orders.entities.SenderDetails
-import `in`.porter.cfms.domain.orders.entities.ReceiverDetails
-import `in`.porter.cfms.domain.orders.entities.ItemDetails
-import `in`.porter.cfms.domain.orders.entities.ShippingDetails
+import arrow.effects.typeclasses.Dispatchers
+import `in`.porter.cfms.domain.orders.entities.*
+import `in`.porter.kotlinutils.exposed.ExposedRepo
+import kotlinx.coroutines.CoroutineDispatcher
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.Instant
 import javax.inject.Inject
 
 class OrderDetailsQueries
-@Inject constructor(
-    val db: Database,
-) {
+@Inject
+constructor(
+    override val db: Database,
+    override val dispatcher: CoroutineDispatcher,
+    val mapper: OrderDetailsMapper
+) : ExposedRepo {
     suspend fun createOrder(request: CreateOrderRequest) {
         transaction {
             OrdersTable.insert {
@@ -62,16 +63,14 @@ class OrderDetailsQueries
         }
     }
 
-    suspend fun fetchOrders(limit: Int, offset: Int): Query {
-        return transaction {
-            OrdersTable.selectAll()
-                .orderBy(OrdersTable.createdAt, SortOrder.DESC)
-                .limit(limit, offset)
-        }
+    suspend fun fetchOrders(limit: Int, offset: Int): List<Order> = transact {
+        OrdersTable.selectAll()
+            .orderBy(OrdersTable.createdAt, SortOrder.DESC)
+            .limit(limit, offset)
+            .let  {mapper.mapOrders(it)}
     }
-    suspend fun getOrderCount(): Int {
-        return transaction {
-            OrdersTable.selectAll().count()
-        }
+
+    suspend fun getOrderCount(): Int = transact {
+        OrdersTable.selectAll().count()
     }
 }
