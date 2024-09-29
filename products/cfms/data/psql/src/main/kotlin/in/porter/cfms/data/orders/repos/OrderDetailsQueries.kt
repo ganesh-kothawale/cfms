@@ -1,11 +1,8 @@
 package `in`.porter.cfms.data.orders.repos
 
-import `in`.porter.cfms.domain.orders.entities.CreateOrderRequest
-import `in`.porter.cfms.domain.orders.entities.AddressDetails
-import `in`.porter.cfms.domain.orders.entities.SenderDetails
-import `in`.porter.cfms.domain.orders.entities.ReceiverDetails
-import `in`.porter.cfms.domain.orders.entities.ItemDetails
-import `in`.porter.cfms.domain.orders.entities.ShippingDetails
+import `in`.porter.cfms.data.orders.entities.Order
+import `in`.porter.cfms.data.orders.mappers.OrderDetailsMapper
+import `in`.porter.cfms.domain.orders.entities.*
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.Instant
@@ -14,6 +11,8 @@ import javax.inject.Inject
 class OrderDetailsQueries
 @Inject constructor(
     val db: Database,
+    val mapper: OrderDetailsMapper
+
 ) {
     suspend fun createOrder(request: CreateOrderRequest) {
         transaction {
@@ -56,9 +55,10 @@ class OrderDetailsQueries
         }
     }
 
-    suspend fun fetchOrderDetailsByOrderNumber(orderNumber: String): Query? {
+    suspend fun fetchOrderDetailsByOrderNumber(orderNumber: String): Order? {
         return transaction {
             OrdersTable.select { OrdersTable.awbNumber eq orderNumber }
+            .let { it.mapNotNull { row: ResultRow -> mapper.fromResultRow(row) }?.singleOrNull() }
         }
     }
 }
