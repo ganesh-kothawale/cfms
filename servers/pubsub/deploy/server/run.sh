@@ -16,4 +16,4 @@ java \
   -javaagent:datadog/dd-java-agent.jar \
   -Ddd.trace.config=datadog/datadog.properties \
   -Ddd.agent.port=8126 \
-  -jar sqs-server.jar
+  -jar pubsub-server.jar

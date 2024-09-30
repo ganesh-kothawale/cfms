@@ -14,7 +14,6 @@ class FetchOrdersApiService @Inject constructor(
     suspend fun invoke(request: FetchOrderApiRequest): FetchOrderResponse {
         return FetchOrderRequestMapper.fromApi(request)
             .let { domainRequest -> toDomain.invoke(domainRequest) }
-            .let { domainResponse -> FetchOrdersResponseMapper.fromDomain(domainResponse) }
-
+            .let { FetchOrdersResponseMapper.fromDomain(it) }
     }
 }

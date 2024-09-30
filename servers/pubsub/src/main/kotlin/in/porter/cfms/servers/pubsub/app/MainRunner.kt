@@ -8,7 +8,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import org.apache.logging.log4j.kotlin.logger
 
-private val logger = logger("in.porter.cfms.servers.sqs.app.MainRunnerKt")
+private val logger = logger("in.porter.cfms.servers.pubsub.app.MainRunnerKt")
 
 suspend fun main() {
     JsonMapper.configure { customConfigure() }

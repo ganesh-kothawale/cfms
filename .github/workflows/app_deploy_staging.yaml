@@ -1,0 +1,60 @@
+name: CI-Pipeline-Staging
+
+on:
+  push:
+    branches:
+      - staging
+
+permissions:
+  contents: write
+  id-token: write
+  pull-requests: write
+
+jobs:
+  generate_epoch:
+    runs-on: [ self-hosted, k8_runners_large ]
+    outputs:
+      epoch: ${{ steps.set_command.outputs.epoch }}
+    steps:
+      - id: set_command
+        run: |
+          echo "epoch=$(date +%s)" >> "$GITHUB_OUTPUT"
+
+  build_ktor_server:
+    needs: generate_epoch
+    uses: porterin/ci-workflows/.github/workflows/ktor_workflow.yml@v3.0.6
+    with:
+      config_properties: ".github/environment/config_ktor_staging.yaml"
+      deployment: 'staging india "" ""'
+      app_version_yaml_file_path: deploy/helm/values/common/dom/staging/values.yaml
+      epoch: "${{ needs.generate_epoch.outputs.epoch }}"
+      build-args: "--build-arg ENV=staging --build-arg STACK=india"
+      env: "staging"
+      infra: "dom"
+
+  build_job_server:
+    needs: generate_epoch
+    uses: porterin/ci-workflows/.github/workflows/ktor_workflow.yml@v3.0.6
+    with:
+      config_properties: ".github/environment/config_job_staging.yaml"
+      deployment: 'staging india "" ""'
+      app_version_yaml_file_path: deploy/helm/values/common/dom/staging/values.yaml
+      epoch: "${{ needs.generate_epoch.outputs.epoch }}"
+      build-args: "--build-arg ENV=staging --build-arg STACK=india"
+      env: "staging"
+      infra: "dom"
+
+  update_helm:
+    needs: [build_ktor_server, build_job_server]
+    uses: porterin/ci-workflows/.github/workflows/helm_package_workflow.yml@v3.0.3
+    with:
+      chart_file_path: deploy/helm/Chart.yaml
+      config_properties: ".github/environment/config_ktor_staging.yaml"
+      app_version: ${{ needs.build_ktor_server.outputs.app_version }}
+      chart_version: ${{ needs.build_ktor_server.outputs.chart_version }}
+      helm_dirname: ${{ needs.build_ktor_server.outputs.helm_dirname }}
+      project_name: ${{ needs.build_ktor_server.outputs.project_name }}
+      dpq_project_id: ${{ needs.build_ktor_server.outputs.dpq_project_id }}
+      app_version_yaml_file_path: deploy/helm/values/common/dom/staging/values.yaml
+      shouldDeployHotfix: ${{ needs.build_ktor_server.outputs.shouldDeployHotfix }}
+      config-folder: "deploy/helm"

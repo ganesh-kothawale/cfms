@@ -53,13 +53,14 @@ constructor(
                 it[teamId] = request.basicDetails.associationDetails.teamId
                 it[createdAt] = Instant.now()
                 it[updatedAt] = Instant.now()
-            }
+            }.value
         }
     }
 
-    suspend fun fetchOrderDetailsByOrderNumber(orderNumber: String): Query? {
+    suspend fun fetchOrderDetailsByOrderNumber(orderNumber: String): Order? {
         return transaction {
             OrdersTable.select { OrdersTable.awbNumber eq orderNumber }
+            .let { it.mapNotNull { row: ResultRow -> mapper.fromResultRow(row) }?.singleOrNull() }
         }
     }
 

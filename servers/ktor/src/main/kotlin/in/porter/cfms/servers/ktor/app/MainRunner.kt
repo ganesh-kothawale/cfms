@@ -22,6 +22,7 @@ private fun initApplication(): NettyApplicationEngine =
   embeddedServer(Netty, port = 8080) { main() }
 
 private fun shutdownServer(server: NettyApplicationEngine) {
+  //dummy
   logger.info { "Shutting down server" }
   try {
     server.stop(Duration.ofSeconds(5).toMillis(), Duration.ofSeconds(15).toMillis())

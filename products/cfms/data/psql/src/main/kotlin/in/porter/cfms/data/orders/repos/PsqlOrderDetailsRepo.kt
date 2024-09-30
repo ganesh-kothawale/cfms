@@ -1,5 +1,6 @@
 package `in`.porter.cfms.data.orders.repos
 
+import `in`.porter.cfms.data.orders.mappers.OrderDetailsMapper
 import `in`.porter.cfms.domain.orders.entities.CreateOrderRequest
 import `in`.porter.cfms.domain.orders.entities.FetchOrdersRequest
 import `in`.porter.cfms.domain.orders.entities.FetchOrdersResponse
@@ -15,13 +16,14 @@ class PsqlOrderDetailsRepo
     val mapper: OrderDetailsMapper
 ) : OrderDetailsRepo {
 
-    override suspend fun createOrder(request: CreateOrderRequest) {
-        queries.createOrder(request)
+    override suspend fun createOrder(request: CreateOrderRequest):Int {
+       return  queries.createOrder(request)
     }
 
     override suspend fun fetchOrderByCourierId(orderId: String): Order? {
-        val query = queries.fetchOrderDetailsByOrderNumber(orderId)
-        return query?.mapNotNull { row: ResultRow -> mapper.toDomain(row) }?.singleOrNull()
+        return  queries.fetchOrderDetailsByOrderNumber(orderId)
+            .let { it?.let { mapper.toDomain(it) } }
+
     }
 
     override suspend fun fetchOrders(request: FetchOrdersRequest): List<Order> {
