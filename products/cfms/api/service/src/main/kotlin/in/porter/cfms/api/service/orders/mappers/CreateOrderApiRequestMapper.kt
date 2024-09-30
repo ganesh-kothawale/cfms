@@ -9,69 +9,69 @@ class CreateOrderApiRequestMapper
     fun toRequestV1(request: CreateOrderApiRequest): CreateOrderApiRequestV1 {
         val basicDetails = BasicDetails(
             associationDetails = AssociationDetails(
-                franchiseId = request.date.franchiseId,
-                teamId = request.date.zorpTeamId
+                franchiseId = request.data.franchiseId,
+                teamId = request.data.zorpTeamId
             ),
-            orderNumber = request.date.orderNumber,
-            awbNumber = request.date.awbNumber,
-            accountId = request.date.accountId,
-            accountCode = request.date.accountCode,
+            orderNumber = request.data.orderNumber,
+            awbNumber = request.data.awbNumber,
+            accountId = request.data.accountId,
+            accountCode = request.data.accountCode,
             courierTransportDetails = CourierTransportDetails(
-                courierPartnerName = request.date.courierPartnerName,
-                modeOfTransport = request.date.modeOfTransport
+                courierPartnerName = request.data.courierPartnerName,
+                modeOfTransport = request.data.modeOfTransport
             ),
-            orderStatus = request.date.orderStatus.first()
+            orderStatus = request.data.orderStatus.first()
         )
 
         val addressDetails = AddressDetails(
             senderDetails = SenderDetails(
                 personalInfo = PersonalInfo(
-                    name = request.date.senderName,
-                    mobileNumber = request.date.senderMobileNumber
+                    name = request.data.senderName,
+                    mobileNumber = request.data.senderMobileNumber
                 ),
                 address = Address(
-                    houseNumber = request.date.senderHouseNumber,
-                    addressDetails = request.date.senderAddressDetails,
-                    cityName = request.date.senderCityName,
-                    stateName = request.date.senderStateName,
-                    pincode = request.date.senderPincode,
+                    houseNumber = request.data.senderHouseNumber,
+                    addressDetails = request.data.senderAddressDetails,
+                    cityName = request.data.senderCityName,
+                    stateName = request.data.senderStateName,
+                    pincode = request.data.senderPincode,
                 ),
                 location = Location(
-                    latitude = request.date.senderLat,
-                    longitude = request.date.senderLong
+                    latitude = request.data.senderLat,
+                    longitude = request.data.senderLong
                 )
 
 
             ),
             receiverDetails = ReceiverDetails(
                 personalInfo = PersonalInfo(
-                    name = request.date.receiverName,
-                    mobileNumber = request.date.receiverMobileNumber
+                    name = request.data.receiverName,
+                    mobileNumber = request.data.receiverMobileNumber
                 ),
                 address = Address(
-                    houseNumber = request.date.receiverHouseNumber,
-                    addressDetails = request.date.receiverAddressDetails,
-                    cityName = request.date.receiverCityName,
-                    stateName = request.date.receiverStateName,
-                    pincode = request.date.senderPincode,
+                    houseNumber = request.data.receiverHouseNumber,
+                    addressDetails = request.data.receiverAddressDetails,
+                    cityName = request.data.receiverCityName,
+                    stateName = request.data.receiverStateName,
+                    pincode = request.data.senderPincode,
                 )
             )
         )
 
         val itemDetails = ItemDetails(
-            materialType = request.date.materialType,
-            materialWeight = request.date.materialWeight,
+            materialType = request.data.materialType,
+            materialWeight = request.data.materialWeight,
             dimensions = Dimensions(
-                length = request.date.length,
-                breadth = request.date.breadth,
-                height = request.date.height
+                length = request.data.length,
+                breadth = request.data.breadth,
+                height = request.data.height
             )
         )
 
         val shippingDetails = ShippingDetails(
-            shippingLabelLink = request.date.shippingLabelLink,
-            pickUpDate = request.date.pickUpDate,
-            volumetricWeight = request.date.volumetricWeight
+            shippingLabelLink = request.data.shippingLabelLink,
+            pickUpDate = request.data.pickUpDate,
+            volumetricWeight = request.data.volumetricWeight
         )
 
         return CreateOrderApiRequestV1(

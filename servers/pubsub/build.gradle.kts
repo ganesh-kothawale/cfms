@@ -78,5 +78,5 @@ tasks {
 }
 
 application {
-  mainClass.set("in.porter.cfms.servers.sqs.app.MainRunnerKt")
+  mainClass.set("in.porter.cfms.servers.pubsub.app.MainRunnerKt")
 }
