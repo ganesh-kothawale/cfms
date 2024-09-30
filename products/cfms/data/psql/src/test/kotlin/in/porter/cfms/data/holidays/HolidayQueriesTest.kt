@@ -11,7 +11,6 @@ import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -74,23 +73,11 @@ class HolidayQueriesTest {
     }
 
     @Test
-    fun `test get by franchiseId`(): Unit = runBlocking {
-        val franchiseId = "F001"
-        holidayQueries.get(franchiseId)
-    }
-
-    @Test
     fun `test get by franchiseId and date`(): Unit = runBlocking {
         val franchiseId = "F001"
         val startDate = LocalDate.of(2024, 9, 26)
         val endDate = LocalDate.of(2024, 9, 27)
         holidayQueries.getByIdAndDate(franchiseId, startDate, endDate)
-    }
-
-    @Test
-    fun `test get all by date`(): Unit = runBlocking {
-        val date = LocalDate.of(2024, 9, 26)
-        holidayQueries.getAllByDate(date)
     }
 
     @Test
@@ -137,16 +124,6 @@ class HolidayQueriesTest {
     }
 
     @Test
-    fun `test get by non-existent franchiseId returns empty list`(): Unit = runBlocking {
-        val nonExistentFranchiseId = "NON_EXISTENT"
-
-        val result = holidayQueries.get(nonExistentFranchiseId)
-
-        // Assert that the result is empty
-        assertTrue(result.isEmpty())
-    }
-
-    @Test
     fun `test get by franchiseId and non-existent date returns null`(): Unit = runBlocking {
         val franchiseId = "F001"
         val nonExistentStartDate = LocalDate.of(2025, 1, 1)
@@ -156,16 +133,6 @@ class HolidayQueriesTest {
 
         // Assert that the result is null
         assertNull(result)
-    }
-
-    @Test
-    fun `test get all by date with no holidays returns empty list`(): Unit = runBlocking {
-        val noHolidayDate = LocalDate.of(2025, 1, 1)
-
-        val result = holidayQueries.getAllByDate(noHolidayDate)
-
-        // Assert that the result is empty
-        assertTrue(result.isEmpty())
     }
 
     @Test

@@ -21,11 +21,6 @@ constructor(
     private val mapper: HolidayRowMapper
 ) : ExposedRepo {
 
-    suspend fun get(franchiseId: String) = transact {
-        HolidayTable.select { (HolidayTable.franchiseId eq franchiseId) }
-            .map { mapper.toRecord(it) }
-    }
-
     suspend fun getByIdAndDate(franchiseId: String, startDate: LocalDate, endDate: LocalDate) = transact {
         HolidayTable.select {
             (HolidayTable.franchiseId eq franchiseId) and
@@ -55,8 +50,4 @@ constructor(
         }.value.toLong()  // Return the generated ID
     }
 
-    suspend fun getAllByDate(date: LocalDate) = transact {
-        HolidayTable.select { (HolidayTable.startDate eq date) }
-            .map { mapper.toRecord(it) }
-    }
 }

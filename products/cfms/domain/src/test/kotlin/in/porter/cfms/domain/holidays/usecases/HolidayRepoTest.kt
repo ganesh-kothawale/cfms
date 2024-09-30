@@ -25,19 +25,6 @@ class HolidayRepoTest {
         holidayRepo = mockk()
     }
 
-    @Test
-    fun `should return holidays for a given franchise`() = runBlocking {
-        val franchiseId = "123"
-        val holidays = listOf(HolidayFactory.buildHoliday())
-
-        coEvery { holidayRepo.get(franchiseId) } returns holidays
-
-        val result = holidayRepo.get(franchiseId)
-
-        assertNotNull(result)
-        assertEquals(1, result.size)
-        assertEquals(franchiseId, result[0].franchiseId)
-    }
 
     @Test
     fun `should return holiday by franchise ID and date`() = runBlocking {
@@ -68,17 +55,4 @@ class HolidayRepoTest {
         coVerify(exactly = 1) { holidayRepo.record(holiday) }
     }
 
-    @Test
-    fun `should return all holidays for a given date`() = runBlocking {
-        val date = LocalDate.now()
-        val holidays = listOf(HolidayFactory.buildHoliday())
-
-        coEvery { holidayRepo.getAllByDate(date) } returns holidays
-
-        val result = holidayRepo.getAllByDate(date)
-
-        assertNotNull(result)
-        assertEquals(1, result.size)
-        assertEquals(date, result[0].startDate)
-    }
 }
