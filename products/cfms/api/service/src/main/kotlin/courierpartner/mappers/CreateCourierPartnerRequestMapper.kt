@@ -12,8 +12,8 @@ constructor() {
     }
 
     fun toDomain(req: CreateCourierPartnerApiRequest) = CreateCourierPartnerRequest(
-        courierPartnerId = req.cp_id,
-        franchiseId =   req.franchise_id,
-        manifestImageLink =  req.manifest_image_link?: MANIFEST_LINK
+        courierPartnerId = req.cpId,
+        franchiseId =   req.franchiseId,
+        manifestImageLink =  req.manifestImageLink?: MANIFEST_LINK
     )
 }

@@ -4,6 +4,7 @@ import courierpartner.mappers.CreateCourierPartnerRequestMapper
 import `in`.porter.cfms.api.models.courierpartner.CreateCourierPartnerApiRequest
 import `in`.porter.cfms.api.models.courierpartner.CreateCourierPartnerResponse
 import `in`.porter.cfms.domain.courierPartner.usecases.internal.CreateCourierPartner
+import `in`.porter.cfms.domain.exceptions.CfmsException
 import `in`.porter.kotlinutils.instrumentation.opentracing.Traceable
 
 import javax.inject.Inject
@@ -20,10 +21,10 @@ constructor(
             mapper.toDomain(req)
                 .let { createCourierPartner.invoke(it) }
                 .let {
-                    CreateCourierPartnerResponse("Courier partner added successfully")
+                    CreateCourierPartnerResponse("Courier partner added successfully with id: $it.")
                 }
-        } catch (e: Exception) {
-            throw Exception(e.message)
+        } catch (e: CfmsException) {
+            throw CfmsException(e.message)
         }
     }
 }

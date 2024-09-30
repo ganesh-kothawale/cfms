@@ -3,6 +3,7 @@ package `in`.porter.cfms.servers.ktor.external.usecases.courierpartner
 import courierpartner.usecases.CreateCourierPartnerService
 import `in`.porter.cfms.api.models.courierpartner.CreateCourierPartnerApiRequest
 import `in`.porter.cfms.domain.courierPartner.usecases.internal.CreateCourierPartner
+import `in`.porter.cfms.domain.exceptions.CfmsException
 import `in`.porter.kotlinutils.instrumentation.opentracing.Traceable
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -20,7 +21,7 @@ constructor(
         try {
             val request = try {
                 call.receive<CreateCourierPartnerApiRequest>()
-            } catch (e: Exception) {
+            } catch (e: CfmsException) {
                 call.respond(HttpStatusCode.BadRequest, mapOf(
                     "error" to "Invalid request format.",
                     "details" to e.message
@@ -31,8 +32,7 @@ constructor(
             call.respond(HttpStatusCode.Created, mapOf(
                 "message" to courierPartnerId.message,
             ))
-            call.respond(HttpStatusCode.OK)
-        } catch (e: Exception) {
+        } catch (e: CfmsException) {
             call.respond(HttpStatusCode.UnprocessableEntity, e)
         }
     }

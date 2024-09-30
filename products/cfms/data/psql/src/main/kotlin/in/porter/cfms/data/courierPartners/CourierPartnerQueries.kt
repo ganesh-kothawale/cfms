@@ -3,6 +3,7 @@ package `in`.porter.cfms.data.courierPartners
 import `in`.porter.cfms.domain.courierPartner.entities.CourierPartnerRecord
 import `in`.porter.kotlinutils.exposed.ExposedRepo
 import kotlinx.coroutines.CoroutineDispatcher
+import org.apache.logging.log4j.kotlin.Logging
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.insertAndGetId
 import javax.inject.Inject
@@ -22,7 +23,10 @@ constructor(
       it[createdAt] = req.createdAt
       it[cpId] = req.courierPartnerId
       it[manifestImageUrl] = req.manifestImageUrl
-    }.value.toInt()
+    }.value
+
+
+
 
   }
 }
