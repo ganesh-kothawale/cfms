@@ -27,9 +27,8 @@ class PsqlOrderDetailsRepo
     }
 
     override suspend fun fetchOrders(request: FetchOrdersRequest): List<Order> {
-       val orders= queries.fetchOrders(request.limit, request.limit * (request.page - 1))
-//            .let  {mapper.mapOrders(it)}
-        return  orders
+       return queries.fetchOrders(request.limit, request.limit * (request.page - 1))
+            .let  {it.map { mapper.toDomain(it) }}
     }
 
     override suspend fun getOrderCount(request: FetchOrdersRequest): Int {

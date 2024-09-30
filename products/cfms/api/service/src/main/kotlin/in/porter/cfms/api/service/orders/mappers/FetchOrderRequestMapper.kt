@@ -9,6 +9,7 @@ class FetchOrderRequestMapper {
             return DomainFetchOrderRequest(
                 page = req.page,
                 limit = req.limit,
+                franchiseId = req.franchiseId
             )
 
         }

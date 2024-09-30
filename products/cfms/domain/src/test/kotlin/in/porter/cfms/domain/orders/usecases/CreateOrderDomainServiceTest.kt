@@ -1,10 +1,10 @@
-package `in`.porter.cfms.domain.orders.usecases
-
 import `in`.porter.cfms.domain.orders.entities.CreateOrderRequest
 import `in`.porter.cfms.domain.orders.repos.OrderDetailsRepo
+import `in`.porter.cfms.domain.orders.usecases.CreateOrderService
 import io.mockk.*
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertThrows
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
@@ -21,13 +21,15 @@ class CreateOrderServiceTest {
     }
 
     @Test
-    fun `should invoke repo with createOrderRequest`() = runBlocking {
+    fun `should invoke repo with createOrderRequest and return id`() = runBlocking {
         val createOrderRequest = mockk<CreateOrderRequest>()
+        val expectedId = 1
 
-        coEvery { repo.createOrder(createOrderRequest) } just Runs
+        coEvery { repo.createOrder(createOrderRequest) } returns expectedId
 
-        createOrderService.invoke(createOrderRequest)
+        val result = createOrderService.invoke(createOrderRequest)
 
+        assertEquals(expectedId, result)
         coVerify { repo.createOrder(createOrderRequest) }
     }
 

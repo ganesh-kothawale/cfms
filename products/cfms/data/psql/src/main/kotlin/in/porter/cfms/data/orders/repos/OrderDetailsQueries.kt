@@ -1,6 +1,8 @@
 package `in`.porter.cfms.data.orders.repos
 
 import arrow.effects.typeclasses.Dispatchers
+import `in`.porter.cfms.data.orders.entities.Order
+import `in`.porter.cfms.data.orders.mappers.OrderDetailsMapper
 import `in`.porter.cfms.domain.orders.entities.*
 import `in`.porter.kotlinutils.exposed.ExposedRepo
 import kotlinx.coroutines.CoroutineDispatcher
@@ -16,9 +18,10 @@ constructor(
     override val dispatcher: CoroutineDispatcher,
     val mapper: OrderDetailsMapper
 ) : ExposedRepo {
-    suspend fun createOrder(request: CreateOrderRequest) {
-        transaction {
-            OrdersTable.insert {
+
+    suspend fun createOrder(request: CreateOrderRequest): Int {
+        return transaction {
+            OrdersTable.insertAndGetId {
                 it[orderNumber] = request.basicDetails.orderNumber
                 it[awbNumber] = request.basicDetails.awbNumber
                 it[courierPartner] = request.basicDetails.courierTransportDetails.courierPartnerName
@@ -57,7 +60,7 @@ constructor(
         }
     }
 
-    suspend fun fetchOrderDetailsByOrderNumber(orderNumber: String): Order? {
+    suspend fun fetchOrderDetailsByOrderNumber(orderNumber: String): `in`.porter.cfms.data.orders.entities.Order? {
         return transaction {
             OrdersTable.select { OrdersTable.awbNumber eq orderNumber }
             .let { it.mapNotNull { row: ResultRow -> mapper.fromResultRow(row) }?.singleOrNull() }

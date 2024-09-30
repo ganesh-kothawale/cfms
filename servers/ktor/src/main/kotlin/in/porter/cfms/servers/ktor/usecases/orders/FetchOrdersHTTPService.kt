@@ -20,8 +20,9 @@ class FetchOrdersHTTPService
             try {
                 val page = call.request.queryParameters["page"]?.toIntOrNull() ?: 1
                 val limit = call.request.queryParameters["limit"]?.toIntOrNull() ?: 10
+                val franchiseId = call.request.queryParameters["franchise_id"]
 
-                FetchOrderApiRequest(page = page, limit = limit)
+                FetchOrderApiRequest(page = page, limit = limit, franchiseId = franchiseId)
                     .let { fetchOrdersApiService.invoke(it) }
                     .let { call.respond(HttpStatusCode.OK, it) }
 
