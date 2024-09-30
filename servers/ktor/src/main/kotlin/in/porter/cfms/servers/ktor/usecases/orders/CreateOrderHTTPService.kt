@@ -7,6 +7,7 @@ import `in`.porter.kotlinutils.instrumentation.opentracing.trace
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
+
 import org.apache.logging.log4j.kotlin.Logging
 import software.amazon.awssdk.http.HttpStatusCode
 import javax.inject.Inject
@@ -14,7 +15,7 @@ import javax.inject.Inject
 class CreateOrderHTTPService
 @Inject
 constructor(
-    private val orderApiService:CreateOrderService ,
+    private val service: CreateOrderService,
 ) : Traceable {
 
     companion object : Logging
@@ -24,8 +25,8 @@ constructor(
             try {
                 call.receive<CreateOrderApiRequest>()
                     .also { logger.info { "Request payload for CreateOrder: $it" } }
-                    .let { orderApiService.invoke(it) }
-                    .let { call.respond(HttpStatusCode.OK) }
+                    .let { service.invoke(it) }
+                    .let { call.respond(io.ktor.http.HttpStatusCode.OK, it) }
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.BAD_REQUEST)
             } catch (e: Exception) {

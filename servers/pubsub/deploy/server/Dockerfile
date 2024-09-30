@@ -1,6 +1,4 @@
-FROM openjdk:11
-
-MAINTAINER mani-k
+FROM 978222968597.dkr.ecr.ap-southeast-1.amazonaws.com/openjdk:11
 
 RUN apt-get update && apt-get install -y \
       vim \
@@ -12,8 +10,8 @@ RUN apt-get update && apt-get install -y \
 # Set timezone
 ENV TZ=Asia/Kolkata APP_HOME=/home/app
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
-      echo $TZ > /etc/timezone && \
-      dpkg-reconfigure --frontend noninteractive tzdata
+     echo $TZ > /etc/timezone && \
+     dpkg-reconfigure --frontend noninteractive tzdata
 
 WORKDIR /home/app
 

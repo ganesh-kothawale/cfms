@@ -5,7 +5,7 @@ spec:
       repository: cfms
       env: staging
       component: api-server
-    projectID: dom-cfms-stag-c1f1
+    projectID: dom-cfms-stag-23ad
     clusterProjectID: dom-cie-stag-68ef
     clusterLocation: asia-south1-a
     clusterName: dom-cie-stag-gke-cluster
@@ -20,7 +20,7 @@ spec:
         mountPath: /home/app/configuration/properties
         filePaths:
           - values/common/dom/staging/configs/*
-          - values/sqs/dom/staging/configs/*
+          - values/pubsub/dom/staging/configs/*
       - name: cfms-job-application-flyway-configs
         annotations:
           argocd.argoproj.io/sync-wave: "-2"
@@ -63,8 +63,8 @@ spec:
       containers:
         - name: cfms-job
           image:
-            registry: dom-dpq-stag-ab34/dom-dpq-stag-gcr-application/job
-          envFile: values/sqs/dom/staging/env.yaml
+            registry: dom-dpq-stag-ab34/dom-dpq-stag-gcr-cfms-application/sqs
+          envFile: values/pubsub/dom/staging/env.yaml
           ports:
             - containerPort: 8080
           resources:

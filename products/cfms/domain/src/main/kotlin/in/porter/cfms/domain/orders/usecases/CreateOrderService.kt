@@ -8,8 +8,8 @@ class CreateOrderService
 @Inject constructor(
     private val repo: OrderDetailsRepo,
 ) {
-    suspend fun invoke(createOrderRequest: CreateOrderRequest) {
-        try {
+    suspend fun invoke(createOrderRequest: CreateOrderRequest): Int {
+        return try {
             repo.createOrder(createOrderRequest)
         } catch (e: IllegalArgumentException) {
             throw e
