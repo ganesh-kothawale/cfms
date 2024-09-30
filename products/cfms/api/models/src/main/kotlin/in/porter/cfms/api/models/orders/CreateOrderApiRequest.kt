@@ -2,7 +2,7 @@ package `in`.porter.cfms.api.models.orders
 
 data class CreateOrderApiRequest(
     val tableType: String,
-    val date: OrderData
+    val data: OrderData
 )
 
 data class OrderData(

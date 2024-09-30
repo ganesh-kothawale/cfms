@@ -13,8 +13,8 @@ class PsqlOrderDetailsRepo
     val mapper: OrderDetailsMapper
 ) : OrderDetailsRepo {
 
-    override suspend fun createOrder(request: CreateOrderRequest) {
-        queries.createOrder(request)
+    override suspend fun createOrder(request: CreateOrderRequest):Int {
+       return  queries.createOrder(request)
     }
 
     override suspend fun fetchOrderByCourierId(orderId: String): Order? {

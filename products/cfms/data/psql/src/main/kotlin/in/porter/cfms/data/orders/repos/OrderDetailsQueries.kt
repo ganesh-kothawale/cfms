@@ -14,9 +14,9 @@ class OrderDetailsQueries
     val mapper: OrderDetailsMapper
 
 ) {
-    suspend fun createOrder(request: CreateOrderRequest) {
-        transaction {
-            OrdersTable.insert {
+    suspend fun createOrder(request: CreateOrderRequest): Int {
+        return transaction {
+            OrdersTable.insertAndGetId {
                 it[orderNumber] = request.basicDetails.orderNumber
                 it[awbNumber] = request.basicDetails.awbNumber
                 it[courierPartner] = request.basicDetails.courierTransportDetails.courierPartnerName
@@ -51,7 +51,7 @@ class OrderDetailsQueries
                 it[teamId] = request.basicDetails.associationDetails.teamId
                 it[createdAt] = Instant.now()
                 it[updatedAt] = Instant.now()
-            }
+            }.value
         }
     }
 
