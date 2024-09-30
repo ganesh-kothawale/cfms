@@ -63,15 +63,22 @@ constructor(
     suspend fun fetchOrderDetailsByOrderNumber(orderNumber: String): `in`.porter.cfms.data.orders.entities.Order? {
         return transaction {
             OrdersTable.select { OrdersTable.awbNumber eq orderNumber }
-            .let { it.mapNotNull { row: ResultRow -> mapper.fromResultRow(row) }?.singleOrNull() }
+                .let { it.mapNotNull { row: ResultRow -> mapper.fromResultRow(row) }?.singleOrNull() }
         }
     }
 
-    suspend fun fetchOrders(limit: Int, offset: Int): List<Order> = transact {
-        OrdersTable.selectAll()
-            .orderBy(OrdersTable.createdAt, SortOrder.DESC)
-            .limit(limit, offset)
-            .let  {mapper.mapOrders(it)}
+    suspend fun fetchOrders(limit: Int, offset: Int, franchiseId: String?): List<Order> = transact {
+        if (franchiseId != null) {
+            OrdersTable.selectAll()
+                .andWhere { OrdersTable.franchiseId eq franchiseId }
+                .orderBy(OrdersTable.createdAt, SortOrder.DESC)
+                .limit(limit, offset)
+        } else {
+            OrdersTable.selectAll()
+                .orderBy(OrdersTable.createdAt, SortOrder.DESC)
+                .limit(limit, offset)
+        }
+            .let { mapper.mapOrders(it) }
     }
 
     suspend fun getOrderCount(): Int = transact {
