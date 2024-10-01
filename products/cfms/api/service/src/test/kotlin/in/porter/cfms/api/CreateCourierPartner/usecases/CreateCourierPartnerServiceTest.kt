@@ -2,23 +2,19 @@ package `in`.porter.cfms.api.CreateCourierPartner.usecases
 
 import courierpartner.mappers.CreateCourierPartnerRequestMapper
 import courierpartner.usecases.CreateCourierPartnerService
-import `in`.porter.cfms.api.CreateCourierPartner.factories.CreateCourierPartnerTestFactory
 import `in`.porter.cfms.api.models.courierpartner.CreateCourierPartnerApiRequest
+import `in`.porter.cfms.api.models.courierpartner.CreateCourierPartnerResponse
 import `in`.porter.cfms.domain.courierPartner.RecordCourierPartner
 import `in`.porter.cfms.domain.courierPartner.entities.CreateCourierPartnerRequest
-import `in`.porter.cfms.domain.courierPartner.repos.CourierPartnerRepo
 import `in`.porter.cfms.domain.courierPartner.usecases.internal.CreateCourierPartner
+import `in`.porter.cfms.domain.exceptions.CfmsException
 import io.mockk.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.TestInstance
 import kotlinx.coroutines.runBlocking
-import org.apache.logging.log4j.kotlin.Logging
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.Assertions.assertEquals;
-import java.time.Duration
-import java.time.Instant
-import java.time.LocalDate
 
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -33,37 +29,47 @@ class CreateCourierPartnerServiceTest {
     mapper = mockk()
     recordCourierPartner = mockk()
     createCourierPartner = mockk()
-      //CreateCourierPartner(recordCourierPartner)
     createCourierPartnerService = CreateCourierPartnerService(mapper, createCourierPartner)
   }
 
-  companion object : Logging
+  companion object {
+    val cfmsException = CfmsException("error")
+    val responseMessage = "Courier partner added successfully with id: "
+  }
 
   @Test
-  fun `jjj`() = runBlocking {
+  fun `CreateCourierPartner service should be invoked successfully`() = runBlocking {
 
-//    val createCourierPartnerApiRequest = mockk<CreateCourierPartnerApiRequest>()
-//    val domainRequest = mockk<CreateCourierPartnerRequest>()
-//    val domainResponse = mockk<Int>()
-//    val apiResponse = mockk<Int>()
-//
-//    every { mapper.toDomain(createCourierPartnerApiRequest) } returns domainRequest
-//    coEvery { createCourierPartner.invoke(domainRequest) } returns domainResponse
-//    //every { responseMapper.fromDomain(domainResponse) } returns apiResponse
-//    logger.info(domainResponse)
-//
-//    val result = createCourierPartnerService.invoke(createCourierPartnerApiRequest)
-//    logger.info(result.message)
-//
-//    assertEquals(result,domainResponse)
+    val createCourierPartnerApiRequest = mockk<CreateCourierPartnerApiRequest>(relaxed = true)
+    val domainRequest = mockk<CreateCourierPartnerRequest>()
+    val domainResponse = mockk<Int>(relaxed = true)
+
+    every { mapper.toDomain(createCourierPartnerApiRequest) } returns domainRequest
+    coEvery { createCourierPartner.invoke(domainRequest) } returns domainResponse
+
+    val result = createCourierPartnerService.invoke(createCourierPartnerApiRequest)
+
+    assertEquals(result.message, CreateCourierPartnerResponse(responseMessage +domainResponse).message)
 
   }
 
+  @Test
+  fun `should throw CfmsException when CfmsException is thrown`() = runBlocking {
 
+    val createCourierPartnerApiRequest = mockk<CreateCourierPartnerApiRequest>(relaxed = true)
+    val domainRequest = mockk<CreateCourierPartnerRequest>()
 
+    every { mapper.toDomain(createCourierPartnerApiRequest) } returns domainRequest
+    coEvery { createCourierPartner.invoke(domainRequest) } throws cfmsException
 
+    val exception = assertThrows<CfmsException> {
+      runBlocking {
+        createCourierPartnerService.invoke(createCourierPartnerApiRequest)
+      }
+    }
 
+    assertEquals(exception.message, cfmsException.message)
 
-
+  }
 }
 

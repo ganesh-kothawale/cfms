@@ -21,7 +21,7 @@ constructor(
             mapper.toDomain(req)
                 .let { createCourierPartner.invoke(it) }
                 .let {
-                    CreateCourierPartnerResponse("Courier partner added successfully with id: $it.")
+                    CreateCourierPartnerResponse("Courier partner added successfully with id: $it")
                 }
         } catch (e: CfmsException) {
             throw CfmsException(e.message)
