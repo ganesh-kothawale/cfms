@@ -20,7 +20,7 @@ constructor(
     companion object : Logging
 
     suspend fun invoke(call: ApplicationCall) {
-        trace {x
+        trace {
             try {
                 call.receive<CreateOrderApiRequest>()
                     .also { logger.info { "Request payload for CreateOrder: $it" } }

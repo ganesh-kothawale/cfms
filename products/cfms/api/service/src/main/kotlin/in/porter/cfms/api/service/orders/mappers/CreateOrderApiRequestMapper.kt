@@ -54,11 +54,7 @@ class CreateOrderApiRequestMapper
                     cityName = request.date.receiverCityName,
                     stateName = request.date.receiverStateName,
                     pincode = request.date.senderPincode,
-<<<<<<< HEAD
-                )
-=======
                 ),
->>>>>>> parent of 57b6bb7 (Revert "api later test cases done")
             )
         )
 

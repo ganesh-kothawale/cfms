@@ -41,7 +41,9 @@ object CreateOrderApiRequestFactory {
                 length = 10.0,
                 breadth = 5.0,
                 height = 2.0,
-                volumetricWeight = 10
+                volumetricWeight = 10,
+                receiverPincode = 123456
+
             )
         )
     }
