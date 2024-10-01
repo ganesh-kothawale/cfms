@@ -23,7 +23,6 @@ constructor(
     suspend fun invoke(call: ApplicationCall) {
         trace {
             try {
-                print(("-----------------this is the search key"))
                 call.receive<CreateOrderApiRequest>()
                     .also { logger.info { "Request payload for CreateOrder: $it" } }
                     .let { service.invoke(it) }

@@ -1,6 +1,5 @@
 package `in`.porter.cfms.data.orders.repos
 
-import arrow.effects.typeclasses.Dispatchers
 import `in`.porter.cfms.data.orders.entities.Order
 import `in`.porter.cfms.data.orders.mappers.OrderDetailsMapper
 import `in`.porter.cfms.domain.orders.entities.*
@@ -11,7 +10,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.Instant
 import javax.inject.Inject
 
-class OrderDetailsQueries
+ class OrderDetailsQueries
 @Inject
 constructor(
     override val db: Database,
