@@ -7,6 +7,7 @@ import `in`.porter.cfms.servers.ktor.di.HttpScope
 
 import dagger.Component
 import `in`.porter.cfms.servers.ktor.external.usecases.courierpartner.CreateCourierPartnerHttpService
+import `in`.porter.cfms.servers.ktor.external.usecases.courierpartner.FetchCourierPartnerHttpService
 
 @HttpScope
 @Component(
@@ -20,5 +21,5 @@ interface HttpComponent {
 
 
   val createCourierPartnerHttpService: CreateCourierPartnerHttpService
-
+  val fetchCourierPartnerHttpService: FetchCourierPartnerHttpService
 }
