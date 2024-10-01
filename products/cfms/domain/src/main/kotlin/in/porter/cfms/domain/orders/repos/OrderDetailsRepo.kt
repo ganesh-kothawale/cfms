@@ -9,5 +9,6 @@ interface OrderDetailsRepo {
     suspend fun fetchOrderByCourierId(orderId: String): Order?
     suspend fun fetchOrders(request: FetchOrdersRequest):  List<Order>
     suspend fun getOrderCount(request: FetchOrdersRequest):  Int
+    suspend fun fun updateStatus(orderId: Int, status: String): Int
 
 }
