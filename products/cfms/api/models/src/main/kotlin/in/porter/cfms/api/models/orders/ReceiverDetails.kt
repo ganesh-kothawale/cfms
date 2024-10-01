@@ -4,4 +4,3 @@ data class ReceiverDetails(
     val personalInfo: PersonalInfo,
     val address: Address,
 )
-
