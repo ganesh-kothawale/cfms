@@ -17,8 +17,10 @@ constructor(
 ) {
     private val logger = LoggerFactory.getLogger(UpdateHoliday::class.java)
 
-    suspend fun updateHoliday(holiday: UpdateHolidayEntity): Long {
+    suspend fun updateHoliday(holiday: UpdateHolidayEntity) {
         // Fetch the existing holiday by ID
+
+        logger.info("Checking validations before updating holiday: ${holiday.id}")
         val existingHoliday = holidayRepo.getById(holiday.id)
             ?: throw CfmsException("Holiday with ID ${holiday.id} not found.")
 
@@ -41,11 +43,13 @@ constructor(
             )
         }
 
+        logger.info("Calling courier service apply leave API")
+
         // Prepare the ApplyLeaveRequest for the external API call
         val applyLeaveRequest = ApplyLeaveRequest(
-            identification_code = holiday.franchiseId,
+            identification_code = holiday.franchiseId.toString(),
             holidays = generateHolidayDates(holiday.startDate, holiday.endDate), // Generate dates between start and end
-            type = holiday.leaveType?.name.toString(),
+            type = holiday.leaveType.name,
             backup_franchises = holiday.backupFranchiseIds?.split(",") ?: emptyList(),
             status = "Approved"
         )
@@ -60,22 +64,27 @@ constructor(
         }
 
         // Log the success message from the external API
-        logger.info("Leave applied successfully: ${applyLeaveResponse.message}")
+        logger.info("Leave applied successfully at courier: ${applyLeaveResponse.message}")
 
         // Insert the holiday into the database
+
+        val existingHolidayCheck = holidayRepo.getByIdAndDate(holiday.franchiseId.toString(), holiday.startDate, holiday.endDate)
+        if (existingHolidayCheck != null) {
+            throw CfmsException("Holiday is already applied for the given dates.")
+        }
         return holidayRepo.update(holiday)
     }
 
     // Helper method to generate a list of dates between start and end date
-    private fun generateHolidayDates(startDate: LocalDate?, endDate: LocalDate?): List<String> {
+    private fun generateHolidayDates(startDate: LocalDate, endDate: LocalDate): List<String> {
+        logger.info("Generating holiday dates between $startDate and $endDate")
         val dates = mutableListOf<String>()
         var currentDate = startDate
-        currentDate?.isAfter(endDate)?.let {
-            while (!it) {
-                dates.add(currentDate.toString())
-                currentDate = currentDate?.plusDays(1)
-            }
+        while (!currentDate.isAfter(endDate)) {
+            dates.add(currentDate.toString())
+            currentDate = currentDate.plusDays(1)
         }
+        logger.info("Generated ${dates.size} dates")
         return dates
     }
 }

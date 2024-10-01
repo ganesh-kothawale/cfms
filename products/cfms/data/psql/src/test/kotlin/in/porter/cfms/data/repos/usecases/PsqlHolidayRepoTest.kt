@@ -2,6 +2,7 @@ package `in`.porter.cfms.data.repos.usecases
 
 import `in`.porter.cfms.data.holidays.HolidayQueries
 import `in`.porter.cfms.data.holidays.mappers.HolidayMapper
+import `in`.porter.cfms.data.holidays.mappers.UpdateHolidayMapper
 import `in`.porter.cfms.data.repos.PsqlHolidayRepo
 import `in`.porter.cfms.data.repos.factories.PsqlHolidayRepoFactory
 import `in`.porter.cfms.domain.holidays.entities.Holiday
@@ -14,7 +15,6 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertThrows
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -27,32 +27,19 @@ class PsqlHolidayRepoTest {
     private lateinit var holidayRepo: PsqlHolidayRepo
     private lateinit var holidayQueries: HolidayQueries
     private lateinit var holidayMapper: HolidayMapper
+    private lateinit var updateHolidayMapper: UpdateHolidayMapper
 
     @BeforeEach
     fun setup() {
         holidayQueries = mockk()
         holidayMapper = mockk()
-        holidayRepo = PsqlHolidayRepo(holidayQueries, holidayMapper)
+        updateHolidayMapper = mockk()
+        holidayRepo = PsqlHolidayRepo(holidayQueries, holidayMapper, updateHolidayMapper)
 
         // Mocking toRecord and toDomain with valid responses
         coEvery { holidayMapper.toRecord(any()) } returns mockk()
         coEvery { holidayMapper.toDomain(any()) } returns mockk()
-    }
-
-    @Test
-    fun `should get list of holidays for a franchise`() = runBlocking {
-        val franchiseId = "123"
-        val holidayRecord = PsqlHolidayRepoFactory.buildHoliday(franchiseId)
-        val holidayList = listOf(holidayRecord)
-
-        coEvery { holidayQueries.get(franchiseId) } returns listOf(mockk())
-        coEvery { holidayMapper.toDomain(any()) } returns holidayRecord
-
-        val result = holidayRepo.get(franchiseId)
-
-        assertEquals(holidayList, result)
-        coVerify(exactly = 1) { holidayQueries.get(franchiseId) }
-        coVerify(exactly = 1) { holidayMapper.toDomain(any()) }
+        coEvery { updateHolidayMapper.toRecord(any()) } returns mockk()
     }
 
     @Test
@@ -89,27 +76,12 @@ class PsqlHolidayRepoTest {
     }
 
     @Test
-    fun `should get all holidays for a specific date`() = runBlocking {
-        val date = LocalDate.now()
-        val holiday = PsqlHolidayRepoFactory.buildHoliday()
-
-        coEvery { holidayQueries.getAllByDate(date) } returns listOf(mockk())
-        coEvery { holidayMapper.toDomain(any()) } returns holiday
-
-        val result = holidayRepo.getAllByDate(date)
-
-        assertEquals(listOf(holiday), result)
-        coVerify(exactly = 1) { holidayQueries.getAllByDate(date) }
-        coVerify(exactly = 1) { holidayMapper.toDomain(any()) }
-    }
-
-    @Test
     fun `should return null if no holiday found by id and date`() = runBlocking {
         // Arrange
         coEvery {  holidayQueries.getByIdAndDate(any(), any(), any()) } returns null
 
         // Act
-        val result = holidayRepo.getByIdAndDate("123", LocalDate.now(), LocalDate.now().plusDays(1))
+        val result = holidayRepo.getByIdAndDate("ABC12", LocalDate.now(), LocalDate.now().plusDays(1))
 
         // Assert
         assertNull(result)
@@ -117,35 +89,9 @@ class PsqlHolidayRepoTest {
     }
 
     @Test
-    fun `should return empty list if no holidays found for the date`() = runBlocking {
-        // Arrange
-        coEvery { holidayQueries.getAllByDate(any()) } returns emptyList()
-
-        // Act
-        val result = holidayRepo.getAllByDate(LocalDate.now())
-
-        // Assert
-        assertTrue(result.isEmpty())
-        coVerify { holidayQueries.getAllByDate(any()) }
-    }
-
-    @Test
-    fun `should return empty list if no holidays found for the franchise id`() = runBlocking {
-        // Arrange
-        coEvery { holidayQueries.get(any()) } returns emptyList()
-
-        // Act
-        val result = holidayRepo.get("123")
-
-        // Assert
-        assertTrue(result.isEmpty())
-        coVerify { holidayQueries.get(any()) }
-    }
-
-    @Test
     fun `should return null for invalid start date greater than end date`() = runBlocking {
         // Arrange
-        val franchiseId = "123"
+        val franchiseId = "ABC12"
         val invalidStartDate = LocalDate.of(2024, 9, 27)
         val endDate = LocalDate.of(2024, 9, 26)
 
@@ -160,22 +106,8 @@ class PsqlHolidayRepoTest {
     }
 
     @Test
-    fun `should return empty list when no holidays exist for franchise`() = runBlocking {
-        // Arrange
-        val franchiseId = "123"
-        coEvery { holidayQueries.get(franchiseId) } returns emptyList()
-
-        // Act
-        val result = holidayRepo.get(franchiseId)
-
-        // Assert
-        assertTrue(result.isEmpty())
-        coVerify(exactly = 1) { holidayQueries.get(franchiseId) }
-    }
-
-    @Test
     fun `should return a holiday when valid data is found for franchise and dates`() = runBlocking {
-        val franchiseId = "123"
+        val franchiseId = "ABC12"
         val startDate = LocalDate.of(2024, 9, 26)
         val endDate = LocalDate.of(2024, 9, 27)
         val holidayRecord = PsqlHolidayRepoFactory.buildHoliday(franchiseId)
@@ -189,21 +121,6 @@ class PsqlHolidayRepoTest {
         assertEquals(holidayRecord, result)
         coVerify(exactly = 1) { holidayQueries.getByIdAndDate(franchiseId, startDate, endDate) }
         coVerify(exactly = 1) { holidayMapper.toDomain(any()) }
-    }
-
-
-    @Test
-    fun `should return empty list when no holidays exist for the date`() = runBlocking {
-        // Arrange
-        val date = LocalDate.of(2024, 9, 26)
-        coEvery { holidayQueries.getAllByDate(date) } returns emptyList()
-
-        // Act
-        val result = holidayRepo.getAllByDate(date)
-
-        // Assert
-        assertTrue(result.isEmpty())
-        coVerify(exactly = 1) { holidayQueries.getAllByDate(date) }
     }
 
     @Test
@@ -248,16 +165,6 @@ class PsqlHolidayRepoTest {
     }
 
     @Test
-    fun `should return empty list for empty franchise ID`() = runBlocking {
-        coEvery { holidayQueries.get("") } returns emptyList()
-
-        val result = holidayRepo.get("")
-
-        assertTrue(result.isEmpty())
-        coVerify(exactly = 1) { holidayQueries.get("") }
-    }
-
-    @Test
     fun `should throw different exception on record failure`() = runBlocking {
         val holiday = PsqlHolidayRepoFactory.buildHoliday()
 
@@ -274,26 +181,8 @@ class PsqlHolidayRepoTest {
     }
 
     @Test
-    fun `should handle multiple holidays for a franchise`() = runBlocking {
-        val franchiseId = "123"
-        val holidays = listOf(
-            PsqlHolidayRepoFactory.buildHoliday(franchiseId),
-            PsqlHolidayRepoFactory.buildHoliday(franchiseId)
-        )
-
-        coEvery { holidayQueries.get(franchiseId) } returns listOf(mockk(), mockk())
-        coEvery { holidayMapper.toDomain(any()) } returns holidays[0] andThen holidays[1]
-
-        val result = holidayRepo.get(franchiseId)
-
-        assertEquals(holidays, result)
-        coVerify(exactly = 1) { holidayQueries.get(franchiseId) }
-        coVerify(exactly = 2) { holidayMapper.toDomain(any()) }
-    }
-
-    @Test
     fun `should return holiday when start date equals end date`() = runBlocking {
-        val franchiseId = "123"
+        val franchiseId = "ABC12"
         val startDate = LocalDate.now()
         val holiday = PsqlHolidayRepoFactory.buildHoliday(franchiseId)
 
@@ -307,73 +196,8 @@ class PsqlHolidayRepoTest {
     }
 
     @Test
-    fun `should handle mapper failure and return empty holiday`() = runBlocking {
-        val franchiseId = "123"
-        val defaultHoliday = Holiday(
-            franchiseId = "",
-            startDate = LocalDate.now(),
-            endDate = LocalDate.now(),
-            holidayName = "Unknown",
-            leaveType = LeaveType.Normal,
-            backupFranchiseIds = null,
-            createdAt = Instant.now(),
-            updatedAt = Instant.now()
-        )
-
-        coEvery { holidayQueries.get(franchiseId) } returns listOf(mockk())
-        coEvery { holidayMapper.toDomain(any()) } returns defaultHoliday
-
-        val result = holidayRepo.get(franchiseId)
-
-        assertEquals(listOf(defaultHoliday), result)
-        coVerify(exactly = 1) { holidayQueries.get(franchiseId) }
-        coVerify(exactly = 1) { holidayMapper.toDomain(any()) }
-    }
-
-    @Test
-    fun `should throw exception when mapper fails to map domain`() = runBlocking {
-        val franchiseId = "123"
-
-        coEvery { holidayQueries.get(franchiseId) } returns listOf(mockk())
-        coEvery { holidayMapper.toDomain(any()) } throws RuntimeException("Mapping failure")
-
-        val exception = assertThrows(RuntimeException::class.java) {
-            runBlocking { holidayRepo.get(franchiseId) }
-        }
-
-        assertEquals("Mapping failure", exception.message)
-        coVerify(exactly = 1) { holidayMapper.toDomain(any()) }
-    }
-
-    @Test
-    fun `should return default holiday if mapper cannot map domain`() = runBlocking {
-        val franchiseId = "123"
-
-        // Mocked return value for the queries and mapper
-        val defaultHoliday = Holiday(
-            franchiseId = "default",
-            startDate = LocalDate.now(),
-            endDate = LocalDate.now(),
-            holidayName = "Default Holiday",
-            leaveType = LeaveType.Normal,
-            backupFranchiseIds = null,
-            createdAt = Instant.now(),
-            updatedAt = Instant.now()
-        )
-
-        coEvery { holidayQueries.get(franchiseId) } returns listOf(mockk())
-        coEvery { holidayMapper.toDomain(any()) } returns defaultHoliday
-
-        val result = holidayRepo.get(franchiseId)
-
-        assertEquals(listOf(defaultHoliday), result)  // Check for the default holiday
-        coVerify(exactly = 1) { holidayQueries.get(franchiseId) }
-        coVerify(exactly = 1) { holidayMapper.toDomain(any()) }
-    }
-
-    @Test
     fun `should return null if no holiday is returned by queries`() = runBlocking {
-        val franchiseId = "123"
+        val franchiseId = "ABC12"
         val startDate = LocalDate.now()
         val endDate = LocalDate.now().plusDays(1)
 
@@ -388,7 +212,7 @@ class PsqlHolidayRepoTest {
 
     @Test
     fun `should return default holiday if queries return null`() = runBlocking {
-        val franchiseId = "123"
+        val franchiseId = "ABC12"
         val startDate = LocalDate.now()
         val endDate = LocalDate.now().plusDays(1)
 
@@ -425,57 +249,5 @@ class PsqlHolidayRepoTest {
 
         assertEquals("Mapper failed", exception.message)
         coVerify(exactly = 1) { holidayMapper.toRecord(any()) }
-    }
-
-    @Test
-    fun `should return empty list if queries return empty list for a date`() = runBlocking {
-        val date = LocalDate.now()
-
-        coEvery { holidayQueries.getAllByDate(date) } returns emptyList()
-
-        val result = holidayRepo.getAllByDate(date)
-
-        assertTrue(result.isEmpty())
-        coVerify(exactly = 1) { holidayQueries.getAllByDate(date) }
-        coVerify(exactly = 0) { holidayMapper.toDomain(any()) }
-    }
-
-    @Test
-    fun `should return empty list if queries return empty list for a franchise`() = runBlocking {
-        val franchiseId = "123"
-
-        coEvery { holidayQueries.get(franchiseId) } returns emptyList()
-
-        val result = holidayRepo.get(franchiseId)
-
-        assertTrue(result.isEmpty())
-        coVerify(exactly = 1) { holidayQueries.get(franchiseId) }
-        coVerify(exactly = 0) { holidayMapper.toDomain(any()) }
-    }
-
-    @Test
-    fun `should return partial holiday when mapper cannot map all fields`() = runBlocking {
-        val franchiseId = "123"
-
-        val partialHoliday = Holiday(
-            franchiseId = franchiseId,
-            startDate = LocalDate.now(),
-            endDate = LocalDate.now().plusDays(1),
-            holidayName = null, // Missing holiday name
-            leaveType = LeaveType.Normal,
-            backupFranchiseIds = null,
-            createdAt = Instant.now(),
-            updatedAt = Instant.now()
-        )
-
-        coEvery { holidayQueries.get(franchiseId) } returns listOf(mockk())
-        coEvery { holidayMapper.toDomain(any()) } returns partialHoliday
-
-        val result = holidayRepo.get(franchiseId)
-
-        assertNotNull(result)
-        assertEquals(listOf(partialHoliday), result)
-        coVerify(exactly = 1) { holidayQueries.get(franchiseId) }
-        coVerify(exactly = 1) { holidayMapper.toDomain(any()) }
     }
 }

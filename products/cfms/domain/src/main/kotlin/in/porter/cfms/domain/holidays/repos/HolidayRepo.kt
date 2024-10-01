@@ -10,7 +10,7 @@ interface HolidayRepo {
 
     suspend fun record(request: Holiday) : Long
 
-    suspend fun update(request: UpdateHolidayEntity) : Long
+    suspend fun update(request: UpdateHolidayEntity)
 
-    suspend fun getById(holidayId: Long): UpdateHolidayEntity?
+    suspend fun getById(holidayId: Int?): UpdateHolidayEntity?
 }

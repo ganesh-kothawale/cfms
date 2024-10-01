@@ -1,6 +1,7 @@
 package `in`.porter.cfms.data.holidays
 
 import `in`.porter.cfms.data.holidays.mappers.HolidayRowMapper
+import `in`.porter.cfms.data.holidays.mappers.UpdateHolidayRowMapper
 import `in`.porter.cfms.data.holidays.records.HolidayRecord
 import `in`.porter.cfms.domain.holidays.entities.LeaveType
 import io.mockk.MockKAnnotations
@@ -29,6 +30,7 @@ class HolidayQueriesTest {
     private lateinit var db: Database
     private lateinit var holidayQueries: HolidayQueries
     private lateinit var rowMapper: HolidayRowMapper
+    private lateinit var updateRowMapper: UpdateHolidayRowMapper
 
     @BeforeAll
     fun setup() {
@@ -48,12 +50,13 @@ class HolidayQueriesTest {
 
         MockKAnnotations.init(this, relaxed = true)
         rowMapper = mockk(relaxed = true)
+        updateRowMapper = mockk(relaxed = true)
 
         transaction(db) {
             SchemaUtils.create(HolidayTable)
         }
 
-        holidayQueries = HolidayQueries(db, Dispatchers.Unconfined, rowMapper)
+        holidayQueries = HolidayQueries(db, Dispatchers.Unconfined, rowMapper, updateRowMapper)
     }
 
     @Test
