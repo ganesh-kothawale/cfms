@@ -46,4 +46,8 @@ constructor(
         }
     }
 
+    override suspend fun deleteById(holidayId: Int) {
+        queries.deleteHolidayById(holidayId)
+    }
+
 }

@@ -9,6 +9,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insertAndGetId
 import org.jetbrains.exposed.sql.update
 import java.time.Instant
@@ -35,7 +36,7 @@ constructor(
 
     suspend fun record(req: HolidayRecord): Long = transact {
         // Insert the holiday and return the generated ID
-        if (req.franchiseId==""){
+        if (req.franchiseId == "") {
             throw Exception("Franchise ID can not be null or empty.")
         }
         if (req.startDate.isAfter(req.endDate)) {
@@ -60,7 +61,7 @@ constructor(
     }
 
     // Update holiday by ID
-    suspend fun updateHoliday(record: UpdateHolidayRecord)= transact {
+    suspend fun updateHoliday(record: UpdateHolidayRecord) = transact {
         HolidayTable.update({ HolidayTable.id eq record.id }) {
             it[startDate] = record.startDate
             it[endDate] = record.endDate
@@ -71,4 +72,7 @@ constructor(
         }
     }
 
+    suspend fun deleteHolidayById(holidayId: Int) = transact {
+        HolidayTable.deleteWhere { HolidayTable.id eq holidayId }
+    }
 }
