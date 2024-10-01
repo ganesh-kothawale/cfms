@@ -18,9 +18,10 @@ class UpdateOrderStatusHTTPService
     suspend fun invoke(call: ApplicationCall) {
         trace {
             try {
-                val request = call.receive<UpdateOrderStatusApiRequest>()
-                val response = service.invoke(request)
-                call.respond(HttpStatusCode.OK, response)
+                val orderId = call.request.queryParameters["recordId"]
+                call.receive<UpdateOrderStatusApiRequest>()
+                    .let { service.invoke(it, orderId) }
+                    .let { call.respond(HttpStatusCode.OK, it) }
             } catch (e: IllegalArgumentException) {
                 call.respond(HttpStatusCode.BadRequest, "Invalid request: ${e.message}")
             } catch (e: Exception) {

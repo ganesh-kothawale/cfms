@@ -21,5 +21,5 @@ interface HttpComponent {
 
   val createOrderHTTPService: CreateOrderHTTPService
   val fetchOrdersHTTPService: FetchOrdersHTTPService
-  val updateOrderStatus:UpdateOrderStatusHTTPService
+  val updateOrderStatusHTTPService: UpdateOrderStatusHTTPService
 }

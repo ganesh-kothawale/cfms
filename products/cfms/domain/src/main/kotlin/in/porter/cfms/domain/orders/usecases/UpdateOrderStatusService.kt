@@ -1,8 +1,10 @@
 package `in`.porter.cfms.domain.orders.usecases
 
 import `in`.porter.cfms.domain.orders.entities.UpdateOrderStatusRequest
+import javax.inject.Inject
 
-class UpdateOrderStatusService {
+class UpdateOrderStatusService
+@Inject constructor() {
 
     suspend fun invoke(request: UpdateOrderStatusRequest): Int {
         // Dummy implementation
