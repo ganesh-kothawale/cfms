@@ -19,5 +19,13 @@ fun Route.holidaysRoutes(httpComponent: HttpComponent) {
         }
     }
 
+    delete ("/{holidayId}") {
+
+        runBlocking {
+            val holidayId = call.parameters["holidayId"]?.toIntOrNull() ?: throw CfmsException("Invalid holiday ID")
+            httpComponent.deleteHolidaysHttpService.invoke(call, holidayId)
+        }
+    }
+
 
 }
