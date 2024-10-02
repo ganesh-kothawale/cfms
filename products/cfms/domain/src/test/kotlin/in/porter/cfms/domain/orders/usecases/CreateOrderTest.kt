@@ -1,41 +1,45 @@
 package `in`.porter.cfms.domain.orders.usecases
 
-import `in`.porter.cfms.domain.orders.entities.CreateOrderRequest
+import `in`.porter.cfms.api.service.orders.factories.CreateOrderRequestFactory
 import `in`.porter.cfms.domain.orders.repos.OrderDetailsRepo
 import io.mockk.*
 import kotlinx.coroutines.runBlocking
-import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.TestInstance.Lifecycle
 
-class CreateOrderServiceTest {
+@TestInstance(Lifecycle.PER_CLASS)
+class CreateOrderTest {
 
     private lateinit var repo: OrderDetailsRepo
-    private lateinit var createOrderRequest: CreateOrderRequest
-    private lateinit var createOrderService: CreateOrderService
+    private lateinit var createOrderService: CreateOrder
 
-    //TODO: Move setup to before all
-    @BeforeEach
+    @BeforeAll
     fun setup() {
         repo = mockk()
-        createOrderRequest = mockk<CreateOrderRequest>()
-        createOrderService = CreateOrderService(repo)
+        createOrderService = CreateOrder(repo)
+    }
+
+    @BeforeEach
+    fun clearMocks() {
         clearAllMocks()
     }
 
     @Test
     fun `should invoke repo with createOrderRequest`() = runBlocking {
-        coEvery { repo.createOrder(createOrderRequest) } just Runs
+        val createOrderRequest = CreateOrderRequestFactory.buildCreateOrderRequest()
+        coEvery { repo.createOrder(createOrderRequest) } returns  1
 
         createOrderService.invoke(createOrderRequest)
-        //TODO: Add exactly once clause
-        coVerify { repo.createOrder(createOrderRequest) }
+
+        coVerify(exactly = 1) { repo.createOrder(createOrderRequest) }
     }
 
     @Test
     fun `should throw IllegalArgumentException for invalid request`() = runBlocking {
+        val createOrderRequest = CreateOrderRequestFactory.buildCreateOrderRequest()
         coEvery { repo.createOrder(createOrderRequest) } throws IllegalArgumentException("Invalid request")
 
         val exception = assertThrows(IllegalArgumentException::class.java) {
@@ -43,11 +47,12 @@ class CreateOrderServiceTest {
         }
         assertEquals("Invalid request", exception.message)
 
-        coVerify { repo.createOrder(createOrderRequest) }
+        coVerify(exactly = 1) { repo.createOrder(createOrderRequest) }
     }
 
     @Test
     fun `should throw Exception for internal server error`() = runBlocking {
+        val createOrderRequest = CreateOrderRequestFactory.buildCreateOrderRequest()
         coEvery { repo.createOrder(createOrderRequest) } throws Exception("Internal server error")
 
         val exception = assertThrows(Exception::class.java) {
@@ -56,6 +61,6 @@ class CreateOrderServiceTest {
 
         assertEquals("Internal server error", exception.message)
 
-        coVerify { repo.createOrder(createOrderRequest) }
+        coVerify(exactly = 1) { repo.createOrder(createOrderRequest) }
     }
 }

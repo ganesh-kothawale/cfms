@@ -1,55 +1,23 @@
 package `in`.porter.cfms.api.service.orders.factories
 
-import `in`.porter.cfms.api.models.orders.*
+import `in`.porter.cfms.domain.orders.entities.CreateOrderRequest
+import `in`.porter.cfms.domain.orders.entities.BasicDetails
+import `in`.porter.cfms.domain.orders.entities.AssociationDetails
+import `in`.porter.cfms.domain.orders.entities.AddressDetails
+import `in`.porter.cfms.domain.orders.entities.SenderDetails
+import `in`.porter.cfms.domain.orders.entities.PersonalInfo
+import `in`.porter.cfms.domain.orders.entities.Address
+import `in`.porter.cfms.domain.orders.entities.Location
+import `in`.porter.cfms.domain.orders.entities.ReceiverDetails
+import `in`.porter.cfms.domain.orders.entities.ItemDetails
+import `in`.porter.cfms.domain.orders.entities.Dimensions
+import `in`.porter.cfms.domain.orders.entities.ShippingDetails
+import `in`.porter.cfms.domain.orders.entities.CourierTransportDetails
 
-object CreateOrderApiRequestFactory {
+object CreateOrderRequestFactory {
 
-    fun buildCreateOrderApiRequest(
-    ): CreateOrderApiRequest {
-        return CreateOrderApiRequest(
-            tableType = "order",
-            data = OrderData(
-                franchiseId = "franchiseId",
-                zorpTeamId = "teamId",
-                orderNumber = "orderNumber",
-                awbNumber = "awbNumber",
-                accountId = 123,
-                accountCode = "accountCode",
-                courierPartnerName = "courierPartnerName",
-                modeOfTransport = "modeOfTransport",
-                orderStatus = listOf("orderStatus"),
-                senderName = "senderName",
-                senderMobileNumber = "senderMobileNumber",
-                senderHouseNumber = "senderHouseNumber",
-                senderAddressDetails = "senderAddressDetails",
-                senderCityName = "senderCityName",
-                senderStateName = "senderStateName",
-                senderPincode = 123456,
-                senderLat = 12.34,
-                senderLong = 56.78,
-                receiverName = "receiverName",
-                receiverMobileNumber = "receiverMobileNumber",
-                receiverHouseNumber = "receiverHouseNumber",
-                receiverAddressDetails = "receiverAddressDetails",
-                receiverCityName = "receiverCityName",
-                receiverStateName = "receiverStateName",
-                shippingLabelLink = "http://example.com/label",
-                pickUpDate = "2023-10-01",
-                materialType = "materialType",
-                materialWeight = 1000,
-                length = 10.0,
-                breadth = 5.0,
-                height = 2.0,
-                volumetricWeight = 10,
-                receiverPincode = 123456
-
-            )
-        )
-    }
-
-    fun buildCreateOrderApiRequestV1(
-    ): CreateOrderApiRequestV2 {
-        return CreateOrderApiRequestV2(
+    fun buildCreateOrderRequest(): CreateOrderRequest {
+        return CreateOrderRequest(
             basicDetails = BasicDetails(
                 associationDetails = AssociationDetails(
                     franchiseId = "franchiseId",
@@ -99,7 +67,7 @@ object CreateOrderApiRequestFactory {
             ),
             itemDetails = ItemDetails(
                 materialType = "materialType",
-                materialWeight = 1000,  // Ensure this matches the expected value
+                materialWeight = 1000,
                 dimensions = Dimensions(
                     length = 10.0,
                     breadth = 5.0,

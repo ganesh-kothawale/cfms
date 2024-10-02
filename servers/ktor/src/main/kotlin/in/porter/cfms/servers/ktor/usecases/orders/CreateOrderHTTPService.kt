@@ -1,6 +1,7 @@
 package `in`.porter.cfms.servers.ktor.usecases.orders
 
 import `in`.porter.cfms.api.models.orders.CreateOrderApiRequest
+import `in`.porter.cfms.api.service.orders.mappers.CreateOrderApiRequestMapper
 import `in`.porter.cfms.api.service.orders.usecases.CreateOrderService
 import `in`.porter.kotlinutils.instrumentation.opentracing.Traceable
 import `in`.porter.kotlinutils.instrumentation.opentracing.trace
@@ -16,6 +17,7 @@ class CreateOrderHTTPService
 @Inject
 constructor(
     private val service: CreateOrderService,
+    private val apiMapper: CreateOrderApiRequestMapper,
 ) : Traceable {
 
     companion object : Logging
@@ -24,13 +26,12 @@ constructor(
         trace {
             try {
                 call.receive<CreateOrderApiRequest>()
+                    .let { apiMapper.toRequestV1(it) }
                     .also { logger.info { "Request payload for CreateOrder: $it" } }
                     .let { service.invoke(it) }
                     .let { call.respond(io.ktor.http.HttpStatusCode.OK, it) }
             } catch (e: Exception) {
-                call.respond(HttpStatusCode.BAD_REQUEST)
-            } catch (e: Exception) {
-                call.respond(HttpStatusCode.INTERNAL_SERVER_ERROR)
+                call.respond(io.ktor.http.HttpStatusCode.UnprocessableEntity, e)
             }
         }
     }

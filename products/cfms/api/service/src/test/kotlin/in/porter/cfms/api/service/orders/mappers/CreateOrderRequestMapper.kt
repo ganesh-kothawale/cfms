@@ -1,7 +1,7 @@
 package `in`.porter.cfms.api.service.orders.mappers
 
 import `in`.porter.cfms.api.service.orders.factories.CreateOrderApiRequestFactory
-import `in`.porter.cfms.api.models.orders.CreateOrderApiRequestV1
+import `in`.porter.cfms.api.models.orders.CreateOrderApiRequestV2
 import `in`.porter.cfms.api.service.orders.factories.CreateOrderRequestFactory
 import `in`.porter.cfms.domain.orders.entities.CreateOrderRequest
 import io.mockk.clearAllMocks
@@ -39,7 +39,7 @@ class CreateOrderRequestMapperTest {
 
     @Test
     fun `map CreateOrderApiRequestV1 to CreateOrderRequest`() {
-        val apiRequestV1: CreateOrderApiRequestV1 = CreateOrderApiRequestFactory.buildCreateOrderApiRequestV1()
+        val apiRequestV1: CreateOrderApiRequestV2 = CreateOrderApiRequestFactory.buildCreateOrderApiRequestV1()
         val expectedDomainRequest: CreateOrderRequest = CreateOrderRequestFactory.buildCreateOrderRequest()
 
         every { basicDetailsMapper.map(apiRequestV1.basicDetails) } returns expectedDomainRequest.basicDetails
