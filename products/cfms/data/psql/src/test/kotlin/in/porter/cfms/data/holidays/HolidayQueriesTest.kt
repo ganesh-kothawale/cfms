@@ -3,6 +3,7 @@ package `in`.porter.cfms.data.holidays
 import `in`.porter.cfms.data.holidays.mappers.HolidayRowMapper
 import `in`.porter.cfms.data.holidays.mappers.UpdateHolidayRowMapper
 import `in`.porter.cfms.data.holidays.records.HolidayRecord
+import `in`.porter.cfms.data.holidays.records.UpdateHolidayRecord
 import `in`.porter.cfms.domain.holidays.entities.LeaveType
 import io.mockk.MockKAnnotations
 import io.mockk.mockk
@@ -197,6 +198,20 @@ class HolidayQueriesTest {
         assertNotNull(result)
         assertTrue(result?.backupFranchiseIds.isNullOrEmpty())  // Check if null or empty
     }
+    @Test
+    fun `test update holiday`():Unit = runBlocking {
+        val updateRecord = UpdateHolidayRecord(
+            id = 1,
+            franchiseId = "F001",
+            startDate = LocalDate.of(2024, 9, 26),
+            endDate = LocalDate.of(2024, 9, 27),
+            holidayName = "Updated Holiday",
+            leaveType = LeaveType.Normal,
+            backupFranchiseIds = null,
+            createdAt = Instant.now(),
+            updatedAt = Instant.now()
+        )
 
-
+        holidayQueries.updateHoliday(updateRecord)
+    }
 }

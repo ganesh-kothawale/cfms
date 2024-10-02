@@ -1,17 +1,18 @@
 package `in`.porter.cfms.domain.holidays.usecases
 
-import `in`.porter.cfms.domain.holidays.entities.Holiday
 import `in`.porter.cfms.domain.holidays.factories.HolidayFactory
+import `in`.porter.cfms.domain.holidays.factories.UpdateHolidayEntityTestFactory
 import `in`.porter.cfms.domain.holidays.repos.HolidayRepo
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
-import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.assertDoesNotThrow
 import java.time.LocalDate
 
 
@@ -53,6 +54,50 @@ class HolidayRepoTest {
 
         assertEquals(1L, result)
         coVerify(exactly = 1) { holidayRepo.record(holiday) }
+    }
+
+    @Test
+    fun `should update a holiday`() = runBlocking {
+        val updateHolidayEntity = UpdateHolidayEntityTestFactory.build()
+
+        coEvery { holidayRepo.update(updateHolidayEntity) } returns Unit
+
+        assertDoesNotThrow {
+            runBlocking {
+                holidayRepo.update(updateHolidayEntity)
+            }
+        }
+
+        coVerify(exactly = 1) { holidayRepo.update(updateHolidayEntity) }
+    }
+
+    @Test
+    fun `should return holiday by ID`() = runBlocking {
+        val holidayId = 1
+        val holiday = UpdateHolidayEntityTestFactory.build(id = holidayId)
+
+        coEvery { holidayRepo.getById(holidayId) } returns holiday
+
+        val result = holidayRepo.getById(holidayId)
+
+        assertNotNull(result)
+        assertEquals(holidayId, result?.id)
+        coVerify(exactly = 1) { holidayRepo.getById(holidayId) }
+    }
+
+    @Test
+    fun `should delete holiday by ID`() = runBlocking {
+        val holidayId = 1
+
+        coEvery { holidayRepo.deleteById(holidayId) } returns Unit
+
+        assertDoesNotThrow {
+            runBlocking {
+                holidayRepo.deleteById(holidayId)
+            }
+        }
+
+        coVerify(exactly = 1) { holidayRepo.deleteById(holidayId) }
     }
 
 }

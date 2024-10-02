@@ -40,6 +40,7 @@ class PsqlHolidayRepoTest {
         coEvery { holidayMapper.toRecord(any()) } returns mockk()
         coEvery { holidayMapper.toDomain(any()) } returns mockk()
         coEvery { updateHolidayMapper.toRecord(any()) } returns mockk()
+        coEvery { updateHolidayMapper.toDomain(any()) } returns mockk()
     }
 
     @Test
@@ -249,5 +250,29 @@ class PsqlHolidayRepoTest {
 
         assertEquals("Mapper failed", exception.message)
         coVerify(exactly = 1) { holidayMapper.toRecord(any()) }
+    }
+
+    @Test
+    fun `should update holiday`() = runBlocking {
+        val updateHolidayEntity = PsqlHolidayRepoFactory.buildUpdateHolidayEntity()
+
+        coEvery { updateHolidayMapper.toRecord(any()) } returns mockk()
+        coEvery { holidayQueries.updateHoliday(any()) } returns 1
+
+        holidayRepo.update(updateHolidayEntity)
+
+        coVerify(exactly = 1) { updateHolidayMapper.toRecord(updateHolidayEntity) }
+        coVerify(exactly = 1) { holidayQueries.updateHoliday(any()) }
+    }
+
+    @Test
+    fun `should delete holiday by ID`() = runBlocking {
+        val holidayId = 1
+
+        coEvery { holidayQueries.deleteHolidayById(holidayId) } returns 1
+
+        holidayRepo.deleteById(holidayId)
+
+        coVerify(exactly = 1) { holidayQueries.deleteHolidayById(holidayId) }
     }
 }
