@@ -1,26 +1,21 @@
 package `in`.porter.cfms.api.service.orders.usecases
 
 import `in`.porter.cfms.api.models.orders.CourierOrderResponse
-import `in`.porter.cfms.api.models.orders.CreateOrderApiRequest
-import `in`.porter.cfms.api.models.orders.OrderDetails
-import `in`.porter.cfms.api.service.orders.mappers.CreateOrderApiRequestMapper
+import `in`.porter.cfms.api.models.orders.CreateOrderApiRequestV2
 import `in`.porter.cfms.api.service.orders.mappers.CreateOrderRequestMapper
-import `in`.porter.cfms.domain.orders.usecases.CreateOrderService
+import `in`.porter.cfms.domain.orders.usecases.CreateOrder
 import javax.inject.Inject
 
 class CreateOrderService
 @Inject
 constructor(
-    private val service: CreateOrderService,
-    private val apiMapper: CreateOrderApiRequestMapper,
+    private val service: CreateOrder,
     private val mapper: CreateOrderRequestMapper
 ) {
 
-    suspend fun invoke(request: CreateOrderApiRequest):CourierOrderResponse {
-
+    suspend fun invoke(request: CreateOrderApiRequestV2): CourierOrderResponse {
         try {
-            return  apiMapper.toRequestV1(request)
-                .let { mapper.toDomain(it) }
+            return mapper.toDomain(request)
                 .let { service.invoke(it) }
                 .let { mapper.getResponseById(it) }
         } catch (e: IllegalArgumentException) {

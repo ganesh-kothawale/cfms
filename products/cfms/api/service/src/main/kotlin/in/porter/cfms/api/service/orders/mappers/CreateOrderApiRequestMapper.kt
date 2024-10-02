@@ -6,7 +6,7 @@ import javax.inject.Inject
 class CreateOrderApiRequestMapper
 @Inject constructor() {
 
-    fun toRequestV1(request: CreateOrderApiRequest): CreateOrderApiRequestV1 {
+    fun toRequestV1(request: CreateOrderApiRequest): CreateOrderApiRequestV2 {
         val basicDetails = BasicDetails(
             associationDetails = AssociationDetails(
                 franchiseId = request.data.franchiseId,
@@ -74,7 +74,7 @@ class CreateOrderApiRequestMapper
             volumetricWeight = request.data.volumetricWeight
         )
 
-        return CreateOrderApiRequestV1(
+        return CreateOrderApiRequestV2(
             basicDetails = basicDetails,
             addressDetails = addressDetails,
             itemDetails = itemDetails,
