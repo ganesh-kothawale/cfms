@@ -10,7 +10,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.Instant
 import javax.inject.Inject
 
- class OrderDetailsQueries
+class OrderDetailsQueries
 @Inject
 constructor(
     override val db: Database,
@@ -82,5 +82,12 @@ constructor(
 
     suspend fun getOrderCount(): Int = transact {
         OrdersTable.selectAll().count()
+    }
+
+    suspend fun updateStatus(orderId: Int, status: String): Int = transaction {
+        OrdersTable.update({ OrdersTable.id eq orderId }) {
+            it[orderStatus] = status
+        }
+        orderId
     }
 }
