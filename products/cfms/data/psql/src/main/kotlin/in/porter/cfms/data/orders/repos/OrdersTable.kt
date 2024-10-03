@@ -1,0 +1,51 @@
+package `in`.porter.cfms.data.orders.repos
+
+import `in`.porter.kotlinutils.exposed.columns.datetime.timestampWithoutTZAsInstant
+import org.jetbrains.exposed.dao.id.IntIdTable
+import org.jetbrains.exposed.sql.Column
+import org.jetbrains.exposed.sql.`java-time`.timestamp
+
+object OrdersTable : IntIdTable("orders_test") {
+    val orderNumber = varchar("order_number", 255)
+    val awbNumber = varchar("awb_number", 255).nullable()
+    val courierPartner = varchar("courier_partner", 255)
+    val modeOfTransport = varchar("mode_of_transport", 255)
+    val senderName = varchar("sender_name", 255)
+    val senderMobile = varchar("sender_mobile", 255)
+    val senderAddress = text("sender_address")
+    val senderPincode = integer("sender_pincode",)
+    val senderCity = varchar("sender_city", 255)
+    val senderState = varchar("sender_state", 255)
+    val senderLatitude = double("sender_latitude",)
+    val senderLongitude = double("sender_longitude",)
+    val receiverName = varchar("receiver_name", 255)
+    val receiverMobile = varchar("receiver_mobile", 255)
+    val receiverAddress = text("receiver_address")
+    val receiverHomeNumber = varchar("receiver_home_number", 255)
+    val receiverCity = varchar("receiver_city", 255)
+    val receiverPincode = integer("receiver_pincode",)
+    val receiverState = varchar("receiver_state", 255)
+    val materialType = varchar("material_type", 255)
+    val materialWeight = integer("material_weight",)
+    val dimensionsLength = double("dimensions_length",).nullable()
+    val dimensionsBreadth = double("dimensions_breadth").nullable()
+    val dimensionsHeight = double("dimensions_height",).nullable()
+    val volumetricWeight = integer("volumetric_weight").nullable()
+    val shippingLabelLink = varchar("shipping_label_link", 255).nullable()
+    val pickupDate = varchar("pickup_datetime",255)
+    val orderStatus = varchar("order_status", 255)
+    val hlpOrderId = integer("hlp_order_id").nullable()
+    val hlpOrderStatus = varchar("hlp_order_status", 255)
+    val vehicleType = varchar("vehicle_type", 255).nullable()
+    val franchiseId = varchar("franchise_id",255)
+    val accountId = integer("account_id",).nullable()
+    val accountCode = varchar("account_code", 255).nullable()
+    val isFranchiseUpdated = bool("is_franchise_updated").default(false)
+    val teamId = varchar("team_id",255).nullable()
+    val statusUpdateSync = varchar("status_update_sync", 255).default("Pending")
+    val senderGeoId = varchar("sender_geo_id", 255).nullable()
+    val receiverGeoId = varchar("receiver_geo_id", 255).nullable()
+    val statusId = integer("status_id")
+    val createdAt = timestampWithoutTZAsInstant("created_at").nullable()
+    val updatedAt = timestampWithoutTZAsInstant("updated_at").nullable()
+}
