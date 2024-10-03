@@ -12,4 +12,12 @@ class PersonalInfoMapper
             mobileNumber = personalInfo.mobileNumber
         )
     }
+
+    fun fromDomain(domainPersonalInfo: DomainPersonalInfo): PersonalInfo {
+        return PersonalInfo(
+            name = domainPersonalInfo.name,
+            mobileNumber = domainPersonalInfo.mobileNumber
+        )
+
+    }
 }

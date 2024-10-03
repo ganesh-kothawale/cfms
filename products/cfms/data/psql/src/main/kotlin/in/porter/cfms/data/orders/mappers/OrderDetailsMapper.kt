@@ -1,6 +1,8 @@
+
 package `in`.porter.cfms.data.orders.mappers
 
 import `in`.porter.cfms.data.orders.entities.Order
+import org.jetbrains.exposed.sql.Query
 import `in`.porter.cfms.domain.orders.entities.Order as DomainOrder
 import org.jetbrains.exposed.sql.ResultRow
 import javax.inject.Inject
@@ -27,5 +29,9 @@ class OrderDetailsMapper @Inject constructor(
             itemDetails = itemDetailsMapper.toDomain(entity.itemDetails),
             shippingDetails = shippingDetailsMapper.toDomain(entity.shippingDetails)
         )
+    }
+fun mapOrders (query: Query): List<Order> {
+        return query
+            .map { row: ResultRow -> fromResultRow(row) }
     }
 }

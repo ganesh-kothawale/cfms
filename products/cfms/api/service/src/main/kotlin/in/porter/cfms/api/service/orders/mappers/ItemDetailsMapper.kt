@@ -15,4 +15,13 @@ class ItemDetailsMapper
             dimensions = itemDetails.dimensions?.let { dimensionsMapper.map(it) }
         )
     }
+
+    fun fromDomain(domainItemDetails: DomainItemDetails): ItemDetails {
+        return ItemDetails(
+            materialType = domainItemDetails.materialType,
+            materialWeight = domainItemDetails.materialWeight,
+            dimensions = domainItemDetails.dimensions?.let { dimensionsMapper.fromDomain(it) }
+        )
+    }
+
 }

@@ -13,4 +13,13 @@ class ShippingDetailsMapper
             volumetricWeight = shippingDetails.volumetricWeight
         )
     }
+
+    fun fromDomain(domainShippingDetails: DomainShippingDetails): ShippingDetails {
+        return ShippingDetails(
+            shippingLabelLink = domainShippingDetails.shippingLabelLink,
+            pickUpDate = domainShippingDetails.pickUpDate,
+            volumetricWeight = domainShippingDetails.volumetricWeight
+        )
+    }
+
 }

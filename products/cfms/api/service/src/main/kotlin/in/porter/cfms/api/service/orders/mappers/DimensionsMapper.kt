@@ -13,4 +13,13 @@ class DimensionsMapper
             height = dimensions.height
         )
     }
+
+    fun fromDomain(domainDimensions: DomainDimensions): Dimensions {
+        return Dimensions(
+            length = domainDimensions.length,
+            breadth = domainDimensions.breadth,
+            height = domainDimensions.height
+        )
+    }
+
 }

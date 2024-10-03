@@ -11,6 +11,7 @@ class BasicDetailsMapper @Inject constructor(
     private val associationDetailsMapper: AssociationDetailsMapper
 ) {
     fun fromResultRow(row: ResultRow): BasicDetails {
+        print("this is query result")
         return BasicDetails(
             awbNumber = row[OrdersTable.awbNumber],
             courierTransportDetails = courierTransportDetailsMapper.fromResultRow(row),
