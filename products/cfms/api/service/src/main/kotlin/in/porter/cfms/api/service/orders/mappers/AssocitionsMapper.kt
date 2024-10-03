@@ -13,12 +13,11 @@ class AssociationDetailsMapper
         )
     }
 
-    companion object {
-        fun fromDomain(domainAssociationDetails: DomainAssociationDetails): AssociationDetails {
-            return AssociationDetails(
-                franchiseId = domainAssociationDetails.franchiseId,
-                teamId = domainAssociationDetails.teamId
-            )
-        }
+    fun fromDomain(domainAssociationDetails: DomainAssociationDetails): AssociationDetails {
+        return AssociationDetails(
+            franchiseId = domainAssociationDetails.franchiseId,
+            teamId = domainAssociationDetails.teamId
+        )
+
     }
 }

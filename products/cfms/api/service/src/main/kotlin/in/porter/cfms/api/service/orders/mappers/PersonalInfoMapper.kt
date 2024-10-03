@@ -13,12 +13,11 @@ class PersonalInfoMapper
         )
     }
 
-    companion object {
-        fun fromDomain(domainPersonalInfo: DomainPersonalInfo): PersonalInfo {
-            return PersonalInfo(
-                name = domainPersonalInfo.name,
-                mobileNumber = domainPersonalInfo.mobileNumber
-            )
-        }
+    fun fromDomain(domainPersonalInfo: DomainPersonalInfo): PersonalInfo {
+        return PersonalInfo(
+            name = domainPersonalInfo.name,
+            mobileNumber = domainPersonalInfo.mobileNumber
+        )
+
     }
 }

@@ -16,12 +16,11 @@ class AddressDetailsMapper
         )
     }
 
-    companion object {
-        fun fromDomain(domainAddressDetails: DomainAddressDetails): AddressDetails {
-            return AddressDetails(
-                senderDetails = SenderDetailsMapper.fromDomain(domainAddressDetails.senderDetails),
-                receiverDetails = ReceiverDetailsMapper.fromDomain(domainAddressDetails.receiverDetails)
-            )
-        }
+    fun fromDomain(domainAddressDetails: DomainAddressDetails): AddressDetails {
+        return AddressDetails(
+            senderDetails = senderDetailsMapper.fromDomain(domainAddressDetails.senderDetails),
+            receiverDetails = receiverDetailsMapper.fromDomain(domainAddressDetails.receiverDetails)
+        )
+
     }
 }

@@ -8,12 +8,14 @@ import `in`.porter.cfms.domain.orders.usecases.FetchOrdersService
 import javax.inject.Inject
 
 class FetchOrdersApiService @Inject constructor(
-    private val toDomain: FetchOrdersService
+    private val toDomain: FetchOrdersService,
+    private val fetchOrderRequestMapper: FetchOrderRequestMapper,
+    private val fetchOrdersResponseMapper: FetchOrdersResponseMapper
 ) {
 
     suspend fun invoke(request: FetchOrderApiRequest): FetchOrderResponse {
-        return FetchOrderRequestMapper.fromApi(request)
+        return fetchOrderRequestMapper.fromApi(request)
             .let { domainRequest -> toDomain.invoke(domainRequest) }
-            .let { FetchOrdersResponseMapper.fromDomain(it) }
+            .let { fetchOrdersResponseMapper.fromDomain(it) }
     }
 }

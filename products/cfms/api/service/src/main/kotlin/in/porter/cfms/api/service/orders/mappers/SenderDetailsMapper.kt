@@ -18,13 +18,12 @@ class SenderDetailsMapper
         )
     }
 
-    companion object {
-        fun fromDomain(domainSenderDetails: DomainSenderDetails): SenderDetails {
-            return SenderDetails(
-                personalInfo = PersonalInfoMapper.fromDomain(domainSenderDetails.personalInfo),
-                address = AddressMapper.fromDomain(domainSenderDetails.address),
-                location = LocationMapper.fromDomain(domainSenderDetails.location)
-            )
-        }
+    fun fromDomain(domainSenderDetails: DomainSenderDetails): SenderDetails {
+        return SenderDetails(
+            personalInfo = personalInfoMapper.fromDomain(domainSenderDetails.personalInfo),
+            address = addressMapper.fromDomain(domainSenderDetails.address),
+            location = locationMapper.fromDomain(domainSenderDetails.location)
+        )
+
     }
 }

@@ -16,15 +16,14 @@ class AddressMapper
         )
     }
 
-    companion object {
-        fun fromDomain(domainAddress: DomainAddress): Address {
-            return Address(
-                houseNumber = domainAddress.houseNumber,
-                addressDetails = domainAddress.addressDetails,
-                cityName = domainAddress.cityName,
-                stateName = domainAddress.stateName,
-                pincode = domainAddress.pincode
-            )
-        }
+    fun fromDomain(domainAddress: DomainAddress): Address {
+        return Address(
+            houseNumber = domainAddress.houseNumber,
+            addressDetails = domainAddress.addressDetails,
+            cityName = domainAddress.cityName,
+            stateName = domainAddress.stateName,
+            pincode = domainAddress.pincode
+        )
+
     }
 }

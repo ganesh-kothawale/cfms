@@ -14,13 +14,12 @@ class DimensionsMapper
         )
     }
 
-    companion object {
-        fun fromDomain(domainDimensions: DomainDimensions): Dimensions {
-            return Dimensions(
-                length = domainDimensions.length,
-                breadth = domainDimensions.breadth,
-                height = domainDimensions.height
-            )
-        }
+    fun fromDomain(domainDimensions: DomainDimensions): Dimensions {
+        return Dimensions(
+            length = domainDimensions.length,
+            breadth = domainDimensions.breadth,
+            height = domainDimensions.height
+        )
     }
+
 }

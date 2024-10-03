@@ -14,13 +14,12 @@ class ShippingDetailsMapper
         )
     }
 
-    companion object {
-        fun fromDomain(domainShippingDetails: DomainShippingDetails): ShippingDetails {
-            return ShippingDetails(
-                shippingLabelLink = domainShippingDetails.shippingLabelLink,
-                pickUpDate = domainShippingDetails.pickUpDate,
-                volumetricWeight = domainShippingDetails.volumetricWeight
-            )
-        }
+    fun fromDomain(domainShippingDetails: DomainShippingDetails): ShippingDetails {
+        return ShippingDetails(
+            shippingLabelLink = domainShippingDetails.shippingLabelLink,
+            pickUpDate = domainShippingDetails.pickUpDate,
+            volumetricWeight = domainShippingDetails.volumetricWeight
+        )
     }
+
 }
