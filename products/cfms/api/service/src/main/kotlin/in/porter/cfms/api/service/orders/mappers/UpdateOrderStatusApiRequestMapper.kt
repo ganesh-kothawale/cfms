@@ -9,7 +9,7 @@ class UpdateOrderStatusApiRequestMapper
 
     fun toDomain(req: UpdateOrderStatusApiRequest, orderId: String?): UpdateOrderStatusRequest =
         UpdateOrderStatusRequest(
-            orderId = orderId?.let { it } ?: throw IllegalArgumentException("Invalid order id"),
+            orderId = orderId?.let { it.toInt() } ?: throw IllegalArgumentException("Invalid order id"),
             status = req.orderStatus.first()
 
         )
