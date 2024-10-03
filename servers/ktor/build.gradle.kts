@@ -75,6 +75,11 @@ tasks.register<Copy>("copyConfig") {
     }
   }
 }
+if (env == "dev") {
+  tasks.named("processResources") {
+    dependsOn("copyConfig")
+  }
+}
 
 tasks.findByName("clean")?.dependsOn("cleanResources")
 tasks.findByName("processResources")?.dependsOn("copyConfig")

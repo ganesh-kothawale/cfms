@@ -8,12 +8,20 @@ class ReceiverDetailsMapper
 @Inject constructor(
     private val personalInfoMapper: PersonalInfoMapper,
     private val addressMapper: AddressMapper,
-    private val locationMapper: LocationMapper
 ) {
     fun map(receiverDetails: ReceiverDetails): DomainReceiverDetails {
         return DomainReceiverDetails(
             personalInfo = personalInfoMapper.map(receiverDetails.personalInfo),
             address = addressMapper.map(receiverDetails.address),
         )
+    }
+
+    fun fromDomain(domainReceiverDetails: DomainReceiverDetails): ReceiverDetails {
+        return ReceiverDetails(
+            personalInfo = personalInfoMapper.fromDomain(domainReceiverDetails.personalInfo),
+            address = addressMapper.fromDomain(domainReceiverDetails.address)
+        )
+
+
     }
 }

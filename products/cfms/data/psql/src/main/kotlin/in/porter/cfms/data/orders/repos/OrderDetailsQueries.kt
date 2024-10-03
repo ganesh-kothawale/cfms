@@ -3,20 +3,24 @@ package `in`.porter.cfms.data.orders.repos
 import `in`.porter.cfms.data.orders.entities.Order
 import `in`.porter.cfms.data.orders.mappers.OrderDetailsMapper
 import `in`.porter.cfms.domain.orders.entities.*
+import `in`.porter.kotlinutils.exposed.ExposedRepo
+import kotlinx.coroutines.CoroutineDispatcher
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.Instant
 import javax.inject.Inject
 
 class OrderDetailsQueries
-@Inject constructor(
-    val db: Database,
+@Inject
+constructor(
+    override val db: Database,
+    override val dispatcher: CoroutineDispatcher,
     val mapper: OrderDetailsMapper
+) : ExposedRepo {
 
-) {
-    suspend fun createOrder(request: CreateOrderRequest) {
-        transaction {
-            OrdersTable.insert {
+    suspend fun createOrder(request: CreateOrderRequest): Int {
+        return transaction {
+            OrdersTable.insertAndGetId {
                 it[orderNumber] = request.basicDetails.orderNumber
                 it[awbNumber] = request.basicDetails.awbNumber
                 it[courierPartner] = request.basicDetails.courierTransportDetails.courierPartnerName
@@ -51,14 +55,39 @@ class OrderDetailsQueries
                 it[teamId] = request.basicDetails.associationDetails.teamId
                 it[createdAt] = Instant.now()
                 it[updatedAt] = Instant.now()
-            }
+            }.value
         }
     }
 
-    suspend fun fetchOrderDetailsByOrderNumber(orderNumber: String): Order? {
+    suspend fun fetchOrderDetailsByOrderNumber(orderNumber: String): `in`.porter.cfms.data.orders.entities.Order? {
         return transaction {
             OrdersTable.select { OrdersTable.awbNumber eq orderNumber }
-            .let { it.mapNotNull { row: ResultRow -> mapper.fromResultRow(row) }?.singleOrNull() }
+                .let { it.mapNotNull { row: ResultRow -> mapper.fromResultRow(row) }?.singleOrNull() }
         }
+    }
+
+    suspend fun fetchOrders(limit: Int, offset: Int, franchiseId: String?): List<Order> = transact {
+        if (franchiseId != null) {
+            OrdersTable.selectAll()
+                .andWhere { OrdersTable.franchiseId eq franchiseId }
+                .orderBy(OrdersTable.createdAt, SortOrder.DESC)
+                .limit(limit, offset)
+        } else {
+            OrdersTable.selectAll()
+                .orderBy(OrdersTable.createdAt, SortOrder.DESC)
+                .limit(limit, offset)
+        }
+            .let { mapper.mapOrders(it) }
+    }
+
+    suspend fun getOrderCount(): Int = transact {
+        OrdersTable.selectAll().count()
+    }
+
+    suspend fun updateStatus(orderId: Int, status: String): Int = transaction {
+        OrdersTable.update({ OrdersTable.id eq orderId }) {
+            it[orderStatus] = status
+        }
+        orderId
     }
 }
