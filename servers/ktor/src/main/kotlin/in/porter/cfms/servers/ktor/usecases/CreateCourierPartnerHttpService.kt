@@ -1,8 +1,7 @@
-package `in`.porter.cfms.servers.ktor.external.usecases.courierpartner
+package `in`.porter.cfms.servers.ktor.usecases
 
 import courierpartner.usecases.CreateCourierPartnerService
 import `in`.porter.cfms.api.models.courierpartner.CreateCourierPartnerApiRequest
-import `in`.porter.cfms.domain.courierPartner.usecases.internal.CreateCourierPartner
 import `in`.porter.cfms.domain.exceptions.CfmsException
 import `in`.porter.kotlinutils.instrumentation.opentracing.Traceable
 import io.ktor.http.*

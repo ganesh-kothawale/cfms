@@ -6,8 +6,6 @@ import `in`.porter.cfms.data.di.PsqlDataComponent
 import `in`.porter.cfms.servers.ktor.di.HttpScope
 
 import dagger.Component
-import `in`.porter.cfms.servers.ktor.external.usecases.courierpartner.CreateCourierPartnerHttpService
-import `in`.porter.cfms.servers.ktor.external.usecases.courierpartner.FetchCourierPartnerHttpService
 
 @HttpScope
 @Component(
@@ -18,8 +16,4 @@ import `in`.porter.cfms.servers.ktor.external.usecases.courierpartner.FetchCouri
 )
 interface HttpComponent {
   val run: Run
-
-
-  val createCourierPartnerHttpService: CreateCourierPartnerHttpService
-  val fetchCourierPartnerHttpService: FetchCourierPartnerHttpService
 }
