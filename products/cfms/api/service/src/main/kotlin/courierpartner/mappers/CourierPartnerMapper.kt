@@ -11,7 +11,8 @@ class CourierPartnerMapper {
         createdAt = courierPartnerDomain.createdAt,
         cpId = courierPartnerDomain.cpId,
         franchiseId = courierPartnerDomain.franchiseId,
-        manifestImageUrl = courierPartnerDomain.manifestImageUrl
+        manifestImageUrl = courierPartnerDomain.manifestImageUrl,
+        courierPartnerName = courierPartnerDomain.courierPartnerName
       )
     }
   }

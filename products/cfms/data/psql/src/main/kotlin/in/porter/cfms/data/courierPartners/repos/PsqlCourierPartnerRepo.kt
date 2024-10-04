@@ -28,4 +28,9 @@ constructor(
   override suspend fun getCpCount(): Int {
     return queries.getCpCount()
   }
+
+  override suspend fun getCpName(cpId: Int): String? {
+    return queries.getName(cpId)
+  }
+
 }

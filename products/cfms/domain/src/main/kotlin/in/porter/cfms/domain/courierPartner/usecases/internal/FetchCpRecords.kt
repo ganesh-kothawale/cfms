@@ -3,6 +3,7 @@ package `in`.porter.cfms.domain.courierPartner.usecases.internal
 import `in`.porter.cfms.domain.courierPartner.RecordCourierPartner
 import `in`.porter.cfms.domain.courierPartner.entities.*
 import `in`.porter.cfms.domain.courierPartner.repos.CourierPartnerRepo
+import `in`.porter.cfms.domain.exceptions.CfmsException
 import `in`.porter.kotlinutils.instrumentation.opentracing.Traceable
 import javax.inject.Inject
 
@@ -29,9 +30,30 @@ class FetchCpRecords
       // gives total count
       val totalCount = repo.getCpCount()
       // here response is mapped to Domain response in fetchCpRecordsItself
-      val orders = repo.fetchCpRecords(request)
+      val records = repo.fetchCpRecords(request)
+      val recordsUpdated: MutableList<CourierPartnerDomain> = mutableListOf()
+
+
+      records.forEach { courierPartnerDomain ->
+        try {
+          val name = repo.getCpName(courierPartnerDomain.cpId) ?: throw CfmsException("entry not found with cpId")
+          val courierPartner = CourierPartnerDomain(
+            id = courierPartnerDomain.id,
+            createdAt = courierPartnerDomain.createdAt,
+            cpId = courierPartnerDomain.cpId,
+            franchiseId = courierPartnerDomain.franchiseId,
+            manifestImageUrl = courierPartnerDomain.manifestImageUrl,
+            courierPartnerName = name
+            )
+          recordsUpdated.add(courierPartner)
+        }
+        catch (e: CfmsException){
+          println("CpId doesn't exist in the courier table")
+          throw CfmsException(e.message)
+        }
+      }
       // request is passed in below for using in pagination data calculation
-      generateResponse(orders, totalCount, request)
+      generateResponse(recordsUpdated, totalCount, request)
     } catch (e: Exception) {
       println("Error executing fetchCpRecords: ${e.message}")
       throw e

@@ -13,7 +13,7 @@ class FetchCpRecordsResponse (
     val cpId: Int,                  // Courier partner ID
     val franchiseId: Int,           // Franchise ID
     val manifestImageUrl: String?,  // URL to the manifest image
-    //val courierPartnerName: String? // Name of the courier partner
+    val courierPartnerName: String? // Name of the courier partner
   )
 
   data class Pagination(

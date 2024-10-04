@@ -9,4 +9,5 @@ interface CourierPartnerRepo {
     suspend fun create(courierPartnerRequest: CreateCourierPartnerRequest): Int
     suspend fun fetchCpRecords(request: FetchCpRecordsRequest): List<CourierPartnerDomain>
     suspend fun getCpCount(): Int
+    suspend fun getCpName(cpId: Int): String?
 }

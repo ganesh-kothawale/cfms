@@ -8,4 +8,5 @@ data class CourierPartnerTableData(
   val courierPartnerId: Int,
   val franchiseId: Int,
   val manifestImageUrl: String?,
+  val courierPartnerName: String?
   )

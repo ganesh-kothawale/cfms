@@ -29,7 +29,8 @@ class CourierPartnerRecordMapper
       createdAt =  row[CpConnectionTable.createdAt],
       courierPartnerId =   row[CpConnectionTable.cpId],
       franchiseId =   row[CpConnectionTable.franchiseId],
-      manifestImageUrl =  row[CpConnectionTable.manifestImageUrl]
+      manifestImageUrl =  row[CpConnectionTable.manifestImageUrl],
+      courierPartnerName = ""
     )
   }
 
@@ -39,7 +40,8 @@ class CourierPartnerRecordMapper
       createdAt = entity.createdAt,
       cpId =  entity.courierPartnerId,
       franchiseId = entity.franchiseId,
-      manifestImageUrl = entity.manifestImageUrl
+      manifestImageUrl = entity.manifestImageUrl,
+      courierPartnerName = entity.courierPartnerName
 
     )
   }
