@@ -2,8 +2,10 @@ package `in`.porter.cfms.api.service.holidays.mappers
 
 import `in`.porter.cfms.api.models.exceptions.CfmsException
 import `in`.porter.cfms.api.models.holidays.UpdateHolidaysRequest
+import `in`.porter.cfms.api.service.holidays.usecases.UpdateHolidaysService
 import `in`.porter.cfms.domain.holidays.entities.LeaveType
 import `in`.porter.cfms.domain.holidays.entities.UpdateHolidayEntity
+import org.slf4j.LoggerFactory
 import java.time.Instant
 import java.time.LocalDate
 import javax.inject.Inject
@@ -11,17 +13,22 @@ import javax.inject.Inject
 class UpdateHolidaysRequestMapper
 @Inject
 constructor() {
+    private val logger = LoggerFactory.getLogger(UpdateHolidaysRequestMapper::class.java)
 
-    fun toDomain(holidayId: Long, request: UpdateHolidaysRequest): UpdateHolidayEntity {
+    fun toDomain(holidayId: Int, request: UpdateHolidaysRequest): UpdateHolidayEntity {
+
+        logger.info("Mapping UpdateHolidayRequest to UpdateHolidayEntity")
+
+        // Get today's date
         val today = LocalDate.now()
 
         // 1. Validate that end date is not before today
-        if (request.endDate?.isBefore(today)  == true ) {
+        if (request.endDate.isBefore(today)) {
             throw CfmsException("End date cannot be before today.")
         }
 
         // 2. Validate that start date is not after end date
-        if (request.startDate?.isAfter(request.endDate) == true) {
+        if (request.startDate.isAfter(request.endDate) ) {
             throw CfmsException("Start date cannot be after end date.")
         }
 
@@ -32,9 +39,10 @@ constructor() {
             startDate = request.startDate,
             endDate = request.endDate,
             holidayName = request.holidayName,
-            leaveType = LeaveType.valueOf((request.leaveType?.name).toString()),
+            leaveType = LeaveType.valueOf((request.leaveType.name)),
             backupFranchiseIds = request.backupFranchiseIds,
-            updatedAt = Instant.now()  // Set updatedAt to current date
+            updatedAt = Instant.now(),
+            createdAt = Instant.now(),
         )
     }
 }

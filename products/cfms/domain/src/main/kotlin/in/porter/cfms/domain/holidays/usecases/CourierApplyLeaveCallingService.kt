@@ -6,11 +6,10 @@ import io.ktor.client.call.*
 import io.ktor.client.request.*
 import io.ktor.client.statement.*
 import io.ktor.http.*
-import kotlinx.serialization.Serializable
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
-    class CourierApplyLeaveCallingService
+class CourierApplyLeaveCallingService
 @Inject
 constructor(
     private val client: HttpClient

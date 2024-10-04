@@ -16,5 +16,5 @@ interface HolidayRepo {
 
     suspend fun update(request: UpdateHolidayEntity) : Long
 
-    suspend fun getById(holidayId: Long): UpdateHolidayEntity?
+    suspend fun getById(holidayId: Int?): UpdateHolidayEntity?
 }

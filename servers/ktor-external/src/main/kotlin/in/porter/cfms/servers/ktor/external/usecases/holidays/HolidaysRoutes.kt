@@ -6,8 +6,7 @@ import io.ktor.server.routing.*
 
 fun Route.holidaysRoutes(httpComponent: HttpComponent) {
 
-        // Create Holiday
-    post("") {
+        post("/create") {
         httpComponent.createHolidaysHttpService.invoke(call)
     }
 
