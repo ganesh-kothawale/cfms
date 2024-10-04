@@ -8,6 +8,7 @@ import java.time.LocalDate
 object UpdateHolidaysRequestMapperFactory {
 
     fun buildUpdateHolidaysRequest(
+        holidayId: Int = 123,
         franchiseId: String = "123",
         startDate: LocalDate = LocalDate.now(),
         endDate: LocalDate = LocalDate.now().plusDays(1),
@@ -21,7 +22,8 @@ object UpdateHolidaysRequestMapperFactory {
             endDate = endDate,
             holidayName = holidayName,
             leaveType = leaveType,
-            backupFranchiseIds = backupFranchiseIds
+            backupFranchiseIds = backupFranchiseIds,
+            holidayId = holidayId
         )
     }
 }

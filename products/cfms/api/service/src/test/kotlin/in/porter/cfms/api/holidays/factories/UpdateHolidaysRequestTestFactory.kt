@@ -7,6 +7,7 @@ import java.time.LocalDate
 object UpdateHolidaysRequestTestFactory {
 
     fun build(
+        holidayId: Int = 123,
         franchiseId: String = "ABC12",
         startDate: LocalDate = LocalDate.now().plusDays(1),
         endDate: LocalDate = LocalDate.now().plusDays(2),
@@ -20,7 +21,8 @@ object UpdateHolidaysRequestTestFactory {
             endDate = endDate,
             holidayName = holidayName,
             leaveType = leaveType,
-            backupFranchiseIds = backupFranchiseIds
+            backupFranchiseIds = backupFranchiseIds,
+            holidayId = holidayId
         )
     }
 
