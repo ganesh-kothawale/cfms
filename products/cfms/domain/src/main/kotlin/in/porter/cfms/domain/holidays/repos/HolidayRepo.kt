@@ -8,9 +8,13 @@ interface HolidayRepo {
 
     suspend fun getByIdAndDate(franchiseId: String, startDate: LocalDate, endDate: LocalDate): Holiday?
 
-    suspend fun record(request: Holiday) : Long
+    suspend fun record(request: Holiday) : Int
 
-    suspend fun update(request: UpdateHolidayEntity)
+    suspend fun get(franchiseId: String): List<Holiday>
 
-    suspend fun getById(holidayId: Int?): UpdateHolidayEntity?
+    suspend fun getAllByDate(date: LocalDate): List<Holiday>
+
+    suspend fun update(request: UpdateHolidayEntity) : Int
+
+    suspend fun getById(holidayId: Int): UpdateHolidayEntity?
 }

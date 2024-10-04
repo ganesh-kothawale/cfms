@@ -17,12 +17,12 @@ constructor(
 ) {
     private val logger = LoggerFactory.getLogger(UpdateHoliday::class.java)
 
-    suspend fun updateHoliday(holiday: UpdateHolidayEntity) {
+    suspend fun updateHoliday(holiday: UpdateHolidayEntity): Int {
         // Fetch the existing holiday by ID
 
-        logger.info("Checking validations before updating holiday: ${holiday.id}")
-        val existingHoliday = holidayRepo.getById(holiday.id)
-            ?: throw CfmsException("Holiday with ID ${holiday.id} not found.")
+        logger.info("Checking validations before updating holiday: ${holiday.holidayId}")
+        val existingHoliday = holidayRepo.getById(holiday.holidayId)
+            ?: throw CfmsException("Holiday with ID ${holiday.holidayId} not found.")
 
         // Validate franchise ID cannot be updated
         if (existingHoliday.franchiseId != holiday.franchiseId) {

@@ -4,8 +4,8 @@ import java.time.Instant
 import java.time.LocalDate
 
 data class UpdateHolidayEntity(
-    val id: Int?,
-    val franchiseId: String? = null,
+    val holidayId: Int,
+    val franchiseId: String,
     val startDate: LocalDate,
     val endDate: LocalDate,
     val leaveType: LeaveType,
