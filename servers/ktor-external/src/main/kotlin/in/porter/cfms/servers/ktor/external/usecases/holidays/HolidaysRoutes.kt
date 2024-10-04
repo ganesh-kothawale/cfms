@@ -8,7 +8,7 @@ fun Route.holidaysRoutes(httpComponent: HttpComponent) {
 
 
     // Create Holiday
-    post("/create") {
+    post("") {
         httpComponent.createHolidaysHttpService.invoke(call)
     }
 
