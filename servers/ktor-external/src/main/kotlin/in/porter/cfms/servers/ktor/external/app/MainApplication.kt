@@ -93,6 +93,6 @@ fun Application.main() {
 
     routing {
         get("/") { call.respond(HttpStatusCode.OK, Unit) }
-        route ("/cfms/public/holidays"){ holidaysRoutes(httpComponent) }
+        route ("/public/cfms/holidays"){ holidaysRoutes(httpComponent) }
     }
 }

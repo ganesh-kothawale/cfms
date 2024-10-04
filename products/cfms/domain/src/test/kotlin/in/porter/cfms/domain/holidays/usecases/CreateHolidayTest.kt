@@ -14,17 +14,17 @@ import org.junit.jupiter.api.Test
 import java.time.LocalDate
 import org.junit.jupiter.api.assertThrows
 
-class RecordHolidayTest {
+class CreateHolidayTest {
 
     private lateinit var mockHolidayRepo: HolidayRepo
     private lateinit var mockCourierService: CourierApplyLeaveCallingService
-    private lateinit var recordHoliday: RecordHoliday
+    private lateinit var recordHoliday: CreateHoliday
 
     @BeforeEach
     fun setup() {
         mockHolidayRepo = mockk()
         mockCourierService = mockk()
-        recordHoliday = RecordHoliday(mockHolidayRepo, mockCourierService)
+        recordHoliday = CreateHoliday(mockHolidayRepo, mockCourierService)
     }
 
     @Test
@@ -41,7 +41,7 @@ class RecordHolidayTest {
             endDate = LocalDate.parse("2024-12-21")
         )
 
-        val holidayId = recordHoliday.invoke(holiday)
+        val holidayId = recordHoliday.createHoliday(holiday)
 
         assertEquals(1L, holidayId)
         coVerify { mockHolidayRepo.record(holiday) }
@@ -62,7 +62,7 @@ class RecordHolidayTest {
         )
 
         val exception = assertThrows<CfmsException> {
-            recordHoliday.invoke(holiday)
+            recordHoliday.createHoliday(holiday)
         }
 
         assertEquals("Failed to apply leave: API call failed", exception.message)

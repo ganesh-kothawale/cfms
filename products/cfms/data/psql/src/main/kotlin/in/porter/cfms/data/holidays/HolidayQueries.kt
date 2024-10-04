@@ -50,4 +50,16 @@ constructor(
         }.value.toLong()  // Return the generated ID
     }
 
+    suspend fun get(franchiseId: String): List<HolidayRecord> = transact {
+        HolidayTable.select {
+            HolidayTable.franchiseId eq franchiseId
+        }.map { mapper.toRecord(it) }  // Map each row to a HolidayRecord
+    }
+
+    suspend fun getAllByDate(date: LocalDate): List<HolidayRecord> = transact {
+        HolidayTable.select {
+            HolidayTable.startDate lessEq date and (HolidayTable.endDate greaterEq date)
+        }.map { mapper.toRecord(it) }  // Map each row to a HolidayRecord
+    }
+
 }

@@ -27,4 +27,16 @@ constructor(
                 .let { queries.record(it) }  // Update the `queries.record` to return the ID
         }
     }
+
+    override suspend fun get(franchiseId: String): List<Holiday> =
+        trace("get") {
+            queries.get(franchiseId)
+                .map { mapper.toDomain(it) }
+        }
+
+    override suspend fun getAllByDate(date: LocalDate): List<Holiday> =
+        trace("getAllByDate") {
+            queries.getAllByDate(date)
+                .map { mapper.toDomain(it) }
+        }
 }
