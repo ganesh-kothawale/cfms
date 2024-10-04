@@ -2,7 +2,6 @@ package `in`.porter.cfms.data.holidays.mappers
 
 import `in`.porter.cfms.data.holidays.records.HolidayRecord
 import `in`.porter.cfms.domain.holidays.entities.Holiday
-import `in`.porter.cfms.domain.holidays.entities.LeaveType
 import java.time.Instant
 import javax.inject.Inject
 
