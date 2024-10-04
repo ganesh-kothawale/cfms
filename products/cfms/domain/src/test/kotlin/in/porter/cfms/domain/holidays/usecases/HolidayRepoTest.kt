@@ -29,7 +29,7 @@ class HolidayRepoTest {
 
     @Test
     fun `should return holidays for a given franchise`() = runBlocking {
-        val franchiseId = "123"
+        val franchiseId = "ABC12"
         val holidays = listOf(HolidayFactory.buildHoliday())
 
         coEvery { holidayRepo.get(franchiseId) } returns holidays
@@ -43,7 +43,7 @@ class HolidayRepoTest {
 
     @Test
     fun `should return holiday by franchise ID and date`() = runBlocking {
-        val franchiseId = "123"
+        val franchiseId = "ABC12"
         val startDate = LocalDate.now()
         val endDate = startDate.plusDays(1)
         val holiday = HolidayFactory.buildHoliday(startDate = startDate, endDate = endDate)
