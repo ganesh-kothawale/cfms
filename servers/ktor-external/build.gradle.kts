@@ -52,6 +52,10 @@ dependencies {
 
   implementation(Libs.elasticEcs)
   implementation(Libs.shadowTransformer)
+
+  implementation(Libs.Ktor.ktorServerTest)
+
+  implementation(Libs.Jackson.javaTimeModule)
 }
 
 val configFolder = "src/main/config"
