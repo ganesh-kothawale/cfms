@@ -64,7 +64,7 @@ class PsqlHolidayRepoTest {
     @Test
     fun `should record holiday and return ID`() = runBlocking {
         val holiday = PsqlHolidayRepoFactory.buildHoliday()
-        val holidayRecordId = 1L
+        val holidayRecordId = 1
 
         coEvery { holidayMapper.toRecord(holiday) } returns mockk()
         coEvery { holidayQueries.record(any()) } returns holidayRecordId

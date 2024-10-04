@@ -17,9 +17,9 @@ constructor(
 
     private val logger = LoggerFactory.getLogger(UpdateHolidaysService::class.java)
 
-    suspend fun invoke(holidayId: Int, request: UpdateHolidaysRequest) {
+    suspend fun invoke(request: UpdateHolidaysRequest): Int {
         // Validate franchise ID cannot be changed
-        logger.info("Invoke function called to send the data to domain for holiday ID: {}", holidayId)
+        logger.info("Invoke function called to send the data to domain for holiday ID: {}", request.holidayId)
         val today = LocalDate.now()
 
         // 1. Validate that start date is not before today
@@ -36,7 +36,7 @@ constructor(
 
         try {
             // Map API request to domain object using the mapper
-            val holidayDomain = mapper.toDomain(holidayId, request)
+            val holidayDomain = mapper.toDomain(request)
 
             // Invoke domain logic to update holiday
             return updateHoliday.updateHoliday(holidayDomain)

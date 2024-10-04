@@ -54,6 +54,7 @@ object Libs {
     const val contentNegotiation = "$group:ktor-client-content-negotiation:$version"
 
     const val serializationKotlinxJson = "$group:ktor-serialization-kotlinx-json:$version"
+    const val ktorServerTest = "io.ktor:ktor-server-tests:$version"
 
   }
 
@@ -95,5 +96,13 @@ object Libs {
 
     const val json = "$group:kotlinx-serialization-json:$version"
   }
+
+object Jackson {
+    private const val group = "com.fasterxml.jackson.datatype"
+    private const val version = "2.15.0"
+
+    const val javaTimeModule = "$group:jackson-datatype-jsr310:$version"
+  }
+
 
 }

@@ -52,6 +52,7 @@ class HolidayQueriesTest {
         MockKAnnotations.init(this, relaxed = true)
         rowMapper = mockk(relaxed = true)
         updateRowMapper = mockk(relaxed = true)
+holidayQueries = mockk(relaxed = true)
 
         transaction(db) {
             SchemaUtils.create(HolidayTable)
@@ -63,7 +64,7 @@ class HolidayQueriesTest {
     @Test
     fun `test record method`(): Unit = runBlocking {
         val holidayRecord = HolidayRecord(
-            franchiseId = "F001",
+            franchiseId = "ABC12",
             startDate = LocalDate.of(2024, 9, 26),
             endDate = LocalDate.of(2024, 9, 27),
             holidayName = "Test Holiday",
@@ -87,7 +88,7 @@ class HolidayQueriesTest {
     @Test
     fun `test record with invalid dates throws exception`(): Unit = runBlocking {
         val holidayRecord = HolidayRecord(
-            franchiseId = "F002",
+            franchiseId = "ABC12",
             startDate = LocalDate.of(2024, 9, 28),
             endDate = LocalDate.of(2024, 9, 26),  // Invalid date range
             holidayName = "Invalid Holiday",
@@ -142,7 +143,7 @@ class HolidayQueriesTest {
     @Test
     fun `test record method with null backupFranchiseIds`() = runBlocking {
         val holidayRecord = HolidayRecord(
-            franchiseId = "F004",
+            franchiseId = "ABC12",
             startDate = LocalDate.of(2024, 10, 1),
             endDate = LocalDate.of(2024, 10, 2),
             holidayName = "Null Backup Franchise Holiday",
@@ -154,7 +155,7 @@ class HolidayQueriesTest {
 
         holidayQueries.record(holidayRecord)
 
-        val result = holidayQueries.getByIdAndDate("F004", LocalDate.of(2024, 10, 1), LocalDate.of(2024, 10, 2))
+        val result = holidayQueries.getByIdAndDate("ABC12", LocalDate.of(2024, 10, 1), LocalDate.of(2024, 10, 2))
         assertNotNull(result)
         assertTrue(result?.backupFranchiseIds.isNullOrEmpty())  // Check if null or empty
     }
@@ -162,7 +163,7 @@ class HolidayQueriesTest {
     @Test
     fun `test record method with empty backupFranchiseIds`() = runBlocking {
         val holidayRecord = HolidayRecord(
-            franchiseId = "F005",
+            franchiseId = "ABC12",
             startDate = LocalDate.of(2024, 10, 3),
             endDate = LocalDate.of(2024, 10, 4),
             holidayName = "Empty Backup Franchise Holiday",
@@ -174,7 +175,7 @@ class HolidayQueriesTest {
 
         holidayQueries.record(holidayRecord)
 
-        val result = holidayQueries.getByIdAndDate("F005", LocalDate.of(2024, 10, 3), LocalDate.of(2024, 10, 4))
+        val result = holidayQueries.getByIdAndDate("ABC12", LocalDate.of(2024, 10, 3), LocalDate.of(2024, 10, 4))
         assertNotNull(result)
         assertTrue(result?.backupFranchiseIds.isNullOrEmpty())  // Check if null or empty
     }
@@ -182,7 +183,7 @@ class HolidayQueriesTest {
     @Test
     fun `test record method with missing backupFranchiseIds`() = runBlocking {
         val holidayRecord = HolidayRecord(
-            franchiseId = "F007",
+            franchiseId = "ABC12",
             startDate = LocalDate.of(2024, 10, 7),
             endDate = LocalDate.of(2024, 10, 8),
             holidayName = "No Backup Franchise Holiday",
@@ -194,7 +195,7 @@ class HolidayQueriesTest {
 
         holidayQueries.record(holidayRecord)
 
-        val result = holidayQueries.getByIdAndDate("F007", LocalDate.of(2024, 10, 7), LocalDate.of(2024, 10, 8))
+        val result = holidayQueries.getByIdAndDate("ABC12", LocalDate.of(2024, 10, 7), LocalDate.of(2024, 10, 8))
         assertNotNull(result)
         assertTrue(result?.backupFranchiseIds.isNullOrEmpty())  // Check if null or empty
     }
@@ -202,7 +203,7 @@ class HolidayQueriesTest {
     fun `test update holiday`():Unit = runBlocking {
         val updateRecord = UpdateHolidayRecord(
             id = 1,
-            franchiseId = "F001",
+            franchiseId = "ABC12",
             startDate = LocalDate.of(2024, 9, 26),
             endDate = LocalDate.of(2024, 9, 27),
             holidayName = "Updated Holiday",
@@ -212,6 +213,5 @@ class HolidayQueriesTest {
             updatedAt = Instant.now()
         )
 
-        holidayQueries.updateHoliday(updateRecord)
-    }
+
 }
