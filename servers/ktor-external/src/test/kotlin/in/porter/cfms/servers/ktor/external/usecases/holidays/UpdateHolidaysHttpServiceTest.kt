@@ -2,9 +2,8 @@ package `in`.porter.cfms.servers.ktor.external.usecases.holidays
 
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import com.fasterxml.jackson.module.kotlin.KotlinModule
-import `in`.porter.cfms.api.service.holidays.usecases.CreateHolidaysService
+import `in`.porter.cfms.api.service.holidays.usecases.UpdateHolidaysService
 import io.ktor.client.request.*
-import io.ktor.client.statement.bodyAsText
 import io.ktor.http.*
 import io.ktor.serialization.jackson.*
 import io.ktor.server.application.*
@@ -17,19 +16,19 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class CreateHolidaysHttpServiceTest {
+class UpdateHolidaysHttpServiceTest {
 
-    private lateinit var createHolidaysService: CreateHolidaysService
-    private lateinit var createHolidaysHttpService: CreateHolidaysHttpService
+    private lateinit var updateHolidaysService: UpdateHolidaysService
+    private lateinit var updateHolidaysHttpService: UpdateHolidaysHttpService
 
     @BeforeEach
     fun setup() {
-        createHolidaysService = mockk() // Mock the service
-        createHolidaysHttpService = CreateHolidaysHttpService(createHolidaysService)
+        updateHolidaysService = mockk() // Mock the service
+        updateHolidaysHttpService = UpdateHolidaysHttpService(updateHolidaysService)
     }
 
     @Test
-    fun `should return Created when service succeeds`() = testApplication {
+    fun `should return OK on successful update`() = testApplication {
         install(ContentNegotiation) {
             jackson {
                 registerModule(KotlinModule.Builder().build()) // Updated KotlinModule usage
@@ -38,32 +37,33 @@ class CreateHolidaysHttpServiceTest {
         }
 
         routing {
-            post("/holidays") {
-                createHolidaysHttpService.invoke(call)
+            put("/holidays") {
+                updateHolidaysHttpService.invoke(call)
             }
         }
 
         // Define the request JSON
         val requestJson = """
             {
+                "holidayId": "123",
                 "franchiseId": "ABC12",
                 "startDate": "2024-01-01",
                 "endDate": "2024-01-02",
-                "holidayName": "New Year",
-                "leaveType": "Normal"
+                "holidayName": "Updated Holiday",
+                "leaveType": "Normal",
+                "backupFranchiseIds": "SME001"
             }
         """.trimIndent()
 
         // Mock service response
-        coEvery { createHolidaysService.invoke(any()) } returns 1
+        coEvery { updateHolidaysService.invoke(any()) } returns 1
 
-        // Send the POST request and check the response
-        client.post("/holidays") {
+        // Send the PUT request and check the response
+        client.put("/holidays") {
             contentType(ContentType.Application.Json)
             setBody(requestJson)
         }.apply {
-            assertEquals(HttpStatusCode.Created, status)
-            assertTrue(bodyAsText().contains("holiday_id"))
+            assertEquals(HttpStatusCode.OK, status)
         }
     }
 
@@ -71,33 +71,35 @@ class CreateHolidaysHttpServiceTest {
     fun `should return BadRequest for invalid input`() = testApplication {
         install(ContentNegotiation) {
             jackson {
-                registerModule(KotlinModule.Builder().build())
-                registerModule(JavaTimeModule())
+                registerModule(KotlinModule.Builder().build()) // Updated KotlinModule usage
+                registerModule(JavaTimeModule()) // JavaTime support for LocalDate
             }
         }
 
         routing {
-            post("/holidays") {
-                createHolidaysHttpService.invoke(call)
+            put("/holidays") {
+                updateHolidaysHttpService.invoke(call)
             }
         }
 
         // Define an invalid request JSON (invalid date format)
         val invalidRequestJson = """
             {
-                "franchiseId": "ABC12",
+                "holidayId": 123,
+                "franchiseId": "test-franchise",
                 "startDate": "invalid-date",
                 "endDate": "2024-01-02",
-                "holidayName": "New Year",
-                "leaveType": "Normal"
+                "holidayName": "Updated Holiday",
+                "leaveType": "Normal",
+                "backupFranchiseIds": "SME001"
             }
         """.trimIndent()
 
         // Simulate service throwing an exception
-        coEvery { createHolidaysService.invoke(any()) } throws IllegalArgumentException("Invalid input")
+        coEvery { updateHolidaysService.invoke(any()) } throws IllegalArgumentException("Invalid input")
 
-        // Send the POST request and check the response for bad input
-        client.post("/holidays") {
+        // Send the PUT request and check the response for bad input
+        client.put("/holidays") {
             contentType(ContentType.Application.Json)
             setBody(invalidRequestJson)
         }.apply {

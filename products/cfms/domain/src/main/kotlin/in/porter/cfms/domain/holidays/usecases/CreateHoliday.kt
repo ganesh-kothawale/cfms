@@ -18,7 +18,7 @@ constructor(
 
     private val logger = LoggerFactory.getLogger(CreateHoliday::class.java)
 
-    suspend fun createHoliday(holiday: Holiday): Long {
+    suspend fun createHoliday(holiday: Holiday): Int {
         // Check if a holiday already exists for the given franchiseId and dates
         val existingHoliday = holidayRepo.getByIdAndDate(holiday.franchiseId, holiday.startDate, holiday.endDate)
         if (existingHoliday != null) {

@@ -11,6 +11,7 @@ class UpdateHolidayRowMapper
 constructor() {
 
     fun toRecord(resultRow: ResultRow) = UpdateHolidayRecord(
+        holidayId = resultRow[HolidayTable.holidayId],
         franchiseId = resultRow[HolidayTable.franchiseId],
         startDate = resultRow[HolidayTable.startDate],
         endDate = resultRow[HolidayTable.endDate],

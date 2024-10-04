@@ -11,8 +11,8 @@ import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.time.LocalDate
 import org.junit.jupiter.api.assertThrows
+import java.time.LocalDate
 
 class CreateHolidayTest {
 
@@ -31,7 +31,7 @@ class CreateHolidayTest {
     fun `should record holiday successfully`() = runBlocking {
         // Mocking successful response from external service and repo
         coEvery { mockHolidayRepo.getByIdAndDate(any(), any(), any()) } returns null
-        coEvery { mockHolidayRepo.record(any()) } returns 1L
+        coEvery { mockHolidayRepo.record(any()) } returns 1
         coEvery { mockCourierService.applyLeave(any()) } returns ApplyLeaveResponse("Leave applied successfully")
 
         // Using factory to build holiday object
@@ -43,7 +43,7 @@ class CreateHolidayTest {
 
         val holidayId = recordHoliday.createHoliday(holiday)
 
-        assertEquals(1L, holidayId)
+        assertEquals(1, holidayId)
         coVerify { mockHolidayRepo.record(holiday) }
     }
 
@@ -51,7 +51,7 @@ class CreateHolidayTest {
     fun `should fail to record holiday when leave application fails`() = runBlocking {
         // Mocking failed response from external service
         coEvery { mockHolidayRepo.getByIdAndDate(any(), any(), any()) } returns null
-        coEvery { mockHolidayRepo.record(any()) } returns 1L
+        coEvery { mockHolidayRepo.record(any()) } returns 1
         coEvery { mockCourierService.applyLeave(any()) } throws CfmsException("API call failed")
 
         // Using factory to build holiday object
