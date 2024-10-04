@@ -1,24 +1,24 @@
 package `in`.porter.cfms.domain.holidays.usecases
 
+import `in`.porter.cfms.domain.exceptions.CfmsException
 import `in`.porter.cfms.domain.holidays.entities.Holiday
 import `in`.porter.cfms.domain.holidays.repos.HolidayRepo
-import `in`.porter.cfms.domain.exceptions.CfmsException
 import `in`.porter.cfms.domain.holidays.usecases.CourierApplyLeaveCallingService.ApplyLeaveRequest
 import `in`.porter.cfms.domain.holidays.usecases.CourierApplyLeaveCallingService.ApplyLeaveResponse
 import org.slf4j.LoggerFactory
 import java.time.LocalDate
 import javax.inject.Inject
 
-class RecordHoliday
+class CreateHoliday
 @Inject
 constructor(
     private val holidayRepo: HolidayRepo,
     private val courierApplyLeaveCallingService: CourierApplyLeaveCallingService
 ) {
 
-    private val logger = LoggerFactory.getLogger(RecordHoliday::class.java)
+    private val logger = LoggerFactory.getLogger(CreateHoliday::class.java)
 
-    suspend fun invoke(holiday: Holiday): Long {
+    suspend fun createHoliday(holiday: Holiday): Int {
         // Check if a holiday already exists for the given franchiseId and dates
         val existingHoliday = holidayRepo.getByIdAndDate(holiday.franchiseId, holiday.startDate, holiday.endDate)
         if (existingHoliday != null) {

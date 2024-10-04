@@ -11,27 +11,27 @@ import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.time.LocalDate
 import org.junit.jupiter.api.assertThrows
+import java.time.LocalDate
 
-class RecordHolidayTest {
+class CreateHolidayTest {
 
     private lateinit var mockHolidayRepo: HolidayRepo
     private lateinit var mockCourierService: CourierApplyLeaveCallingService
-    private lateinit var recordHoliday: RecordHoliday
+    private lateinit var recordHoliday: CreateHoliday
 
     @BeforeEach
     fun setup() {
         mockHolidayRepo = mockk()
         mockCourierService = mockk()
-        recordHoliday = RecordHoliday(mockHolidayRepo, mockCourierService)
+        recordHoliday = CreateHoliday(mockHolidayRepo, mockCourierService)
     }
 
     @Test
     fun `should record holiday successfully`() = runBlocking {
         // Mocking successful response from external service and repo
         coEvery { mockHolidayRepo.getByIdAndDate(any(), any(), any()) } returns null
-        coEvery { mockHolidayRepo.record(any()) } returns 1L
+        coEvery { mockHolidayRepo.record(any()) } returns 1
         coEvery { mockCourierService.applyLeave(any()) } returns ApplyLeaveResponse("Leave applied successfully")
 
         // Using factory to build holiday object
@@ -41,9 +41,9 @@ class RecordHolidayTest {
             endDate = LocalDate.parse("2024-12-21")
         )
 
-        val holidayId = recordHoliday.invoke(holiday)
+        val holidayId = recordHoliday.createHoliday(holiday)
 
-        assertEquals(1L, holidayId)
+        assertEquals(1, holidayId)
         coVerify { mockHolidayRepo.record(holiday) }
     }
 
@@ -51,7 +51,7 @@ class RecordHolidayTest {
     fun `should fail to record holiday when leave application fails`() = runBlocking {
         // Mocking failed response from external service
         coEvery { mockHolidayRepo.getByIdAndDate(any(), any(), any()) } returns null
-        coEvery { mockHolidayRepo.record(any()) } returns 1L
+        coEvery { mockHolidayRepo.record(any()) } returns 1
         coEvery { mockCourierService.applyLeave(any()) } throws CfmsException("API call failed")
 
         // Using factory to build holiday object
@@ -62,7 +62,7 @@ class RecordHolidayTest {
         )
 
         val exception = assertThrows<CfmsException> {
-            recordHoliday.invoke(holiday)
+            recordHoliday.createHoliday(holiday)
         }
 
         assertEquals("Failed to apply leave: API call failed", exception.message)
