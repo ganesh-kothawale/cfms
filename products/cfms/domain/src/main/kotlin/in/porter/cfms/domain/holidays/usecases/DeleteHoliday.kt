@@ -8,13 +8,13 @@ import org.slf4j.LoggerFactory
 import java.time.LocalDate
 import javax.inject.Inject
 
-class DeleteHolidayDomainService
+class DeleteHoliday
 @Inject constructor(
     private val holidayRepo: HolidayRepo,
     private val courierService: CourierApplyLeaveCallingService
 ) {
 
-    private val logger = LoggerFactory.getLogger(DeleteHolidayDomainService::class.java)
+    private val logger = LoggerFactory.getLogger(DeleteHoliday::class.java)
 
     suspend fun deleteHoliday(holidayId: Int) {
         try {

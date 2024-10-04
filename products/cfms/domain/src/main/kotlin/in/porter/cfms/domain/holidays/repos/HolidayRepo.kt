@@ -16,7 +16,7 @@ interface HolidayRepo {
 
     suspend fun update(request: UpdateHolidayEntity) : Int
 
-    suspend fun getById(holidayId: Int?): UpdateHolidayEntity?
+    suspend fun getById(holidayId: Int): UpdateHolidayEntity?
 
     suspend fun deleteById(holidayId: Int)
 }

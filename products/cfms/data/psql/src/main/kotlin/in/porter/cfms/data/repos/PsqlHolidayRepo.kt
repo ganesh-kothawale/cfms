@@ -15,7 +15,7 @@ class PsqlHolidayRepo
 constructor(
     private val queries: HolidayQueries,
     private val mapper: HolidayMapper,
-    private val updateMapper : UpdateHolidayMapper
+    private val updateMapper: UpdateHolidayMapper
 ) : Traceable, HolidayRepo {
 
     override suspend fun getByIdAndDate(franchiseId: String, startDate: LocalDate, endDate: LocalDate): Holiday? =
@@ -43,11 +43,17 @@ constructor(
                 .map { mapper.toDomain(it) }
         }
 
-override suspend fun getById(holidayId: Int): UpdateHolidayEntity? {
+    override suspend fun getById(holidayId: Int): UpdateHolidayEntity? {
         // Fetch the holiday by ID from the database and map it to the domain entity
         return trace("getById") {
             queries.getHolidayById(holidayId)
                 ?.let { updateMapper.toDomain(it) }
+        }
+    }
+
+    override suspend fun deleteById(holidayId: Int) {
+        trace("deleteById") {
+            queries.deleteHoliday(holidayId)
         }
     }
 
