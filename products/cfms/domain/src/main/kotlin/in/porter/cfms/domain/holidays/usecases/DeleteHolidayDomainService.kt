@@ -31,6 +31,7 @@ class DeleteHolidayDomainService
 
             // Step 3: Call external API with status "Cancelled"
             val applyLeaveRequest = ApplyLeaveRequest(
+                //TODO: Need to change the identification code 
                 identification_code = holiday.franchiseId.toString(),
                 holidays = generateHolidayDates(
                     holiday.startDate,
