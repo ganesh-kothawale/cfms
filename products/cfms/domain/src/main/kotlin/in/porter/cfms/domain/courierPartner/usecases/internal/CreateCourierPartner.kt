@@ -13,8 +13,12 @@ constructor(
 ) : Traceable {
 
   suspend fun invoke(req: CreateCourierPartnerRequest) : Int = trace {
-    recordCourierPartner.invoke(req)
-      .let {it}
+    try {
+      recordCourierPartner.invoke(req)
+        .let {it}
+    } catch (e: IllegalArgumentException) {
+      throw e
+    }
   }
 
 }

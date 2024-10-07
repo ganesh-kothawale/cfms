@@ -11,7 +11,7 @@ class FetchCpRecords
   @Inject
   constructor(
     private val repo: CourierPartnerRepo,
-) {
+) : Traceable{
   private fun generateResponse(listOfCourierPartners: List<CourierPartnerDomain>, totalCount: Int, request: FetchCpRecordsRequest): FetchCpRecordsResponse {
     val pagination = Pagination(
       currentPage = request.page + 1,
@@ -48,14 +48,11 @@ class FetchCpRecords
           recordsUpdated.add(courierPartner)
         }
         catch (e: CfmsException){
-          println("CpId doesn't exist in the courier table")
           throw CfmsException(e.message)
         }
       }
-      // request is passed in below for using in pagination data calculation
       generateResponse(recordsUpdated, totalCount, request)
     } catch (e: Exception) {
-      println("Error executing fetchCpRecords: ${e.message}")
       throw e
     }
   }

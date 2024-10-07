@@ -10,8 +10,12 @@ class RecordCourierPartner
 constructor(
   private val repo: CourierPartnerRepo,
 ) : Traceable {
-
   suspend fun invoke(req: CreateCourierPartnerRequest): Int = trace {
+    try {
       repo.create(req)
     }
+    catch (e: IllegalArgumentException){
+      throw e
+    }
+  }
 }
