@@ -36,16 +36,16 @@ class UpdateHolidaysServiceTest {
         val validRequest = UpdateHolidaysRequestTestFactory.build()
 
         // Mock the mapper and domain call
-        coEvery { mapper.toDomain(holidayId, validRequest) } returns mockk()
-        coEvery { updateHoliday.updateHoliday(any()) } returns Unit
+        coEvery { mapper.toDomain(validRequest) } returns mockk()
+        coEvery { updateHoliday.updateHoliday(any()) } returns 1
 
         assertDoesNotThrow {
             runBlocking {
-                updateHolidaysService.invoke(holidayId, validRequest)
+                updateHolidaysService.invoke(validRequest)
             }
         }
 
-        coVerify(exactly = 1) { mapper.toDomain(holidayId, validRequest) }
+        coVerify(exactly = 1) { mapper.toDomain(validRequest) }
         coVerify(exactly = 1) { updateHoliday.updateHoliday(any()) }
     }
 
@@ -56,7 +56,7 @@ class UpdateHolidaysServiceTest {
 
         val exception = assertThrows(CfmsException::class.java) {
             runBlocking {
-                updateHolidaysService.invoke(holidayId, invalidRequest)
+                updateHolidaysService.invoke(invalidRequest)
             }
         }
 
@@ -71,7 +71,7 @@ class UpdateHolidaysServiceTest {
 
         val exception = assertThrows(CfmsException::class.java) {
             runBlocking {
-                updateHolidaysService.invoke(holidayId, invalidRequest)
+                updateHolidaysService.invoke(invalidRequest)
             }
         }
 
@@ -85,16 +85,16 @@ class UpdateHolidaysServiceTest {
         val requestWithNullHolidayName = UpdateHolidaysRequestTestFactory.buildWithNullHolidayName()
 
         // Mock the mapper and domain call
-        coEvery { mapper.toDomain(holidayId, requestWithNullHolidayName) } returns mockk()
-        coEvery { updateHoliday.updateHoliday(any()) } returns Unit
+        coEvery { mapper.toDomain(requestWithNullHolidayName) } returns mockk()
+        coEvery { updateHoliday.updateHoliday(any()) } returns 1
 
         assertDoesNotThrow {
             runBlocking {
-                updateHolidaysService.invoke(holidayId, requestWithNullHolidayName)
+                updateHolidaysService.invoke(requestWithNullHolidayName)
             }
         }
 
-        coVerify(exactly = 1) { mapper.toDomain(holidayId, requestWithNullHolidayName) }
+        coVerify(exactly = 1) { mapper.toDomain(requestWithNullHolidayName) }
         coVerify(exactly = 1) { updateHoliday.updateHoliday(any()) }
     }
 
@@ -104,16 +104,16 @@ class UpdateHolidaysServiceTest {
         val requestWithNullBackupFranchiseIds = UpdateHolidaysRequestTestFactory.buildWithNullBackupFranchiseIds()
 
         // Mock the mapper and domain call
-        coEvery { mapper.toDomain(holidayId, requestWithNullBackupFranchiseIds) } returns mockk()
-        coEvery { updateHoliday.updateHoliday(any()) } returns Unit
+        coEvery { mapper.toDomain(requestWithNullBackupFranchiseIds) } returns mockk()
+        coEvery { updateHoliday.updateHoliday(any()) } returns 1
 
         assertDoesNotThrow {
             runBlocking {
-                updateHolidaysService.invoke(holidayId, requestWithNullBackupFranchiseIds)
+                updateHolidaysService.invoke(requestWithNullBackupFranchiseIds)
             }
         }
 
-        coVerify(exactly = 1) { mapper.toDomain(holidayId, requestWithNullBackupFranchiseIds) }
+        coVerify(exactly = 1) { mapper.toDomain(requestWithNullBackupFranchiseIds) }
         coVerify(exactly = 1) { updateHoliday.updateHoliday(any()) }
     }
 
@@ -123,17 +123,17 @@ class UpdateHolidaysServiceTest {
         val validRequest = UpdateHolidaysRequestTestFactory.build()
 
         // Mock the mapper and domain call to throw an exception
-        coEvery { mapper.toDomain(holidayId, validRequest) } returns mockk()
+        coEvery { mapper.toDomain(validRequest) } returns mockk()
         coEvery { updateHoliday.updateHoliday(any()) } throws CfmsException("Domain error")
 
         val exception = assertThrows(CfmsException::class.java) {
             runBlocking {
-                updateHolidaysService.invoke(holidayId, validRequest)
+                updateHolidaysService.invoke(validRequest)
             }
         }
 
         assertEquals("Exception occurred while updating holiday: Domain error", exception.message)
-        coVerify(exactly = 1) { mapper.toDomain(holidayId, validRequest) }
+        coVerify(exactly = 1) { mapper.toDomain(validRequest) }
         coVerify(exactly = 1) { updateHoliday.updateHoliday(any()) }
     }
 }

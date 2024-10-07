@@ -77,7 +77,7 @@ class HolidayRepoTest {
     fun `should update a holiday`() = runBlocking {
         val updateHolidayEntity = UpdateHolidayEntityTestFactory.build()
 
-        coEvery { holidayRepo.update(updateHolidayEntity) } returns Unit
+        coEvery { holidayRepo.update(updateHolidayEntity) } returns 1
 
         assertDoesNotThrow {
             runBlocking {
@@ -91,14 +91,14 @@ class HolidayRepoTest {
     @Test
     fun `should return holiday by ID`() = runBlocking {
         val holidayId = 1
-        val holiday = UpdateHolidayEntityTestFactory.build(id = holidayId)
+        val holiday = UpdateHolidayEntityTestFactory.build(holidayId = holidayId)
 
         coEvery { holidayRepo.getById(holidayId) } returns holiday
 
         val result = holidayRepo.getById(holidayId)
 
         assertNotNull(result)
-        assertEquals(holidayId, result?.id)
+        assertEquals(holidayId, result?.holidayId)
         coVerify(exactly = 1) { holidayRepo.getById(holidayId) }
     }
 

@@ -52,7 +52,7 @@ class HolidayQueriesTest {
         MockKAnnotations.init(this, relaxed = true)
         rowMapper = mockk(relaxed = true)
         updateRowMapper = mockk(relaxed = true)
-holidayQueries = mockk(relaxed = true)
+        holidayQueries = mockk(relaxed = true)
 
         transaction(db) {
             SchemaUtils.create(HolidayTable)
@@ -199,10 +199,11 @@ holidayQueries = mockk(relaxed = true)
         assertNotNull(result)
         assertTrue(result?.backupFranchiseIds.isNullOrEmpty())  // Check if null or empty
     }
+
     @Test
-    fun `test update holiday`():Unit = runBlocking {
-        val updateRecord = UpdateHolidayRecord(
-            id = 1,
+    fun `test update holiday`(): Unit = runBlocking {
+        UpdateHolidayRecord(
+            holidayId = 1,
             franchiseId = "ABC12",
             startDate = LocalDate.of(2024, 9, 26),
             endDate = LocalDate.of(2024, 9, 27),
@@ -212,6 +213,5 @@ holidayQueries = mockk(relaxed = true)
             createdAt = Instant.now(),
             updatedAt = Instant.now()
         )
-
-
+    }
 }

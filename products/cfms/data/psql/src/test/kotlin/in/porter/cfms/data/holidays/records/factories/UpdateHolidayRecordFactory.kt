@@ -8,7 +8,7 @@ import java.time.LocalDate
 object UpdateHolidayRecordFactory {
 
     fun create(
-        id: Int? = 1,
+        holidayId: Int = 1,
         franchiseId: String = "123",
         startDate: LocalDate = LocalDate.now(),
         endDate: LocalDate = LocalDate.now().plusDays(1),
@@ -19,7 +19,7 @@ object UpdateHolidayRecordFactory {
         updatedAt: Instant? = Instant.now()
     ): UpdateHolidayRecord {
         return UpdateHolidayRecord(
-            id = id,
+            holidayId = holidayId,
             franchiseId = franchiseId,
             startDate = startDate,
             endDate = endDate,

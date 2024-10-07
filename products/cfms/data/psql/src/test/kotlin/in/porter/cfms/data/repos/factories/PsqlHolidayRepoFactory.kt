@@ -31,7 +31,7 @@ object PsqlHolidayRepoFactory {
     }
 
     fun buildUpdateHolidayEntity(
-        id: Int? = 1,
+        holidayId: Int = 1,
         franchiseId: String = "123",
         startDate: LocalDate = LocalDate.now(),
         endDate: LocalDate = LocalDate.now().plusDays(1),
@@ -42,7 +42,7 @@ object PsqlHolidayRepoFactory {
         updatedAt: Instant = Instant.now()
     ): UpdateHolidayEntity {
         return UpdateHolidayEntity(
-            id = id,
+            holidayId = holidayId,
             franchiseId = franchiseId,
             startDate = startDate,
             endDate = endDate,

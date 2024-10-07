@@ -1,5 +1,6 @@
-package `in`.porter.cfms.data.holidays.mappers
+package `in`.porter.cfms.data.holidays.mappers.usecases
 
+import `in`.porter.cfms.data.holidays.mappers.UpdateHolidayRowMapper
 import `in`.porter.cfms.data.holidays.mappers.factories.UpdateHolidayRowMapperFactory
 import `in`.porter.cfms.domain.holidays.entities.LeaveType
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -16,7 +17,7 @@ class UpdateHolidayRowMapperTest {
 
         val updateHolidayRecord = updateHolidayRowMapper.toRecord(resultRow)
 
-        assertEquals(null, updateHolidayRecord.id)
+        assertEquals(1, updateHolidayRecord.holidayId)
         assertEquals("123", updateHolidayRecord.franchiseId)
         assertEquals(LocalDate.now(), updateHolidayRecord.startDate)
         assertEquals(LocalDate.now().plusDays(1), updateHolidayRecord.endDate)
@@ -29,7 +30,7 @@ class UpdateHolidayRowMapperTest {
     fun `should build a valid UpdateHolidayRecord`() {
         val updateHolidayRecord = UpdateHolidayRowMapperFactory.buildUpdateHolidayRecord()
 
-        assertEquals(1, updateHolidayRecord.id)
+        assertEquals(1, updateHolidayRecord.holidayId)
         assertEquals("123", updateHolidayRecord.franchiseId)
         assertEquals(LocalDate.now(), updateHolidayRecord.startDate)
         assertEquals(LocalDate.now().plusDays(1), updateHolidayRecord.endDate)

@@ -17,24 +17,24 @@ import org.junit.jupiter.api.TestInstance
 import java.time.LocalDate
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class DeleteHolidayDomainServiceTest {
+class DeleteHolidayTest {
 
     private lateinit var holidayRepo: HolidayRepo
     private lateinit var courierService: CourierApplyLeaveCallingService
-    private lateinit var deleteHolidayDomainService: DeleteHolidayDomainService
+    private lateinit var deleteHolidayDomainService: DeleteHoliday
 
     @BeforeEach
     fun setup() {
         holidayRepo = mockk()
         courierService = mockk()
-        deleteHolidayDomainService = DeleteHolidayDomainService(holidayRepo, courierService)
+        deleteHolidayDomainService = DeleteHoliday(holidayRepo, courierService)
     }
 
     @Test
     fun `should successfully delete holiday`() = runBlocking {
         val holidayId = 1
         val holiday = UpdateHolidayEntity(
-            id = holidayId,
+            holidayId = holidayId,
             franchiseId = "ABC12",
             startDate = LocalDate.now().plusDays(1),
             endDate = LocalDate.now().plusDays(5),
@@ -82,7 +82,7 @@ class DeleteHolidayDomainServiceTest {
     fun `should throw CfmsException if holiday cannot be deleted after the start date`() = runBlocking {
         val holidayId = 1
         val holiday = UpdateHolidayEntity(
-            id = holidayId,
+            holidayId = holidayId,
             franchiseId = "ABC12",
             startDate = LocalDate.now().minusDays(1), // Holiday has already started
             endDate = LocalDate.now().plusDays(5),
@@ -110,7 +110,7 @@ class DeleteHolidayDomainServiceTest {
     fun `should throw CfmsException if external service fails`() = runBlocking {
         val holidayId = 1
         val holiday = UpdateHolidayEntity(
-            id = holidayId,
+            holidayId = holidayId,
             franchiseId = "ABC12",
             startDate = LocalDate.now().plusDays(1),
             endDate = LocalDate.now().plusDays(5),
@@ -140,7 +140,7 @@ class DeleteHolidayDomainServiceTest {
     fun `should throw Exception for unexpected errors`() = runBlocking {
         val holidayId = 1
         val holiday = UpdateHolidayEntity(
-            id = holidayId,
+            holidayId = holidayId,
             franchiseId = "ABC123",
             startDate = LocalDate.now().plusDays(1),
             endDate = LocalDate.now().plusDays(5),

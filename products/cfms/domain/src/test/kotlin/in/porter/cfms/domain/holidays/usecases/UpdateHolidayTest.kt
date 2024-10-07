@@ -33,10 +33,10 @@ class UpdateHolidayTest {
     fun `should successfully update holiday when valid data is provided`() = runBlocking {
         // Arrange
         val updateHolidayEntity = UpdateHolidayEntityTestFactory.build()
-        coEvery { holidayRepo.getById(updateHolidayEntity.id) } returns updateHolidayEntity
+        coEvery { holidayRepo.getById(updateHolidayEntity.holidayId) } returns updateHolidayEntity
         coEvery { courierService.applyLeave(any()) } returns CourierApplyLeaveCallingService.ApplyLeaveResponse("Leave applied successfully")
         coEvery { holidayRepo.getByIdAndDate(any(), any(), any()) } returns null
-        coEvery { holidayRepo.update(updateHolidayEntity) } returns Unit
+        coEvery { holidayRepo.update(updateHolidayEntity) } returns 1
 
         // Act
         updateHoliday.updateHoliday(updateHolidayEntity)
@@ -49,8 +49,8 @@ class UpdateHolidayTest {
     @Test
     fun `should throw exception when holiday with given ID is not found`() = runBlocking {
         // Arrange
-        val updateHolidayEntity = UpdateHolidayEntityTestFactory.build(id = 1)
-        coEvery { holidayRepo.getById(updateHolidayEntity.id) } returns null
+        val updateHolidayEntity = UpdateHolidayEntityTestFactory.build(holidayId = 1)
+        coEvery { holidayRepo.getById(updateHolidayEntity.holidayId) } returns null
 
         // Act & Assert
         val exception = assertThrows(CfmsException::class.java) {
@@ -58,7 +58,7 @@ class UpdateHolidayTest {
         }
 
         assertEquals("Holiday with ID 1 not found.", exception.message)
-        coVerify(exactly = 1) { holidayRepo.getById(updateHolidayEntity.id) }
+        coVerify(exactly = 1) { holidayRepo.getById(updateHolidayEntity.holidayId) }
     }
 
     @Test
@@ -66,7 +66,7 @@ class UpdateHolidayTest {
         // Arrange
         val existingHoliday = UpdateHolidayEntityTestFactory.build(franchiseId = "ABC12")
         val updateHolidayEntity = UpdateHolidayEntityTestFactory.build(franchiseId = "XYZ34")
-        coEvery { holidayRepo.getById(updateHolidayEntity.id) } returns existingHoliday
+        coEvery { holidayRepo.getById(updateHolidayEntity.holidayId) } returns existingHoliday
 
         // Act & Assert
         val exception = assertThrows(CfmsException::class.java) {
@@ -74,14 +74,14 @@ class UpdateHolidayTest {
         }
 
         assertEquals("Franchise ID cannot be updated.", exception.message)
-        coVerify(exactly = 1) { holidayRepo.getById(updateHolidayEntity.id) }
+        coVerify(exactly = 1) { holidayRepo.getById(updateHolidayEntity.holidayId) }
     }
 
     @Test
     fun `should throw exception if the holiday's end date has passed`() = runBlocking {
         // Arrange
         val existingHoliday = UpdateHolidayEntityTestFactory.build(endDate = LocalDate.now().minusDays(1))
-        coEvery { holidayRepo.getById(existingHoliday.id) } returns existingHoliday
+        coEvery { holidayRepo.getById(existingHoliday.holidayId) } returns existingHoliday
 
         // Act & Assert
         val exception = assertThrows(CfmsException::class.java) {
@@ -89,14 +89,14 @@ class UpdateHolidayTest {
         }
 
         assertEquals("Cannot update a holiday whose end date has already passed.", exception.message)
-        coVerify(exactly = 1) { holidayRepo.getById(existingHoliday.id) }
+        coVerify(exactly = 1) { holidayRepo.getById(existingHoliday.holidayId) }
     }
 
     @Test
     fun `should throw exception when external apply leave API fails`() = runBlocking {
         // Arrange
         val updateHolidayEntity = UpdateHolidayEntityTestFactory.build()
-        coEvery { holidayRepo.getById(updateHolidayEntity.id) } returns updateHolidayEntity
+        coEvery { holidayRepo.getById(updateHolidayEntity.holidayId) } returns updateHolidayEntity
         coEvery { courierService.applyLeave(any()) } throws CfmsException("Failed to apply leave")
         coEvery { holidayRepo.getByIdAndDate(any(), any(), any()) } returns null
 
@@ -107,7 +107,7 @@ class UpdateHolidayTest {
 
         assertEquals("Failed to apply leave: Failed to apply leave", exception.message)
         coVerify(exactly = 1) { courierService.applyLeave(any()) }
-        coVerify(exactly = 1) { holidayRepo.getById(updateHolidayEntity.id) }
+        coVerify(exactly = 1) { holidayRepo.getById(updateHolidayEntity.holidayId) }
     }
 
     @Test
@@ -117,8 +117,8 @@ class UpdateHolidayTest {
         val existingHoliday = HolidayFactory.buildHoliday()  // Ensure this returns a `Holiday` type, not `UpdateHolidayEntity`
         val applyLeaveResponse = ApplyLeaveResponse(message = "Leave applied successfully")
 
-        coEvery { holidayRepo.getById(updateHolidayEntity.id) } returns updateHolidayEntity
-        coEvery { holidayRepo.getByIdAndDate(updateHolidayEntity.franchiseId!!, updateHolidayEntity.startDate, updateHolidayEntity.endDate) } returns existingHoliday
+        coEvery { holidayRepo.getById(updateHolidayEntity.holidayId) } returns updateHolidayEntity
+        coEvery { holidayRepo.getByIdAndDate(updateHolidayEntity.franchiseId, updateHolidayEntity.startDate, updateHolidayEntity.endDate) } returns existingHoliday
         coEvery { courierService.applyLeave(any()) } returns applyLeaveResponse
 
         // Act & Assert
@@ -127,8 +127,8 @@ class UpdateHolidayTest {
         }
 
         assertEquals("Holiday is already applied for the given dates.", exception.message)
-        coVerify(exactly = 1) { holidayRepo.getById(updateHolidayEntity.id) }
-        coVerify(exactly = 1) { holidayRepo.getByIdAndDate(updateHolidayEntity.franchiseId!!, updateHolidayEntity.startDate, updateHolidayEntity.endDate) }
+        coVerify(exactly = 1) { holidayRepo.getById(updateHolidayEntity.holidayId) }
+        coVerify(exactly = 1) { holidayRepo.getByIdAndDate(updateHolidayEntity.franchiseId, updateHolidayEntity.startDate, updateHolidayEntity.endDate) }
     }
 
 

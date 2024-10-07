@@ -17,8 +17,8 @@ class UpdateHolidaysRequestMapperTest {
     fun `should map UpdateHolidaysRequest to UpdateHolidayEntity`() {
         val request: UpdateHolidaysRequest = UpdateHolidaysRequestMapperFactory.buildUpdateHolidaysRequest()
 
-        val result: UpdateHolidayEntity = mapper.toDomain(1, request)
-
+        val result: UpdateHolidayEntity = mapper.toDomain(request)
+        assertEquals(request.holidayId, result.holidayId)
         assertEquals(request.franchiseId, result.franchiseId)
         assertEquals(request.startDate, result.startDate)
         assertEquals(request.endDate, result.endDate)
@@ -33,7 +33,7 @@ class UpdateHolidaysRequestMapperTest {
         )
 
         val exception = assertThrows(CfmsException::class.java) {
-            mapper.toDomain(1, request)
+            mapper.toDomain(request)
         }
 
         assertEquals("End date cannot be before today.", exception.message)
@@ -47,7 +47,7 @@ class UpdateHolidaysRequestMapperTest {
         )
 
         val exception = assertThrows(CfmsException::class.java) {
-            mapper.toDomain(1, request)
+            mapper.toDomain(request)
         }
 
         assertEquals("Start date cannot be after end date.", exception.message)

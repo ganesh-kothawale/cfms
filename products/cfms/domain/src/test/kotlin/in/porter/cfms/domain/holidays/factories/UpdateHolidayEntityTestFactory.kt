@@ -8,7 +8,7 @@ import java.time.LocalDate
 object UpdateHolidayEntityTestFactory {
 
     fun build(
-        id: Int = 1,
+        holidayId: Int = 1,
         franchiseId: String = "ABC12",
         startDate: LocalDate = LocalDate.now().plusDays(1),
         endDate: LocalDate = LocalDate.now().plusDays(2),
@@ -19,7 +19,7 @@ object UpdateHolidayEntityTestFactory {
         createdAt: Instant? = Instant.now()
     ): UpdateHolidayEntity {
         return UpdateHolidayEntity(
-            id = id,
+            holidayId = holidayId,
             franchiseId = franchiseId,
             startDate = startDate,
             endDate = endDate,
@@ -32,7 +32,7 @@ object UpdateHolidayEntityTestFactory {
     }
 
     fun buildInvalidDate(
-        id: Int = 1,
+        holidayId: Int = 1,
         franchiseId: String = "ABC12",
         startDate: LocalDate = LocalDate.now().minusDays(1),  // Invalid date (start date before today)
         endDate: LocalDate = LocalDate.now().plusDays(2),
@@ -43,7 +43,7 @@ object UpdateHolidayEntityTestFactory {
         createdAt: Instant? = Instant.now()
     ): UpdateHolidayEntity {
         return UpdateHolidayEntity(
-            id = id,
+            holidayId = holidayId,
             franchiseId = franchiseId,
             startDate = startDate,
             endDate = endDate,
@@ -56,7 +56,7 @@ object UpdateHolidayEntityTestFactory {
     }
 
     fun buildWithNullFields(
-        id: Int = 1,
+        holidayId: Int = 1,
         franchiseId: String = "ABC12",
         startDate: LocalDate = LocalDate.now().plusDays(1),
         endDate: LocalDate = LocalDate.now().plusDays(2),
@@ -67,7 +67,7 @@ object UpdateHolidayEntityTestFactory {
         createdAt: Instant? = Instant.now()
     ): UpdateHolidayEntity {
         return UpdateHolidayEntity(
-            id = id,
+            holidayId = holidayId,
             franchiseId = franchiseId,
             startDate = startDate,
             endDate = endDate,

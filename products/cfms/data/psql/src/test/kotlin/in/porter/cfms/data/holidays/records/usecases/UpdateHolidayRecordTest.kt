@@ -16,7 +16,7 @@ class UpdateHolidayRecordTest {
         val expectedInstant = Instant.now().truncatedTo(ChronoUnit.MILLIS)
 
         val record = UpdateHolidayRecord(
-            id = 1,
+            holidayId = 1,
             franchiseId = "123",
             startDate = LocalDate.now(),
             endDate = LocalDate.now().plusDays(1),
@@ -34,7 +34,7 @@ class UpdateHolidayRecordTest {
     @Test
     fun `should create UpdateHolidayRecord with custom values`() {
         val record = UpdateHolidayRecordFactory.create(
-            id = 2,
+            holidayId = 2,
             franchiseId = "456",
             startDate = LocalDate.of(2024, 12, 24),
             endDate = LocalDate.of(2024, 12, 26),
@@ -43,7 +43,7 @@ class UpdateHolidayRecordTest {
             backupFranchiseIds = "654,987"
         )
 
-        assertEquals(2, record.id)
+        assertEquals(2, record.holidayId)
         assertEquals("456", record.franchiseId)
         assertEquals(LocalDate.of(2024, 12, 24), record.startDate)
         assertEquals(LocalDate.of(2024, 12, 26), record.endDate)

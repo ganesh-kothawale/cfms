@@ -15,10 +15,7 @@ object UpdateHolidayRowMapperFactory {
     fun create(): ResultRow {
         val resultRow: ResultRow = mockk(relaxed = true)
         // You can mock individual field values as well using relaxed mocks
-        val entityId: EntityID<Int> = mockk {
-            coEvery { value } returns 1
-        }
-        coEvery { resultRow[HolidayTable.id] } returns entityId
+        coEvery { resultRow[HolidayTable.holidayId] } returns 1
         coEvery { resultRow[HolidayTable.franchiseId] } returns "123"
         coEvery { resultRow[HolidayTable.startDate] } returns LocalDate.now()
         coEvery { resultRow[HolidayTable.endDate] } returns LocalDate.now().plusDays(1)
@@ -33,7 +30,7 @@ object UpdateHolidayRowMapperFactory {
 
     fun buildUpdateHolidayRecord(): UpdateHolidayRecord {
         return UpdateHolidayRecord(
-            id = 1,
+            holidayId = 1,
             franchiseId = "123",
             startDate = LocalDate.now(),
             endDate = LocalDate.now().plusDays(1),

@@ -269,10 +269,10 @@ class PsqlHolidayRepoTest {
     fun `should delete holiday by ID`() = runBlocking {
         val holidayId = 1
 
-        coEvery { holidayQueries.deleteHolidayById(holidayId) } returns 1
+        coEvery { holidayQueries.deleteHoliday(holidayId) } returns 1
 
         holidayRepo.deleteById(holidayId)
 
-        coVerify(exactly = 1) { holidayQueries.deleteHolidayById(holidayId) }
+        coVerify(exactly = 1) { holidayQueries.deleteHoliday(holidayId) }
     }
 }

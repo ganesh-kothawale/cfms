@@ -1,7 +1,7 @@
 package `in`.porter.cfms.api.service.holidays.usecases
 
 import `in`.porter.cfms.domain.exceptions.CfmsException
-import `in`.porter.cfms.domain.holidays.usecases.DeleteHolidayDomainService
+import `in`.porter.cfms.domain.holidays.usecases.DeleteHoliday
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -15,7 +15,7 @@ import org.junit.jupiter.api.TestInstance
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class DeleteHolidaysServiceTest {
 
-    private lateinit var deleteHolidayDomainService: DeleteHolidayDomainService
+    private lateinit var deleteHolidayDomainService: DeleteHoliday
     private lateinit var deleteHolidaysService: DeleteHolidaysService
 
     @BeforeEach

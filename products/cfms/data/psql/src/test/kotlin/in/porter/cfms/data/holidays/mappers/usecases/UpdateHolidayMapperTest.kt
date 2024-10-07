@@ -21,7 +21,7 @@ class UpdateHolidayMapperTest {
 
         val record = updateHolidayMapper.toRecord(updateHolidayEntity)
 
-        assertEquals(updateHolidayEntity.id, record.id)
+        assertEquals(updateHolidayEntity.holidayId, record.holidayId)
         assertEquals(updateHolidayEntity.franchiseId, record.franchiseId)
         assertEquals(updateHolidayEntity.startDate, record.startDate)
         assertEquals(updateHolidayEntity.endDate, record.endDate)
@@ -37,7 +37,7 @@ class UpdateHolidayMapperTest {
 
         val entity = updateHolidayMapper.toDomain(updateHolidayRecord)
 
-        assertEquals(updateHolidayRecord.id, entity.id)
+        assertEquals(updateHolidayRecord.holidayId, entity.holidayId)
         assertEquals(updateHolidayRecord.franchiseId, entity.franchiseId)
         assertEquals(updateHolidayRecord.startDate, entity.startDate)
         assertEquals(updateHolidayRecord.endDate, entity.endDate)
