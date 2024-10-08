@@ -1,18 +1,13 @@
 package `in`.porter.cfms.api.FetchCourierPartner.usecases
 
-import courierpartner.mappers.CreateCourierPartnerRequestMapper
 import courierpartner.mappers.FetchCpRecordsMapper
-import courierpartner.usecases.CreateCourierPartnerService
 import courierpartner.usecases.FetchCpRecordsService
 import `in`.porter.cfms.api.CreateCourierPartner.usecases.CreateCourierPartnerServiceTest.Companion.cfmsException
 import `in`.porter.cfms.api.models.courierpartner.FetchCpRecordsApiRequest
 import `in`.porter.cfms.api.models.courierpartner.FetchCpRecordsApiResponse
-import `in`.porter.cfms.domain.courierPartner.RecordCourierPartner
-import `in`.porter.cfms.domain.courierPartner.entities.CreateCourierPartnerRequest
 import `in`.porter.cfms.domain.courierPartner.entities.FetchCpRecordsRequest
 import `in`.porter.cfms.domain.courierPartner.entities.FetchCpRecordsResponse
 import `in`.porter.cfms.domain.courierPartner.repos.CourierPartnerRepo
-import `in`.porter.cfms.domain.courierPartner.usecases.internal.CreateCourierPartner
 import `in`.porter.cfms.domain.courierPartner.usecases.internal.FetchCpRecords
 import `in`.porter.cfms.domain.exceptions.CfmsException
 import io.mockk.coEvery
@@ -73,8 +68,7 @@ import org.junit.jupiter.api.assertThrows
             coEvery { fetchCpRecords.invoke(domainRequest) } throws cfmsException
 
             val exception = assertThrows<CfmsException> {
-                runBlocking {
-                  fetchCpRecordsService.invoke(fetchCourierPartnerApiRequest)
+                runBlocking { fetchCpRecordsService.invoke(fetchCourierPartnerApiRequest)
                 }
             }
 

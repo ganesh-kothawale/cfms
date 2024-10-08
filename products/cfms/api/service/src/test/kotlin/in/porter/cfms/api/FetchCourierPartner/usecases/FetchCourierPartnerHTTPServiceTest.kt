@@ -1,4 +1,5 @@
 //package `in`.porter.cfms.api.FetchCourierPartner.usecases
+//import com.nhaarman.mockitokotlin2.mock
 //import courierpartner.usecases.FetchCpRecordsService
 //import `in`.porter.cfms.api.models.courierpartner.FetchCpRecordsApiRequest
 //import `in`.porter.cfms.api.models.courierpartner.FetchCpRecordsApiResponse
@@ -10,6 +11,7 @@
 //import org.junit.jupiter.api.Test
 //import `in`.porter.cfms.domain.exceptions.CfmsException
 //import `in`.porter.cfms.servers.ktor.usecases.FetchCourierPartnerHttpService
+//import org.amshove.kluent.mock
 //import org.junit.jupiter.api.Assertions.assertEquals
 //import org.mockito.Mockito.mock
 //import software.amazon.awssdk.http.HttpStatusCode
@@ -19,7 +21,7 @@
 //class FetchCourierPartnerHttpServiceTest {
 //
 //    private val service: FetchCpRecordsService = mockk()
-//    private val call: ApplicationCall = mockk(relaxed = true)
+//    private val call = mockk<>()
 //    private lateinit var fetchCourierPartnerHttpService: FetchCourierPartnerHttpService
 //
 //    @BeforeEach
