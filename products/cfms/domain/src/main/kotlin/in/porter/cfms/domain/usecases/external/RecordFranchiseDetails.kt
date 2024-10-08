@@ -13,16 +13,17 @@ class RecordFranchiseDetails
 constructor(
     private val repo: FranchiseRepo,
     private val createFranchise: CreateFranchise
-):Traceable {
+) : Traceable {
+
     suspend fun invoke(req: RecordFranchiseDetailsRequest) {
+        // Check if the franchise already exists
         repo.getByEmail(req.poc.email)?.let {
             throw FranchiseAlreadyExistsException(req.poc.email)
         }
         try {
             createFranchise.invoke(req)
         } catch (e: CfmsException) {
-            e.printStackTrace()
+            throw e // Rethrow the exception to propagate it up
         }
     }
 }
-

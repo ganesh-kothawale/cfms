@@ -10,4 +10,6 @@ dependencies {
   implementation(Libs.Dagger.dagger)
   kapt(Libs.Dagger.compiler)
   testImplementation(Libs.Testing.testContainersPostgresql)
+  implementation(Libs.KotlinUtils.openTracing)
+  implementation(Libs.KotlinUtils.serdeJackson)
 }

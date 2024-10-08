@@ -1,9 +1,8 @@
 package `in`.porter.cfms.servers.ktor.external.usecases.franchises
 
 import `in`.porter.cfms.api.models.franchises.RecordFranchiseDetailsRequest
-import `in`.porter.cfms.api.service.exceptions.CfmsException
+import `in`.porter.cfms.data.exceptions.CfmsException
 import `in`.porter.cfms.api.service.franchises.usecases.CreateFranchiseRecordService
-import `in`.porter.cfms.domain.usecases.external.RecordFranchiseDetails
 import `in`.porter.kotlinutils.instrumentation.opentracing.Traceable
 import io.ktor.http.*
 import io.ktor.server.application.*

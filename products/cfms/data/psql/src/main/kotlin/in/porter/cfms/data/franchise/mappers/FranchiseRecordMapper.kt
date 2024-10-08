@@ -1,40 +1,46 @@
 package `in`.porter.cfms.data.franchise.mappers
 
+import `in`.porter.cfms.data.exceptions.CfmsException
 import `in`.porter.cfms.data.franchise.records.FranchiseRecord
 import `in`.porter.cfms.data.franchise.records.FranchiseRecordData
 import `in`.porter.cfms.domain.franchise.FranchiseStatus
 import `in`.porter.cfms.domain.franchise.entities.Franchise
-
 import javax.inject.Inject
 
 class FranchiseRecordMapper @Inject constructor() {
 
-    fun toRecord(franchise: Franchise): FranchiseRecordData = FranchiseRecordData(
-        address = franchise.address,
-        city = franchise.city,
-        state = franchise.state,
-        pincode = franchise.pincode,
-        latitude = franchise.latitude,
-        longitude = franchise.longitude,
-        pocName = franchise.pocName,
-        primaryNumber = franchise.primaryNumber,
-        email = franchise.email,
-        status = franchise.status.name,
-        porterHubName = franchise.porterHubName,
-        franchiseGst = franchise.franchiseGst,
-        franchisePan = franchise.franchisePan,
-        franchiseCanceledCheque = franchise.franchiseCanceledCheque,
-        daysOfOperation = franchise.daysOfOperation,
-        startTime = franchise.startTime,
-        endTime = franchise.endTime,
-        cutOffTime = franchise.cutOffTime,
-        hlpEnabled = franchise.hlpEnabled,
-        radiusCoverage = franchise.radiusCoverage,
-        showCrNumber = franchise.showCrNumber,
-        kamUser = franchise.kamUser,
-        teamId = franchise.teamId,
-        franchiseId = franchise.franchiseId
-    )
+    fun toRecord(franchise: Franchise): FranchiseRecordData {
+        return try {
+            FranchiseRecordData(
+                address = franchise.address,
+                city = franchise.city,
+                state = franchise.state,
+                pincode = franchise.pincode,
+                latitude = franchise.latitude,
+                longitude = franchise.longitude,
+                pocName = franchise.pocName,
+                primaryNumber = franchise.primaryNumber,
+                email = franchise.email,
+                status = franchise.status.name,
+                porterHubName = franchise.porterHubName,
+                franchiseGst = franchise.franchiseGst,
+                franchisePan = franchise.franchisePan,
+                franchiseCanceledCheque = franchise.franchiseCanceledCheque,
+                daysOfOperation = franchise.daysOfOperation,
+                startTime = franchise.startTime,
+                endTime = franchise.endTime,
+                cutOffTime = franchise.cutOffTime,
+                hlpEnabled = franchise.hlpEnabled,
+                radiusCoverage = franchise.radiusCoverage,
+                showCrNumber = franchise.showCrNumber,
+                kamUser = franchise.kamUser,
+                teamId = franchise.teamId,
+                franchiseId = franchise.franchiseId
+            )
+        } catch (e: CfmsException) {
+            throw CfmsException("Failed to map Franchise to Record")
+        }
+    }
 
     fun fromRecord(record: FranchiseRecord) = Franchise(
         franchiseId = record.franchiseId,

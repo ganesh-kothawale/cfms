@@ -1,5 +1,6 @@
 package `in`.porter.cfms.data.repos
 
+import `in`.porter.cfms.data.exceptions.CfmsException
 import `in`.porter.cfms.data.franchise.FranchiseQueries
 import `in`.porter.cfms.data.franchise.mappers.FranchiseRecordMapper
 import `in`.porter.cfms.domain.franchise.entities.Franchise
@@ -15,22 +16,23 @@ class PsqlFranchisesRepo
 
     override suspend fun create(franchiseRequest: Franchise): Unit =
         trace("create") {
-            mapper.toRecord(franchiseRequest)
-                .let { queries.save(it) }
+            try {
+                mapper.toRecord(franchiseRequest)
+                    .let { queries.save(it) }
+            } catch (e: CfmsException) {
+                throw CfmsException("Failed to create franchise: ${e.message}")
+            }
         }
 
-
-    override suspend fun getByCode(franchiseCodes: String): Franchise? =
+    override suspend fun getByCode(franchiseCode: String): Franchise? =
         trace("getByCode") {
-            queries.getByCode(franchiseCodes)
+            queries.getByCode(franchiseCode)
                 ?.let { mapper.fromRecord(it) }
         }
 
     override suspend fun getByEmail(email: String): Franchise? =
         trace("getByEmail") {
-            queries.getByEmail( email)
-                ?.let{mapper.fromRecord(it)}
+            queries.getByEmail(email)
+                ?.let { mapper.fromRecord(it) }
         }
-
-
 }

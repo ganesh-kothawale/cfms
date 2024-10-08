@@ -1,5 +1,6 @@
 package `in`.porter.cfms.domain.franchise.usecases.internal
 
+import `in`.porter.cfms.domain.exceptions.CfmsException
 import `in`.porter.cfms.domain.franchise.entities.Franchise
 import `in`.porter.cfms.domain.franchise.repos.FranchiseRepo
 import `in`.porter.cfms.domain.franchise.factories.RecordFranchiseDetailsRequestFactory
@@ -47,7 +48,7 @@ class CreateFranchiseTest {
         val request = requestFactory.build().copy(poc = requestFactory.build().poc.copy(name = "")) // Missing POC name
 
         // Act & Assert
-        val exception = assertThrows<IllegalArgumentException> {
+        val exception = assertThrows<CfmsException> {
             createFranchise.invoke(request)
         }
 
@@ -61,7 +62,7 @@ class CreateFranchiseTest {
         val request = requestFactory.build().copy(poc = requestFactory.build().poc.copy(email = "invalid-email")) // Invalid email format
 
         // Act & Assert
-        val exception = assertThrows<IllegalArgumentException> {
+        val exception = assertThrows<CfmsException> {
             createFranchise.invoke(request)
         }
 
@@ -75,7 +76,7 @@ class CreateFranchiseTest {
         val request = requestFactory.build().copy(address = requestFactory.build().address.copy(address = "")) // Invalid (empty) address
 
         // Act & Assert
-        val exception = assertThrows<IllegalArgumentException> {
+        val exception = assertThrows<CfmsException> {
             createFranchise.invoke(request)
         }
 
@@ -91,7 +92,7 @@ class CreateFranchiseTest {
         coEvery { franchiseRepo.create(any<Franchise>()) } throws Exception("DB error")
 
         // Act & Assert
-        val exception = assertThrows<RuntimeException> {
+        val exception = assertThrows<CfmsException> {
             createFranchise.invoke(request)
         }
 

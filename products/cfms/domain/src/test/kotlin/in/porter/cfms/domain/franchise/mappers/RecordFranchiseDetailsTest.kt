@@ -2,6 +2,7 @@ package `in`.porter.cfms.domain.usecases.external
 
 import `in`.porter.cfms.domain.exceptions.CfmsException
 import `in`.porter.cfms.domain.exceptions.FranchiseAlreadyExistsException
+import `in`.porter.cfms.domain.franchise.entities.Franchise
 import `in`.porter.cfms.domain.franchise.repos.FranchiseRepo
 import `in`.porter.cfms.domain.franchise.usecases.internal.CreateFranchise
 import `in`.porter.cfms.domain.usecases.entities.RecordFranchiseDetailsRequest
@@ -53,14 +54,16 @@ class RecordFranchiseDetailsTest {
         val existingFranchiseEmail = "existing@franchise.com"
         val request = requestFactory.build().copy(poc = requestFactory.build().poc.copy(email = existingFranchiseEmail))
 
-        coEvery { franchiseRepo.getByEmail(existingFranchiseEmail) } returns mockk() // Simulate existing franchise
+        // Return a mock object (not null) to simulate an existing franchise
+        val existingFranchise = mockk<Franchise>() // Replace with actual franchise model if needed
+        coEvery { franchiseRepo.getByEmail(existingFranchiseEmail) } returns existingFranchise
 
         // Act & Assert
         val exception = assertThrows<FranchiseAlreadyExistsException> {
             recordFranchiseDetails.invoke(request)
         }
 
-        assertEquals("Franchise already exists for email: $existingFranchiseEmail", exception.message)
+        assertEquals("Franchise with Franchise Id $existingFranchiseEmail already exists", exception.message)
         coVerify(exactly = 0) { createFranchise.invoke(any()) }
     }
 
