@@ -68,7 +68,7 @@ object Libs {
 
   object Testing {
     private const val testContainersGroup = "org.testcontainers"
-    private const val testContainersVersion = "1.12.3"
+    private const val testContainersVersion = "1.17.5"
     const val testContainers = "$testContainersGroup:testcontainers:$testContainersVersion"
     const val testContainersPostgresql = "$testContainersGroup:postgresql:$testContainersVersion"
     const val testContainersJuniper = "$testContainersGroup:junit-jupiter:$testContainersVersion"

@@ -1,10 +1,7 @@
 package `in`.porter.cfms.data.franchise
 
-import `in`.porter.cfms.domain.franchise.FranchiseStatus
 import `in`.porter.kotlinutils.exposed.columns.datetime.timestampWithoutTZAsInstant
-import `in`.porter.kotlinutils.geos.entities.LatLng
 import org.jetbrains.exposed.dao.id.IntIdTable
-import org.jetbrains.exposed.sql.Table
 
 object FranchisesTable : IntIdTable() {
         val franchiseId = varchar("franchise_id", 255)

@@ -12,4 +12,7 @@ dependencies {
   testImplementation(Libs.Testing.testContainersPostgresql)
   implementation(Libs.KotlinUtils.openTracing)
   implementation(Libs.KotlinUtils.serdeJackson)
+  testImplementation(Libs.Testing.testContainersPostgresql)
+  testImplementation(Libs.Testing.testContainers)
+  testImplementation(Libs.Testing.testContainersJuniper)
 }
