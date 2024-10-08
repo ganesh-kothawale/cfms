@@ -1,5 +1,7 @@
 package `in`.porter.cfms.api.service.franchises.usecases
 
+import `in`.porter.cfms.api.models.franchises.Data
+import `in`.porter.cfms.api.models.franchises.ErrorResponse
 import `in`.porter.cfms.api.models.franchises.RecordFranchiseDetailsRequest
 import `in`.porter.cfms.api.models.franchises.RecordFranchiseDetailsResponse
 import `in`.porter.cfms.api.service.exceptions.CfmsException
@@ -10,22 +12,44 @@ import `in`.porter.cfms.domain.usecases.external.RecordFranchiseDetails
 import `in`.porter.kotlinutils.instrumentation.opentracing.Traceable
 import javax.inject.Inject
 
-
 class CreateFranchiseRecordService
 @Inject
 constructor(
     private val mapper: RecordFranchiseDetailsRequestMapper,
     private val recordFranchiseDetails: RecordFranchiseDetails
-
 ) : Traceable {
-    suspend fun invoke(request: RecordFranchiseDetailsRequest) = trace {
+    suspend fun invoke(request: RecordFranchiseDetailsRequest): RecordFranchiseDetailsResponse = trace {
         try {
             val generatedFranchiseId = CommonUtils.generateRandomAlphaNumeric(12)
             mapper.toDomain(request, generatedFranchiseId)
                 .let { recordFranchiseDetails.invoke(it) }
-                .let { RecordFranchiseDetailsResponse("Franchise Created Successfully") }
+
+            val data = Data(
+                message = "Franchise created successfully",
+                franchise_id = generatedFranchiseId
+            )
+
+            RecordFranchiseDetailsResponse(data = data)
         } catch (e: CfmsException) {
-            throw CfmsException(e.message)
+            val errorResponse = when (e) {
+                is CfmsException -> {
+                    listOf(
+                        ErrorResponse(
+                            message = "Invalid input data",
+                            details = e.message ?: "No additional details"
+                        )
+                    )
+                }
+                else -> {
+                    listOf(
+                        ErrorResponse(
+                            message = "Franchise creation failed",
+                            details = e.message ?: "Failed to store franchise in DB, rolling back Porter creation"
+                        )
+                    )
+                }
+            }
+            RecordFranchiseDetailsResponse(error = errorResponse)
         }
     }
 }
