@@ -8,7 +8,7 @@ import kotlinx.coroutines.runBlocking
 
 fun Route.holidaysRoutes(httpComponent: HttpComponent) {
 
-        post("/create") {
+    post("") {
         httpComponent.createHolidaysHttpService.invoke(call)
     }
 
@@ -17,7 +17,7 @@ fun Route.holidaysRoutes(httpComponent: HttpComponent) {
 
     }
 
-    delete ("/{holidayId}") {
+    delete("/{holidayId}") {
 
         runBlocking {
             val holidayId = call.parameters["holidayId"]?.toIntOrNull() ?: throw CfmsException("Invalid holiday ID")
