@@ -5,6 +5,6 @@ import org.jetbrains.annotations.Nullable
 
 data class RecordFranchisePOCRequest(
     val name: String,
-    @JsonProperty("primaryNumber") val primaryNumber: String,
+    @JsonProperty("mobile") val primaryNumber: String,
     val email: String
 )
