@@ -1,0 +1,116 @@
+spec:
+  app:
+    metadata:
+      name: cfms-job
+      repository: cfms
+      env: staging
+      component: api-server
+    projectID: dom-cfms-stag-23ad
+    clusterProjectID: dom-cie-stag-68ef
+    clusterLocation: asia-south1-a
+    clusterName: dom-cie-stag-gke-cluster
+    serviceAccount:
+      gcpServiceAccount: cfms-app
+      name: cfms-job
+      annotations:
+        argocd.argoproj.io/sync-wave: "-5"
+      automount: true
+    configMap:
+      - name: cfms-job-application-configs
+        mountPath: /home/app/configuration/properties
+        filePaths:
+          - values/common/dom/staging/configs/*
+          - values/pubsub/dom/staging/configs/*
+      - name: cfms-job-application-flyway-configs
+        annotations:
+          argocd.argoproj.io/sync-wave: "-2"
+        filePaths:
+          - values/common/dom/migrations
+    externalSecrets:
+      - name: cfms-job-secrets
+        mountPath: /home/app/configuration/secrets
+        data:
+          - secretKey: psql_secrets.properties
+            remoteRefKey: psql-secrets-properties-job
+          - secretKey: flyway.conf
+            remoteRefKey: flyway-config-secrets
+          - secretKey: application_secrets.properties
+            remoteRefKey: application-secrets-properties
+    jobs:
+      - name: cfms-job-flyway-migrate
+        containers:
+          name: flyway-migrations
+          image: flyway/flyway
+          resources:
+            limits:
+              cpu: 2560m
+              memory: 2048Mi
+            requests:
+              cpu: 256m
+              memory: 1024Mi
+          args: [ "migrate" ]
+        volumes:
+          - name: flyway-job-migrations
+            mountPath: /flyway/sql
+            configMap:
+              name: cfms-job-application-flyway-configs
+          - name: cfms-job-secrets-volume
+            mountPath: /flyway/conf
+            secret:
+              secretName: cfms-job-secrets
+    deployment:
+      replicas: 2
+      containers:
+        - name: cfms-job
+          image:
+            registry: dom-dpq-stag-ab34/dom-dpq-stag-gcr-cfms-application/sqs
+          envFile: values/pubsub/dom/staging/env.yaml
+          ports:
+            - containerPort: 8080
+          resources:
+            limits:
+              cpu: 512m
+              memory: 2048Mi
+            requests:
+              cpu: 256m
+              memory: 1024Mi
+          probe:
+            default:
+              type:
+                exec:
+                  command:
+                    - /bin/true
+            startup:
+              type:
+                exec:
+                  command:
+                    - /bin/true
+              parameters:
+                initialDelaySeconds: 60
+                periodSeconds: 30
+    rollout:
+      enabled: true
+      job_subscription_ids:
+      - "dom-cfms-stag-topic-jobs-subscription"
+    horizontalPodAutoScaler:
+      minReplicas: 2
+      maxReplicas: 8
+      metadata:
+        labels: {}
+      metrics:
+        - type: resource
+          name: cpu
+          value: 70.0
+      behavior:
+        scaleUp:
+          stabilizationWindowSeconds: 180
+          policies:
+            - type: Pods
+              value: 1
+              periodSeconds: 60
+        scaleDown:
+          stabilizationWindowSeconds: 180
+          policies:
+            - type: Pods
+              value: 1
+              periodSeconds: 60

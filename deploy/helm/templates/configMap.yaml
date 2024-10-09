@@ -1,0 +1,51 @@
+{{ with .Values.spec.app}}
+{{- $app := .}}
+{{ range .configMap }}
+{{- $config := .}}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ $config.name }}
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    app.kubernetes.io/version: {{ $.Values.spec.appVersion }}
+    app.release.name: {{ $.Release.Name }}
+    app.kubernetes.io/name: {{ $app.metadata.repository }}
+    app.kubernetes.io/instance: {{ $app.metadata.name }}
+    app.kubernetes.io/component: {{ $app.metadata.component }}
+  {{- if $config.annotations }}
+  annotations:
+    {{ toYaml $config.annotations | nindent 4 }}
+  {{- end }}
+data:
+{{- range $filePath := .filePaths }}
+{{- range $path, $_ := $.Files.Glob $filePath }}
+{{ base $path | indent 2 }}: |
+{{ $.Files.Get $path | indent 4 }}
+{{- end }}
+{{- end }}
+{{- end }}
+---
+{{- range .deployment.containers }}
+{{- if .envFile }}
+{{ $filePath := .envFile }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .name }}
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    app.kubernetes.io/version: {{ $.Values.spec.appVersion }}
+    app.release.name: {{ $.Release.Name }}
+    app.kubernetes.io/name: {{ $app.metadata.repository }}
+    app.kubernetes.io/instance: {{ $app.metadata.name }}
+    app.kubernetes.io/component: {{ $app.metadata.component }}
+data:
+{{- range $path, $_ := $.Files.Glob $filePath }}
+{{ $.Files.Get $path | indent 4 }}
+{{- end }}
+{{- end }}
+{{- end }}
+{{- end }}

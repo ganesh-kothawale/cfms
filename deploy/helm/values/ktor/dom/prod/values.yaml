@@ -1,0 +1,127 @@
+spec:
+  app:
+    metadata:
+      name: cfms-ktor
+      repository: cfms
+      env: production
+      component: api-server
+    projectID: dom-cfms-prod-7a42
+    clusterProjectID: dom-cie-prod-de83
+    clusterLocation: asia-south1
+    clusterName: dom-cie-prod-gke-cluster
+    serviceAccount:
+      gcpServiceAccount: cfms-app
+      name: cfms-ktor
+      annotations:
+        argocd.argoproj.io/sync-wave: "-5"
+      automount: true
+    configMap:
+      - name: cfms-ktor-application-configs
+        mountPath: /home/app/configuration/properties
+        filePaths:
+          - values/common/dom/prod/configs/*
+          - values/ktor/dom/prod/configs/*
+      - name: cfms-ktor-application-flyway-configs
+        annotations:
+          argocd.argoproj.io/sync-wave: "-2"
+        filePaths:
+          - values/common/dom/migrations
+    externalSecrets:
+      - name: cfms-ktor-secrets
+        mountPath: /home/app/configuration/secrets
+        data:
+          - secretKey: psql_secrets.properties
+            remoteRefKey: psql-secrets-properties-ktor
+          - secretKey: flyway.conf
+            remoteRefKey: flyway-config-secrets
+          - secretKey: application_secrets.properties
+            remoteRefKey: application-secrets-properties
+    jobs:
+      - name: cfms-ktor-flyway-migrate
+        containers:
+          name: flyway-migrations
+          image: flyway/flyway
+          resources:
+            limits:
+              cpu: 2560m
+              memory: 2048Mi
+            requests:
+              cpu: 256m
+              memory: 1024Mi
+          args: [ "migrate" ]
+        volumes:
+          - name: flyway-sql-migrations
+            mountPath: /flyway/sql
+            configMap:
+              name: cfms-ktor-application-flyway-configs
+          - name: cfms-ktor-secrets-volume
+            mountPath: /flyway/conf
+            secret:
+              secretName: cfms-ktor-secrets
+    deployment:
+      replicas: 2
+      containers:
+        - name: cfms-ktor
+          image:
+            registry: dom-dpq-prod-3143/dom-dpq-prod-cfms-application/ktor
+          envFile: values/ktor/dom/prod/env.yaml
+          ports:
+            - containerPort: 8080
+          resources:
+            limits:
+              cpu: 2560m
+              memory: 2048Mi
+            requests:
+              cpu: 256m
+              memory: 1024Mi
+          probe:
+            default:
+              type:
+                httpGet:
+                  port: 8080
+                  path: /
+            startup:
+              parameters:
+                initialDelaySeconds: 60
+                periodSeconds: 10
+                timeoutSeconds: 1
+                successThreshold: 1
+                failureThreshold: 10
+            liveness:
+              parameters:
+                initialDelaySeconds: 60
+                periodSeconds: 5
+                timeoutSeconds: 1
+                successThreshold: 1
+                failureThreshold: 3
+    rollout:
+      enabled: true
+    horizontalPodAutoScaler:
+      minReplicas: 2
+      maxReplicas: 8
+      metadata:
+        labels: {}
+      metrics:
+        - type: resource
+          name: cpu
+          value: 70.0
+      behavior:
+        scaleUp:
+          stabilizationWindowSeconds: 180
+          policies:
+            - type: Pods
+              value: 1
+              periodSeconds: 60
+        scaleDown:
+          stabilizationWindowSeconds: 180
+          policies:
+            - type: Pods
+              value: 1
+              periodSeconds: 60
+    service:
+      ports:
+        - targetPort: 8080
+    httproutes:
+      private:
+        - hostnames:
+            - cfms-ktor.prod-internal.porter.in
