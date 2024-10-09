@@ -53,6 +53,8 @@ object Libs {
     const val ktorOkHttpClient = "$group:ktor-client-okhttp:$version"
     const val contentNegotiation = "$group:ktor-client-content-negotiation:$version"
 
+    const val ktorServerTest = "io.ktor:ktor-server-tests:$version"
+
   }
 
   object Log4j {
@@ -86,5 +88,13 @@ object Libs {
     const val core = "$group:micrometer-core:$version"
     const val cloudwatch = "$group:micrometer-registry-cloudwatch2:$version"
   }
+
+  object Jackson {
+    private const val group = "com.fasterxml.jackson.datatype"
+    private const val version = "2.15.0"
+
+    const val javaTimeModule = "$group:jackson-datatype-jsr310:$version"
+  }
+
 
 }
