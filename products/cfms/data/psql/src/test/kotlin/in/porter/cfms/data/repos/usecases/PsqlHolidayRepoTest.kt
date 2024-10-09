@@ -2,11 +2,14 @@ package `in`.porter.cfms.data.repos.usecases
 
 import `in`.porter.cfms.data.holidays.HolidayQueries
 import `in`.porter.cfms.data.holidays.mappers.HolidayMapper
+import `in`.porter.cfms.data.holidays.mappers.ListHolidayMapper
+import `in`.porter.cfms.data.holidays.mappers.ListHolidaysFranchiseRowMapper
 import `in`.porter.cfms.data.holidays.mappers.UpdateHolidayMapper
 import `in`.porter.cfms.data.repos.PsqlHolidayRepo
 import `in`.porter.cfms.data.repos.factories.PsqlHolidayRepoFactory
 import `in`.porter.cfms.domain.holidays.entities.Holiday
 import `in`.porter.cfms.domain.holidays.entities.LeaveType
+import `in`.porter.cfms.domain.holidays.entities.UpdateHoliday
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -28,37 +31,45 @@ class PsqlHolidayRepoTest {
     private lateinit var holidayQueries: HolidayQueries
     private lateinit var holidayMapper: HolidayMapper
     private lateinit var updateHolidayMapper: UpdateHolidayMapper
+    private lateinit var listHolidayMapper: ListHolidayMapper
+    private lateinit var listHolidaysFranchiseMapper : ListHolidaysFranchiseRowMapper
 
     @BeforeEach
     fun setup() {
         holidayQueries = mockk()
         holidayMapper = mockk()
         updateHolidayMapper = mockk()
-        holidayRepo = PsqlHolidayRepo(holidayQueries, holidayMapper, updateHolidayMapper)
+        listHolidayMapper = mockk()
+        listHolidaysFranchiseMapper = mockk()
+        holidayRepo = PsqlHolidayRepo(holidayQueries, holidayMapper, updateHolidayMapper, listHolidayMapper, listHolidaysFranchiseMapper)
 
         // Mocking toRecord and toDomain with valid responses
         coEvery { holidayMapper.toRecord(any()) } returns mockk()
         coEvery { holidayMapper.toDomain(any()) } returns mockk()
         coEvery { updateHolidayMapper.toRecord(any()) } returns mockk()
         coEvery { updateHolidayMapper.toDomain(any()) } returns mockk()
+        coEvery { listHolidayMapper.toRecord(any()) } returns mockk()
+        coEvery { listHolidayMapper.toDomain(any(), any()) } returns mockk()
+        coEvery { listHolidaysFranchiseMapper.toRecord(any()) } returns mockk()
     }
 
     @Test
     fun `should get holiday by franchise ID and date`() = runBlocking {
+        val holidayId = 1
         val franchiseId = "123"
         val startDate = LocalDate.now()
         val endDate = LocalDate.now().plusDays(1)
-        val holiday = PsqlHolidayRepoFactory.buildHoliday(franchiseId)
+        val holiday = PsqlHolidayRepoFactory.buildUpdateHolidayEntity(holidayId)
 
         coEvery { holidayQueries.getByIdAndDate(franchiseId, startDate, endDate) } returns mockk()
-        coEvery { holidayMapper.toDomain(any()) } returns holiday
+        coEvery { updateHolidayMapper.toDomain(any()) } returns holiday
 
         val result = holidayRepo.getByIdAndDate(franchiseId, startDate, endDate)
 
         assertNotNull(result)
         assertEquals(holiday, result)
         coVerify(exactly = 1) { holidayQueries.getByIdAndDate(franchiseId, startDate, endDate) }
-        coVerify(exactly = 1) { holidayMapper.toDomain(any()) }
+        coVerify(exactly = 1) { updateHolidayMapper.toDomain(any()) }
     }
 
     @Test
@@ -108,20 +119,21 @@ class PsqlHolidayRepoTest {
 
     @Test
     fun `should return a holiday when valid data is found for franchise and dates`() = runBlocking {
+        val holidayId = 1
         val franchiseId = "ABC12"
         val startDate = LocalDate.of(2024, 9, 26)
         val endDate = LocalDate.of(2024, 9, 27)
-        val holidayRecord = PsqlHolidayRepoFactory.buildHoliday(franchiseId)
+        val holidayRecord = PsqlHolidayRepoFactory.buildUpdateHolidayEntity(holidayId)
 
         coEvery { holidayQueries.getByIdAndDate(franchiseId, startDate, endDate) } returns mockk() // Mocked record from queries
-        coEvery { holidayMapper.toDomain(any()) } returns holidayRecord // Mocked domain response
+        coEvery { updateHolidayMapper.toDomain(any()) } returns holidayRecord // Mocked domain response
 
         val result = holidayRepo.getByIdAndDate(franchiseId, startDate, endDate)
 
         assertNotNull(result)
         assertEquals(holidayRecord, result)
         coVerify(exactly = 1) { holidayQueries.getByIdAndDate(franchiseId, startDate, endDate) }
-        coVerify(exactly = 1) { holidayMapper.toDomain(any()) }
+        coVerify(exactly = 1) { updateHolidayMapper.toDomain(any()) }
     }
 
     @Test
@@ -217,7 +229,8 @@ class PsqlHolidayRepoTest {
         val startDate = LocalDate.now()
         val endDate = LocalDate.now().plusDays(1)
 
-        val defaultHoliday = Holiday(
+        val defaultHoliday = UpdateHoliday(
+            holidayId = 1,
             franchiseId = "default",
             startDate = startDate,
             endDate = endDate,
@@ -229,14 +242,14 @@ class PsqlHolidayRepoTest {
         )
 
         coEvery { holidayQueries.getByIdAndDate(franchiseId, startDate, endDate) } returns mockk()
-        coEvery { holidayMapper.toDomain(any()) } returns defaultHoliday
+        coEvery { updateHolidayMapper.toDomain(any()) } returns defaultHoliday
 
         val result = holidayRepo.getByIdAndDate(franchiseId, startDate, endDate)
 
         assertNotNull(result)
         assertEquals(defaultHoliday, result)
         coVerify(exactly = 1) { holidayQueries.getByIdAndDate(franchiseId, startDate, endDate) }
-        coVerify(exactly = 1) { holidayMapper.toDomain(any()) }
+        coVerify(exactly = 1) { updateHolidayMapper.toDomain(any()) }
     }
     @Test
     fun `should handle exception when mapper fails`() = runBlocking {

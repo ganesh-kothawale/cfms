@@ -32,7 +32,7 @@ class UpdateHolidaysServiceTest {
 
     @Test
     fun `should update holiday successfully with valid request`() = runBlocking {
-        val holidayId = 1
+
         val validRequest = UpdateHolidaysRequestTestFactory.build()
 
         // Mock the mapper and domain call
@@ -51,7 +51,7 @@ class UpdateHolidaysServiceTest {
 
     @Test
     fun `should throw exception when start date is in the past`() = runBlocking {
-        val holidayId = 1
+
         val invalidRequest = UpdateHolidaysRequestTestFactory.buildInvalidStartDate()
 
         val exception = assertThrows(CfmsException::class.java) {
@@ -66,7 +66,7 @@ class UpdateHolidaysServiceTest {
 
     @Test
     fun `should throw exception when end date is before start date`() = runBlocking {
-        val holidayId = 1
+
         val invalidRequest = UpdateHolidaysRequestTestFactory.buildInvalidEndDate()
 
         val exception = assertThrows(CfmsException::class.java) {
@@ -81,7 +81,7 @@ class UpdateHolidaysServiceTest {
 
     @Test
     fun `should update holiday with null holiday name`() = runBlocking {
-        val holidayId = 1
+
         val requestWithNullHolidayName = UpdateHolidaysRequestTestFactory.buildWithNullHolidayName()
 
         // Mock the mapper and domain call
@@ -100,7 +100,7 @@ class UpdateHolidaysServiceTest {
 
     @Test
     fun `should update holiday with null backup franchise ids`() = runBlocking {
-        val holidayId = 1
+
         val requestWithNullBackupFranchiseIds = UpdateHolidaysRequestTestFactory.buildWithNullBackupFranchiseIds()
 
         // Mock the mapper and domain call
@@ -119,7 +119,7 @@ class UpdateHolidaysServiceTest {
 
     @Test
     fun `should log and throw CfmsException when domain update fails`() = runBlocking {
-        val holidayId = 1
+
         val validRequest = UpdateHolidaysRequestTestFactory.build()
 
         // Mock the mapper and domain call to throw an exception

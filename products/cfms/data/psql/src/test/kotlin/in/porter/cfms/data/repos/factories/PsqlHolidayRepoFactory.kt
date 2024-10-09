@@ -2,7 +2,7 @@ package `in`.porter.cfms.data.repos.factories
 
 import `in`.porter.cfms.domain.holidays.entities.Holiday
 import `in`.porter.cfms.domain.holidays.entities.LeaveType
-import `in`.porter.cfms.domain.holidays.entities.UpdateHolidayEntity
+import `in`.porter.cfms.domain.holidays.entities.UpdateHoliday
 import java.time.Instant
 import java.time.LocalDate
 
@@ -40,8 +40,8 @@ object PsqlHolidayRepoFactory {
         backupFranchiseIds: String? = "321,456",
         createdAt: Instant = Instant.now(),
         updatedAt: Instant = Instant.now()
-    ): UpdateHolidayEntity {
-        return UpdateHolidayEntity(
+    ): UpdateHoliday {
+        return UpdateHoliday(
             holidayId = holidayId,
             franchiseId = franchiseId,
             startDate = startDate,

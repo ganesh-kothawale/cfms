@@ -3,7 +3,7 @@ package `in`.porter.cfms.api.service.holidays.mappers
 import `in`.porter.cfms.api.models.exceptions.CfmsException
 import `in`.porter.cfms.api.models.holidays.UpdateHolidaysRequest
 import `in`.porter.cfms.domain.holidays.entities.LeaveType
-import `in`.porter.cfms.domain.holidays.entities.UpdateHolidayEntity
+import `in`.porter.cfms.domain.holidays.entities.UpdateHoliday
 import org.slf4j.LoggerFactory
 import java.time.Instant
 import java.time.LocalDate
@@ -14,7 +14,7 @@ class UpdateHolidaysRequestMapper
 constructor() {
     private val logger = LoggerFactory.getLogger(UpdateHolidaysRequestMapper::class.java)
 
-    fun toDomain(request: UpdateHolidaysRequest): UpdateHolidayEntity {
+    fun toDomain(request: UpdateHolidaysRequest): UpdateHoliday {
 
         logger.info("Mapping UpdateHolidayRequest to UpdateHolidayEntity")
 
@@ -32,7 +32,7 @@ constructor() {
         }
 
         // Create a domain object with the necessary fields
-        return UpdateHolidayEntity(
+        return UpdateHoliday(
             holidayId = request.holidayId,
             franchiseId = request.franchiseId,
             startDate = request.startDate,

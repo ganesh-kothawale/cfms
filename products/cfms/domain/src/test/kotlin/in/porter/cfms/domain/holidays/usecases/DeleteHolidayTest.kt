@@ -2,7 +2,7 @@ package `in`.porter.cfms.domain.holidays.usecases
 
 import `in`.porter.cfms.domain.exceptions.CfmsException
 import `in`.porter.cfms.domain.holidays.entities.LeaveType
-import `in`.porter.cfms.domain.holidays.entities.UpdateHolidayEntity
+import `in`.porter.cfms.domain.holidays.entities.UpdateHoliday
 import `in`.porter.cfms.domain.holidays.repos.HolidayRepo
 import `in`.porter.cfms.domain.holidays.usecases.CourierApplyLeaveCallingService.ApplyLeaveRequest
 import `in`.porter.cfms.domain.holidays.usecases.CourierApplyLeaveCallingService.ApplyLeaveResponse
@@ -33,7 +33,7 @@ class DeleteHolidayTest {
     @Test
     fun `should successfully delete holiday`() = runBlocking {
         val holidayId = 1
-        val holiday = UpdateHolidayEntity(
+        val holiday = UpdateHoliday(
             holidayId = holidayId,
             franchiseId = "ABC12",
             startDate = LocalDate.now().plusDays(1),
@@ -81,7 +81,7 @@ class DeleteHolidayTest {
     @Test
     fun `should throw CfmsException if holiday cannot be deleted after the start date`() = runBlocking {
         val holidayId = 1
-        val holiday = UpdateHolidayEntity(
+        val holiday = UpdateHoliday(
             holidayId = holidayId,
             franchiseId = "ABC12",
             startDate = LocalDate.now().minusDays(1), // Holiday has already started
@@ -109,7 +109,7 @@ class DeleteHolidayTest {
     @Test
     fun `should throw CfmsException if external service fails`() = runBlocking {
         val holidayId = 1
-        val holiday = UpdateHolidayEntity(
+        val holiday = UpdateHoliday(
             holidayId = holidayId,
             franchiseId = "ABC12",
             startDate = LocalDate.now().plusDays(1),
@@ -139,7 +139,7 @@ class DeleteHolidayTest {
     @Test
     fun `should throw Exception for unexpected errors`() = runBlocking {
         val holidayId = 1
-        val holiday = UpdateHolidayEntity(
+        val holiday = UpdateHoliday(
             holidayId = holidayId,
             franchiseId = "ABC123",
             startDate = LocalDate.now().plusDays(1),

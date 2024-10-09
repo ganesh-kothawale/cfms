@@ -1,11 +1,11 @@
 package `in`.porter.cfms.domain.holidays.factories
 
 import `in`.porter.cfms.domain.holidays.entities.LeaveType
-import `in`.porter.cfms.domain.holidays.entities.UpdateHolidayEntity
+import `in`.porter.cfms.domain.holidays.entities.UpdateHoliday
 import java.time.Instant
 import java.time.LocalDate
 
-object UpdateHolidayEntityTestFactory {
+object UpdateHolidayFactory {
 
     fun build(
         holidayId: Int = 1,
@@ -17,8 +17,8 @@ object UpdateHolidayEntityTestFactory {
         holidayName: String? = "Christmas",
         updatedAt: Instant? = Instant.now(),
         createdAt: Instant? = Instant.now()
-    ): UpdateHolidayEntity {
-        return UpdateHolidayEntity(
+    ): UpdateHoliday {
+        return UpdateHoliday(
             holidayId = holidayId,
             franchiseId = franchiseId,
             startDate = startDate,
@@ -41,8 +41,8 @@ object UpdateHolidayEntityTestFactory {
         holidayName: String? = "Christmas",
         updatedAt: Instant? = Instant.now(),
         createdAt: Instant? = Instant.now()
-    ): UpdateHolidayEntity {
-        return UpdateHolidayEntity(
+    ): UpdateHoliday {
+        return UpdateHoliday(
             holidayId = holidayId,
             franchiseId = franchiseId,
             startDate = startDate,
@@ -65,8 +65,8 @@ object UpdateHolidayEntityTestFactory {
         backupFranchiseIds: String? = null,  // Null backup franchises
         updatedAt: Instant? = Instant.now(),
         createdAt: Instant? = Instant.now()
-    ): UpdateHolidayEntity {
-        return UpdateHolidayEntity(
+    ): UpdateHoliday {
+        return UpdateHoliday(
             holidayId = holidayId,
             franchiseId = franchiseId,
             startDate = startDate,

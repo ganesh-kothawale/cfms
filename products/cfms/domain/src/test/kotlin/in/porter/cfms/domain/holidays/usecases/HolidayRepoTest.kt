@@ -1,8 +1,7 @@
 package `in`.porter.cfms.domain.holidays.usecases
 
-import `in`.porter.cfms.domain.holidays.entities.Holiday
 import `in`.porter.cfms.domain.holidays.factories.HolidayFactory
-import `in`.porter.cfms.domain.holidays.factories.UpdateHolidayEntityTestFactory
+import `in`.porter.cfms.domain.holidays.factories.UpdateHolidayFactory
 import `in`.porter.cfms.domain.holidays.repos.HolidayRepo
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -49,7 +48,7 @@ class HolidayRepoTest {
         val franchiseId = "ABC12"
         val startDate = LocalDate.now()
         val endDate = startDate.plusDays(1)
-        val holiday = HolidayFactory.buildHoliday(startDate = startDate, endDate = endDate)
+        val holiday = UpdateHolidayFactory.build(startDate = startDate, endDate = endDate)
 
         coEvery { holidayRepo.getByIdAndDate(franchiseId, startDate, endDate) } returns holiday
 
@@ -75,7 +74,7 @@ class HolidayRepoTest {
 
     @Test
     fun `should update a holiday`() = runBlocking {
-        val updateHolidayEntity = UpdateHolidayEntityTestFactory.build()
+        val updateHolidayEntity = UpdateHolidayFactory.build()
 
         coEvery { holidayRepo.update(updateHolidayEntity) } returns 1
 
@@ -91,7 +90,7 @@ class HolidayRepoTest {
     @Test
     fun `should return holiday by ID`() = runBlocking {
         val holidayId = 1
-        val holiday = UpdateHolidayEntityTestFactory.build(holidayId = holidayId)
+        val holiday = UpdateHolidayFactory.build(holidayId = holidayId)
 
         coEvery { holidayRepo.getById(holidayId) } returns holiday
 
