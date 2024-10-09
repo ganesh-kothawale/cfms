@@ -1,8 +1,10 @@
 package `in`.porter.cfms.servers.ktor.external.usecases.holidays
 
+import `in`.porter.cfms.api.models.exceptions.CfmsException
 import `in`.porter.cfms.servers.ktor.external.di.HttpComponent
 import io.ktor.server.application.*
 import io.ktor.server.routing.*
+import kotlinx.coroutines.runBlocking
 
 fun Route.holidaysRoutes(httpComponent: HttpComponent) {
 
@@ -13,6 +15,14 @@ fun Route.holidaysRoutes(httpComponent: HttpComponent) {
     put("") {
         httpComponent.updateHolidaysHttpService.invoke(call)
 
+    }
+
+    delete ("/{holidayId}") {
+
+        runBlocking {
+            val holidayId = call.parameters["holidayId"]?.toIntOrNull() ?: throw CfmsException("Invalid holiday ID")
+            httpComponent.deleteHolidaysHttpService.invoke(call, holidayId)
+        }
     }
 
 

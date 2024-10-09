@@ -8,6 +8,7 @@ import `in`.porter.kotlinutils.exposed.ExposedRepo
 import kotlinx.coroutines.CoroutineDispatcher
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.update
 import org.jetbrains.exposed.sql.insert
@@ -83,6 +84,10 @@ suspend fun getHolidayById(id: Int): UpdateHolidayRecord? = transact {
             it[backupFranchiseIds] = record.backupFranchiseIds
             it[updatedAt] = Instant.now() // Assuming `updatedAt` is updated on each modification
         }
+    }
+
+    fun deleteHoliday(holidayId: Int): Int {
+        return HolidayTable.deleteWhere { HolidayTable.holidayId eq holidayId }
     }
 
 }
