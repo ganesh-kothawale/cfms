@@ -13,7 +13,7 @@ import org.jetbrains.exposed.sql.Database
   modules =
   [
     UtilsModule::class,
-    HolidayModule::class
+    HolidayModule::class,
   OrderDetailsRepoModule::class
   ]
 )
