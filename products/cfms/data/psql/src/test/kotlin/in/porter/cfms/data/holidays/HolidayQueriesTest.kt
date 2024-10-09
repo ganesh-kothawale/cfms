@@ -3,6 +3,7 @@ package `in`.porter.cfms.data.holidays
 import `in`.porter.cfms.data.holidays.mappers.HolidayRowMapper
 import `in`.porter.cfms.data.holidays.mappers.UpdateHolidayRowMapper
 import `in`.porter.cfms.data.holidays.records.HolidayRecord
+import `in`.porter.cfms.data.holidays.records.UpdateHolidayRecord
 import `in`.porter.cfms.domain.holidays.entities.LeaveType
 import io.mockk.MockKAnnotations
 import io.mockk.mockk
@@ -51,7 +52,7 @@ class HolidayQueriesTest {
         MockKAnnotations.init(this, relaxed = true)
         rowMapper = mockk(relaxed = true)
         updateRowMapper = mockk(relaxed = true)
-holidayQueries = mockk(relaxed = true)
+        holidayQueries = mockk(relaxed = true)
 
         transaction(db) {
             SchemaUtils.create(HolidayTable)
@@ -197,5 +198,20 @@ holidayQueries = mockk(relaxed = true)
         val result = holidayQueries.getByIdAndDate("ABC12", LocalDate.of(2024, 10, 7), LocalDate.of(2024, 10, 8))
         assertNotNull(result)
         assertTrue(result?.backupFranchiseIds.isNullOrEmpty())  // Check if null or empty
+    }
+
+    @Test
+    fun `test update holiday`(): Unit = runBlocking {
+        UpdateHolidayRecord(
+            holidayId = 1,
+            franchiseId = "ABC12",
+            startDate = LocalDate.of(2024, 9, 26),
+            endDate = LocalDate.of(2024, 9, 27),
+            holidayName = "Updated Holiday",
+            leaveType = LeaveType.Normal,
+            backupFranchiseIds = null,
+            createdAt = Instant.now(),
+            updatedAt = Instant.now()
+        )
     }
 }

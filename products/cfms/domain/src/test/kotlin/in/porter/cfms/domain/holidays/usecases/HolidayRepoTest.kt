@@ -1,6 +1,8 @@
 package `in`.porter.cfms.domain.holidays.usecases
 
+import `in`.porter.cfms.domain.holidays.entities.Holiday
 import `in`.porter.cfms.domain.holidays.factories.HolidayFactory
+import `in`.porter.cfms.domain.holidays.factories.UpdateHolidayEntityTestFactory
 import `in`.porter.cfms.domain.holidays.repos.HolidayRepo
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -13,6 +15,7 @@ import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import java.time.LocalDate
 
@@ -71,6 +74,50 @@ class HolidayRepoTest {
     }
 
     @Test
+    fun `should update a holiday`() = runBlocking {
+        val updateHolidayEntity = UpdateHolidayEntityTestFactory.build()
+
+        coEvery { holidayRepo.update(updateHolidayEntity) } returns 1
+
+        assertDoesNotThrow {
+            runBlocking {
+                holidayRepo.update(updateHolidayEntity)
+            }
+        }
+
+        coVerify(exactly = 1) { holidayRepo.update(updateHolidayEntity) }
+    }
+
+    @Test
+    fun `should return holiday by ID`() = runBlocking {
+        val holidayId = 1
+        val holiday = UpdateHolidayEntityTestFactory.build(holidayId = holidayId)
+
+        coEvery { holidayRepo.getById(holidayId) } returns holiday
+
+        val result = holidayRepo.getById(holidayId)
+
+        assertNotNull(result)
+        assertEquals(holidayId, result?.holidayId)
+        coVerify(exactly = 1) { holidayRepo.getById(holidayId) }
+    }
+
+    @Test
+    fun `should delete holiday by ID`() = runBlocking {
+        val holidayId = 1
+
+        coEvery { holidayRepo.deleteById(holidayId) } returns Unit
+
+        assertDoesNotThrow {
+            runBlocking {
+                holidayRepo.deleteById(holidayId)
+            }
+        }
+
+        coVerify(exactly = 1) { holidayRepo.deleteById(holidayId) }
+    }
+
+@Test
     fun `should return all holidays for a given date`() = runBlocking {
         val date = LocalDate.now()
         val holidays = listOf(HolidayFactory.buildHoliday())

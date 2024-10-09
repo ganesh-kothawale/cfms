@@ -58,7 +58,7 @@ constructor(
 
     suspend fun getHolidayById(id: Int): UpdateHolidayRecord? = transact {
         HolidayTable.select {
-            HolidayTable.id eq id
+            HolidayTable.holidayId eq id
         }.firstOrNull()?.let { updateMapper.toRecord(it) }
     }
 
