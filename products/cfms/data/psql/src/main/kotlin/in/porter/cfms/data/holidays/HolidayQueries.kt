@@ -37,6 +37,12 @@ constructor(
 
     suspend fun record(req: HolidayRecord): Long = transact {
         // Insert the holiday and return the generated ID
+        if (req.franchiseId==""){
+            throw Exception("Franchise ID can not be null or empty.")
+        }
+        if (req.startDate.isAfter(req.endDate)) {
+            throw IllegalArgumentException("Start date cannot be after end date.")
+        }
         HolidayTable.insertAndGetId {
             it[franchiseId] = req.franchiseId
             it[startDate] = req.startDate

@@ -10,4 +10,5 @@ dependencies {
   implementation(Libs.Micrometer.core)
   implementation(Libs.Dagger.dagger)
   kapt(Libs.Dagger.compiler)
+  testImplementation(Libs.Testing.testContainersPostgresql)
 }
