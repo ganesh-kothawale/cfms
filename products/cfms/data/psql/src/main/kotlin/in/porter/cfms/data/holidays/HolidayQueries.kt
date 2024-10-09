@@ -86,7 +86,9 @@ suspend fun get(franchiseId: String): List<HolidayRecord> = transact {
         }
     }
 
-    fun deleteHoliday(holidayId: Int): Int {
-        return HolidayTable.deleteWhere { HolidayTable.holidayId eq holidayId }
+    suspend fun deleteHoliday(holidayId: Int): Int {
+       return transact{
+            HolidayTable.deleteWhere { HolidayTable.holidayId eq holidayId }
+        }
     }
 }
