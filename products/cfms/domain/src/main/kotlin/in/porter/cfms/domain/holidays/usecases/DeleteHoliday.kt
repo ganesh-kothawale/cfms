@@ -8,13 +8,13 @@ import org.slf4j.LoggerFactory
 import java.time.LocalDate
 import javax.inject.Inject
 
-class DeleteHolidayDomainService
+class DeleteHoliday
 @Inject constructor(
     private val holidayRepo: HolidayRepo,
     private val courierService: CourierApplyLeaveCallingService
 ) {
 
-    private val logger = LoggerFactory.getLogger(DeleteHolidayDomainService::class.java)
+    private val logger = LoggerFactory.getLogger(DeleteHoliday::class.java)
 
     suspend fun deleteHoliday(holidayId: Int) {
         try {
@@ -31,6 +31,7 @@ class DeleteHolidayDomainService
 
             // Step 3: Call external API with status "Cancelled"
             val applyLeaveRequest = ApplyLeaveRequest(
+                //TODO: Need to change the identification code 
                 identification_code = holiday.franchiseId.toString(),
                 holidays = generateHolidayDates(
                     holiday.startDate,

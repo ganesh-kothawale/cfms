@@ -3,11 +3,11 @@ package `in`.porter.cfms.api.service.holidays.usecases
 
 
 import `in`.porter.cfms.domain.exceptions.CfmsException
-import `in`.porter.cfms.domain.holidays.usecases.DeleteHolidayDomainService
+import `in`.porter.cfms.domain.holidays.usecases.DeleteHoliday
 import javax.inject.Inject
 
 class DeleteHolidaysService @Inject constructor(
-    private val deleteHolidayDomainService: DeleteHolidayDomainService
+    private val deleteHolidayDomainService: DeleteHoliday
 ) {
 
     suspend fun deleteHoliday(holidayId: Int) {

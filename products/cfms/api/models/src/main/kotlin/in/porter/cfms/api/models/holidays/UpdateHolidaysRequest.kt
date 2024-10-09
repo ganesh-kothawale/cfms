@@ -3,6 +3,7 @@ package `in`.porter.cfms.api.models.holidays
 import java.time.LocalDate
 
 data class UpdateHolidaysRequest(
+    val holidayId: Int,
     val franchiseId: String,
     val startDate: LocalDate,
     val endDate: LocalDate,

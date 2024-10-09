@@ -5,8 +5,7 @@ import `in`.porter.cfms.api.models.exceptions.CfmsException
 import `in`.porter.cfms.api.service.holidays.mappers.CreateHolidaysRequestMapper
 import `in`.porter.cfms.api.service.holidays.usecases.CreateHolidaysService
 import `in`.porter.cfms.domain.holidays.entities.Holiday
-import `in`.porter.cfms.domain.holidays.entities.LeaveType
-import `in`.porter.cfms.domain.holidays.usecases.RecordHoliday
+import `in`.porter.cfms.domain.holidays.usecases.CreateHoliday
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -19,36 +18,20 @@ import org.junit.jupiter.api.assertThrows
 import java.time.LocalDate
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class   CreateHolidaysServiceTest {
+class CreateHolidaysServiceTest {
 
     private lateinit var createHolidaysService: CreateHolidaysService
-    private lateinit var createHolidaysRequestMapper: CreateHolidaysRequestMapper
-    private lateinit var recordHoliday: RecordHoliday
+    private lateinit var createHoliday: CreateHoliday
+    private lateinit var mapper: CreateHolidaysRequestMapper
 
     @BeforeEach
     fun setup() {
-        createHolidaysRequestMapper = mockk()
-        recordHoliday = mockk()
-        createHolidaysService = CreateHolidaysService(createHolidaysRequestMapper, recordHoliday)
-    }
-
-    @Test
-    fun `should successfully create a holiday`() = runBlocking {
-        val request = CreateHolidaysRequestTestFactory.buildCreateHolidaysRequest(
-            holidayName = null,  // Now nullable
-            backupFranchiseIds = null  // Now nullable
+        createHoliday = mockk()
+        mapper = CreateHolidaysRequestMapper()  // Instantiate the mapper
+        createHolidaysService = CreateHolidaysService(
+            createHoliday,
+            mapper
         )
-
-        val domainHoliday = mockk<Holiday>()
-        coEvery { createHolidaysRequestMapper.toDomain(any()) } returns domainHoliday
-        coEvery { recordHoliday.invoke(any()) } returns 1L
-
-        val holidayId = createHolidaysService.invoke(request)
-
-        assertEquals(1L, holidayId)
-
-        coVerify(exactly = 1) { createHolidaysRequestMapper.toDomain(request) }
-        coVerify(exactly = 1) { recordHoliday.invoke(domainHoliday) }
     }
 
     @Test
@@ -63,7 +46,7 @@ class   CreateHolidaysServiceTest {
         }
 
         assertEquals("Start date cannot be before today's date.", exception.message)
-        coVerify(exactly = 0) { recordHoliday.invoke(any()) }
+        coVerify(exactly = 0) { createHoliday.createHoliday(any()) }
     }
 
     @Test
@@ -78,22 +61,64 @@ class   CreateHolidaysServiceTest {
         }
 
         assertEquals("End date cannot be before start date.", exception.message)
-        coVerify(exactly = 0) { recordHoliday.invoke(any()) }
+        coVerify(exactly = 0) { createHoliday.createHoliday(any()) }
+    }
+
+    @Test
+    fun `should throw exception when holiday already exists`() = runBlocking {
+        val request = CreateHolidaysRequestTestFactory.buildCreateHolidaysRequest()
+
+        coEvery { createHoliday.createHoliday(any<Holiday>()) } throws CfmsException("Holiday already exists")
+
+        val exception = assertThrows<CfmsException> {
+            createHolidaysService.invoke(request)
+        }
+
+        assertEquals("Failed to store holiday in DB: Holiday already exists", exception.message)
+        coVerify(exactly = 1) { createHoliday.createHoliday(any<Holiday>()) }
     }
 
     @Test
     fun `should throw exception when storing holiday fails`() = runBlocking {
         val request = CreateHolidaysRequestTestFactory.buildCreateHolidaysRequest()
 
-        coEvery { createHolidaysRequestMapper.toDomain(any()) } returns mockk()
-        coEvery { recordHoliday.invoke(any()) } throws Exception("DB error")
+        coEvery { createHoliday.createHoliday(any<Holiday>()) } throws Exception("DB error")
 
         val exception = assertThrows<CfmsException> {
             createHolidaysService.invoke(request)
         }
 
-        assertEquals("Failed to store holiday in DB: DB error", exception.message)  // Ensure message matches
-        coVerify(exactly = 1) { recordHoliday.invoke(any()) }
+        assertEquals("Failed to store holiday in DB: DB error", exception.message)
+        coVerify(exactly = 1) { createHoliday.createHoliday(any<Holiday>()) }
     }
 
+    @Test
+    fun `should successfully create a holiday with Normal leave type`() = runBlocking {
+        val request = CreateHolidaysRequestTestFactory.buildCreateHolidaysRequest(
+            leaveType = `in`.porter.cfms.api.models.holidays.LeaveType.Normal
+        )
+
+        coEvery { createHoliday.createHoliday(any<Holiday>()) } returns 1
+
+        val holidayId = createHolidaysService.invoke(request)
+
+        assertEquals(1, holidayId)
+
+        coVerify(exactly = 1) { createHoliday.createHoliday(any<Holiday>()) }
+    }
+
+    @Test
+    fun `should successfully create a holiday with Emergency leave type`() = runBlocking {
+        val request = CreateHolidaysRequestTestFactory.buildCreateHolidaysRequest(
+            leaveType = `in`.porter.cfms.api.models.holidays.LeaveType.Emergency
+        )
+
+        coEvery { createHoliday.createHoliday(any<Holiday>()) } returns 1
+
+        val holidayId = createHolidaysService.invoke(request)
+
+        assertEquals(1, holidayId)
+
+        coVerify(exactly = 1) { createHoliday.createHoliday(any<Holiday>()) }
+    }
 }

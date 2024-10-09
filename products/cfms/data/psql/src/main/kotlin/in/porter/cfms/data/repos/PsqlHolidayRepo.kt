@@ -24,13 +24,26 @@ constructor(
                 ?.let { mapper.toDomain(it) }
         }
 
-    override suspend fun record(request: Holiday): Long {
+    override suspend fun record(request: Holiday): Int {
         return trace("record") {
             mapper.toRecord(request)
                 .let { queries.record(it) }  // Update the `queries.record` to return the ID
         }
     }
-    override suspend fun getById(holidayId: Int?): UpdateHolidayEntity? {
+
+    override suspend fun get(franchiseId: String): List<Holiday> =
+        trace("get") {
+            queries.get(franchiseId)
+                .map { mapper.toDomain(it) }
+        }
+
+    override suspend fun getAllByDate(date: LocalDate): List<Holiday> =
+        trace("getAllByDate") {
+            queries.getAllByDate(date)
+                .map { mapper.toDomain(it) }
+        }
+
+    override suspend fun getById(holidayId: Int): UpdateHolidayEntity? {
         // Fetch the holiday by ID from the database and map it to the domain entity
         return trace("getById") {
             queries.getHolidayById(holidayId)
@@ -38,12 +51,17 @@ constructor(
         }
     }
 
-    override suspend fun update(holiday: UpdateHolidayEntity) {
+    override suspend fun deleteById(holidayId: Int) {
+        trace("deleteById") {
+            queries.deleteHoliday(holidayId)
+        }
+    }
+
+    override suspend fun update(holiday: UpdateHolidayEntity): Int {
         // Map the UpdateHolidayEntity to the database model and update the holiday
         return trace("update") {
             updateMapper.toRecord(holiday)
                 .let { queries.updateHoliday(it) }  // Ensure queries.updateHoliday returns the updated holiday ID
         }
     }
-
 }
