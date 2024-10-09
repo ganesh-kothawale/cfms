@@ -12,10 +12,16 @@ fun Route.holidaysRoutes(httpComponent: HttpComponent) {
         httpComponent.createHolidaysHttpService.invoke(call)
     }
 
-    put("/{holidayId}") {
+    put("") {
+        httpComponent.updateHolidaysHttpService.invoke(call)
+
+    }
+
+    delete ("/{holidayId}") {
+
         runBlocking {
             val holidayId = call.parameters["holidayId"]?.toIntOrNull() ?: throw CfmsException("Invalid holiday ID")
-            httpComponent.updateHolidaysHttpService.invoke(call, holidayId)
+            httpComponent.deleteHolidaysHttpService.invoke(call, holidayId)
         }
     }
 
