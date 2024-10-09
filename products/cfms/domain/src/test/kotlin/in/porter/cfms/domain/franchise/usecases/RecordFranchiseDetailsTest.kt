@@ -1,12 +1,12 @@
-package `in`.porter.cfms.domain.usecases.external
+package `in`.porter.cfms.domain.franchise.usecases
 
 import `in`.porter.cfms.domain.exceptions.CfmsException
 import `in`.porter.cfms.domain.exceptions.FranchiseAlreadyExistsException
 import `in`.porter.cfms.domain.franchise.entities.Franchise
 import `in`.porter.cfms.domain.franchise.repos.FranchiseRepo
 import `in`.porter.cfms.domain.franchise.usecases.internal.CreateFranchise
-import `in`.porter.cfms.domain.usecases.entities.RecordFranchiseDetailsRequest
 import `in`.porter.cfms.domain.franchise.factories.RecordFranchiseDetailsRequestFactory
+import `in`.porter.cfms.domain.usecases.external.RecordFranchiseDetails
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk

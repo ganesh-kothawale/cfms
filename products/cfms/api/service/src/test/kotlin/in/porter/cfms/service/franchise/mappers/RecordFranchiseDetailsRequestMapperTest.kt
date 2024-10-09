@@ -1,8 +1,8 @@
-package `in`.porter.cfms.service.mappers
+package `in`.porter.cfms.service.franchise.mappers
 
 import `in`.porter.cfms.api.models.franchises.RecordFranchiseDetailsRequest
 import `in`.porter.cfms.api.service.franchises.mappers.RecordFranchiseDetailsRequestMapper
-import `in`.porter.cfms.service.factories.RecordFranchiseDetailsRequestFactory
+import `in`.porter.cfms.service.franchise.factories.RecordFranchiseDetailsRequestFactory
 import `in`.porter.cfms.api.models.FranchiseStatus as ModelFranchiseStatus
 import `in`.porter.cfms.domain.franchise.FranchiseStatus as DomainFranchiseStatus
 import org.junit.jupiter.api.Assertions.assertEquals

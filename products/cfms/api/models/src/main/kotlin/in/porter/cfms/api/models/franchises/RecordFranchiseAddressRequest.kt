@@ -1,5 +1,6 @@
 package `in`.porter.cfms.api.models.franchises
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import java.math.BigDecimal
 
 data class RecordFranchiseAddressRequest(
@@ -7,6 +8,6 @@ data class RecordFranchiseAddressRequest(
     val city: String,
     val state: String,
     val pincode: String,
-    val latitude: BigDecimal,
-    val longitude: BigDecimal
+    @JsonProperty("lat") val latitude: BigDecimal,
+    @JsonProperty("lng") val longitude: BigDecimal
 )

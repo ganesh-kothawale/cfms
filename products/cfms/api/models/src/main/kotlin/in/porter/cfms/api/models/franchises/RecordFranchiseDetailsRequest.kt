@@ -1,31 +1,26 @@
 package `in`.porter.cfms.api.models.franchises
 
-
-import com.fasterxml.jackson.annotation.JsonFormat
 import com.fasterxml.jackson.annotation.JsonProperty
 import `in`.porter.cfms.api.models.FranchiseStatus
 import java.math.BigDecimal
 import java.time.Instant
 
-
 data class RecordFranchiseDetailsRequest(
     val address: RecordFranchiseAddressRequest,
     val poc: RecordFranchisePOCRequest,
-    @JsonProperty("customerShipmentLabelRequired") val customerShipmentLabelRequired: Boolean,
-    @JsonProperty("radiusCoverage") val radiusCoverage: BigDecimal,
-    @JsonProperty("hlpEnabled") val hlpEnabled: Boolean,
+    @JsonProperty("identification_code") val identificationCode: String,
+    @JsonProperty("radius_covered") val radiusCovered: BigDecimal,
+    @JsonProperty("hlp_enabled") val hlpEnabled: Boolean,
+    @JsonProperty("is_active") val isActive: Boolean,
+    @JsonProperty("days_of_the_week") val daysOfTheWeek: String,
+    @JsonProperty("cut_off_time") val cutOffTime: Instant,
+    @JsonProperty("start_time") val startTime: Instant,
+    @JsonProperty("end_time") val endTime: Instant,
+    @JsonProperty("porter_hub_name") val porterHubName: String,
+    @JsonProperty("franchise_gst") val franchiseGst: String,
+    @JsonProperty("franchise_pan") val franchisePan: String,
+    @JsonProperty("franchise_canceled_cheque") val franchiseCanceledCheque: String,
+    @JsonProperty("courier_partners") val courierPartners: List<String>,
+    @JsonProperty("kam_user") val kamUser: String,
     val status: FranchiseStatus,
-    @JsonProperty("daysOfOperation") val daysOfOperation: String,
-    @JsonProperty("cutOffTime")
-    val cutOffTime: Instant,
-    @JsonProperty("startTime")
-    val startTime: Instant,
-    @JsonProperty("endTime")
-    val endTime: Instant,
-    @JsonProperty("porterHubName") val porterHubName: String,
-    @JsonProperty("franchiseGst") val franchiseGst: String,
-    @JsonProperty("franchisePan") val franchisePan :String,
-    @JsonProperty("franchiseCanceledCheque") val franchiseCanceledCheque :String,
-    @JsonProperty("kamUser") val kamUser: String,
-    @JsonProperty("showCrNumber") val showCrNumber: Boolean
-)
+    )

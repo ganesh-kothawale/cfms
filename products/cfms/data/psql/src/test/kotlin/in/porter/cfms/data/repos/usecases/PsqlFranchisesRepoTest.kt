@@ -1,4 +1,4 @@
-package `in`.porter.cfms.data.repos
+package `in`.porter.cfms.data.repos.usecases
 
 import `in`.porter.cfms.data.factories.FranchiseFactory
 import `in`.porter.cfms.data.franchise.FranchiseQueries
@@ -7,8 +7,7 @@ import `in`.porter.cfms.data.franchise.mappers.FranchiseRecordMapper
 import `in`.porter.cfms.data.franchise.mappers.FranchiseRowMapper
 import `in`.porter.cfms.data.franchise.records.FranchiseRecord
 import `in`.porter.cfms.data.franchise.records.FranchiseRecordData
-import `in`.porter.cfms.domain.franchise.FranchiseStatus
-import `in`.porter.cfms.domain.franchise.entities.Franchise
+import `in`.porter.cfms.data.repos.PsqlFranchisesRepo
 import io.mockk.*
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.ResultRow
@@ -16,7 +15,6 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
-import org.junit.jupiter.api.assertThrows
 import java.math.BigDecimal
 import java.time.Instant
 

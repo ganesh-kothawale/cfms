@@ -1,4 +1,4 @@
-package `in`.porter.cfms.service.factories
+package `in`.porter.cfms.service.franchise.factories
 
 import `in`.porter.cfms.api.models.franchises.RecordFranchiseAddressRequest
 import `in`.porter.cfms.api.models.franchises.RecordFranchiseDetailsRequest

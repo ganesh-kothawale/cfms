@@ -1,4 +1,4 @@
-package `in`.porter.cfms.data.mappers
+package `in`.porter.cfms.data.repos.usecases
 
 import `in`.porter.cfms.data.franchise.FranchiseQueries
 import `in`.porter.cfms.data.franchise.FranchisesTable
