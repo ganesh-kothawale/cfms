@@ -45,7 +45,8 @@ class RecordFranchiseDetailsTest {
         recordFranchiseDetails.invoke(request)
 
         // Assert
-        coVerify(exactly = 1) { createFranchise.invoke(request) }
+        coVerify(exactly = 1) { franchiseRepo.getByEmail(request.poc.email) } // Verify getByEmail is called
+        coVerify(exactly = 1) { createFranchise.invoke(request) } // Verify createFranchise is invoked
     }
 
     @Test
@@ -64,7 +65,10 @@ class RecordFranchiseDetailsTest {
         }
 
         assertEquals("Franchise with Franchise Id $existingFranchiseEmail already exists", exception.message)
-        coVerify(exactly = 0) { createFranchise.invoke(any()) }
+
+        // Verify calls
+        coVerify(exactly = 1) { franchiseRepo.getByEmail(existingFranchiseEmail) } // Verify getByEmail is called
+        coVerify(exactly = 0) { createFranchise.invoke(any()) } // Verify createFranchise is not invoked
     }
 
     @Test
@@ -82,6 +86,9 @@ class RecordFranchiseDetailsTest {
 
         // Assert
         assertEquals("Creation failed", exception.message)
-        coVerify(exactly = 1) { createFranchise.invoke(request) }
+
+        // Verify calls
+        coVerify(exactly = 1) { franchiseRepo.getByEmail(request.poc.email) } // Verify getByEmail is called
+        coVerify(exactly = 1) { createFranchise.invoke(request) } // Verify createFranchise is invoked
     }
 }

@@ -27,3 +27,5 @@ CREATE TABLE "franchises" (
   "created_at" TIMESTAMP DEFAULT NOW(),
   "updated_at" TIMESTAMP DEFAULT NOW()
 );
+
+CREATE INDEX idx_email ON "franchises" ("email");

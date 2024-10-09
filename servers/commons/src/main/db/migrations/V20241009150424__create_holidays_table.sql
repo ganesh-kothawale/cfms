@@ -9,3 +9,5 @@ CREATE TABLE "holidays" (
   "created_at" TIMESTAMP DEFAULT NOW(),
   "updated_at" TIMESTAMP DEFAULT NOW()
 );
+
+ALTER TABLE "holidays" ADD FOREIGN KEY ("franchise_id") REFERENCES "franchises" ("franchise_id");
