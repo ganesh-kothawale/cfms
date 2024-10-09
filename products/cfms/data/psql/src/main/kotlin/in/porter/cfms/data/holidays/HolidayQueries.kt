@@ -1,15 +1,17 @@
 package `in`.porter.cfms.data.holidays
 
 import `in`.porter.cfms.data.holidays.mappers.HolidayRowMapper
+import `in`.porter.cfms.data.holidays.mappers.UpdateHolidayRowMapper
 import `in`.porter.cfms.data.holidays.records.HolidayRecord
+import `in`.porter.cfms.data.holidays.records.UpdateHolidayRecord
 import `in`.porter.kotlinutils.exposed.ExposedRepo
-import `in`.porter.kotlinutils.exposed.operations.upsert
 import kotlinx.coroutines.CoroutineDispatcher
 import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.update
 import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.insertAndGetId
+import java.time.Instant
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -18,7 +20,8 @@ class HolidayQueries
 constructor(
     override val db: Database,
     override val dispatcher: CoroutineDispatcher,
-    private val mapper: HolidayRowMapper
+    private val mapper: HolidayRowMapper,
+    private val updateMapper: UpdateHolidayRowMapper
 ) : ExposedRepo {
 
     suspend fun getByIdAndDate(franchiseId: String, startDate: LocalDate, endDate: LocalDate) = transact {
@@ -30,7 +33,7 @@ constructor(
             ?.let { mapper.toRecord(it) }
     }
 
-    suspend fun record(req: HolidayRecord): Long = transact {
+    suspend fun record(req: HolidayRecord): Int = transact {
         // Insert the holiday and return the generated ID
         if (req.franchiseId==""){
             throw Exception("Franchise ID can not be null or empty.")
@@ -38,16 +41,18 @@ constructor(
         if (req.startDate.isAfter(req.endDate)) {
             throw IllegalArgumentException("Start date cannot be after end date.")
         }
-        HolidayTable.insertAndGetId {
+        val insertedId = HolidayTable.insert {
             it[franchiseId] = req.franchiseId
             it[startDate] = req.startDate
             it[endDate] = req.endDate
             it[holidayName] = req.holidayName
             it[leaveType] = req.leaveType.name
             it[backupFranchiseIds] = req.backupFranchiseIds
-            it[createdAt] = req.createdAt
-            it[updatedAt] = req.updatedAt
-        }.value.toLong()  // Return the generated ID
+            it[createdAt] = Instant.now()
+            it[updatedAt] = Instant.now()
+        } get HolidayTable.holidayId
+
+        insertedId
     }
 
     suspend fun get(franchiseId: String): List<HolidayRecord> = transact {
@@ -60,6 +65,24 @@ constructor(
         HolidayTable.select {
             HolidayTable.startDate lessEq date and (HolidayTable.endDate greaterEq date)
         }.map { mapper.toRecord(it) }  // Map each row to a HolidayRecord
+    }
+
+suspend fun getHolidayById(id: Int): UpdateHolidayRecord? = transact {
+        HolidayTable.select {
+            HolidayTable.holidayId eq id
+        }.firstOrNull()?.let { updateMapper.toRecord(it) }
+    }
+
+    // Update holiday by ID
+    suspend fun updateHoliday(record: UpdateHolidayRecord)= transact {
+        HolidayTable.update({ HolidayTable.holidayId eq record.holidayId }) {
+            it[startDate] = record.startDate
+            it[endDate] = record.endDate
+            it[holidayName] = record.holidayName
+            it[leaveType] = record.leaveType.toString()
+            it[backupFranchiseIds] = record.backupFranchiseIds
+            it[updatedAt] = Instant.now() // Assuming `updatedAt` is updated on each modification
+        }
     }
 
 }

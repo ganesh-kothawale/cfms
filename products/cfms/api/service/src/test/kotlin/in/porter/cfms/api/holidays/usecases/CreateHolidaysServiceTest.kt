@@ -98,11 +98,11 @@ class CreateHolidaysServiceTest {
             leaveType = `in`.porter.cfms.api.models.holidays.LeaveType.Normal
         )
 
-        coEvery { createHoliday.createHoliday(any<Holiday>()) } returns 1L
+        coEvery { createHoliday.createHoliday(any<Holiday>()) } returns 1
 
         val holidayId = createHolidaysService.invoke(request)
 
-        assertEquals(1L, holidayId)
+        assertEquals(1, holidayId)
 
         coVerify(exactly = 1) { createHoliday.createHoliday(any<Holiday>()) }
     }
@@ -113,11 +113,11 @@ class CreateHolidaysServiceTest {
             leaveType = `in`.porter.cfms.api.models.holidays.LeaveType.Emergency
         )
 
-        coEvery { createHoliday.createHoliday(any<Holiday>()) } returns 1L
+        coEvery { createHoliday.createHoliday(any<Holiday>()) } returns 1
 
         val holidayId = createHolidaysService.invoke(request)
 
-        assertEquals(1L, holidayId)
+        assertEquals(1, holidayId)
 
         coVerify(exactly = 1) { createHoliday.createHoliday(any<Holiday>()) }
     }

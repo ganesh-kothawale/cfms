@@ -7,6 +7,7 @@ import `in`.porter.cfms.servers.ktor.di.HttpScope
 
 import dagger.Component
 import `in`.porter.cfms.servers.ktor.external.usecases.holidays.CreateHolidaysHttpService
+import `in`.porter.cfms.servers.ktor.external.usecases.holidays.UpdateHolidaysHttpService
 
 @HttpScope
 @Component(
@@ -18,5 +19,6 @@ import `in`.porter.cfms.servers.ktor.external.usecases.holidays.CreateHolidaysHt
 interface HttpComponent {
   val run: Run
   val createHolidaysHttpService: CreateHolidaysHttpService
+  val updateHolidaysHttpService: UpdateHolidaysHttpService
 
 }

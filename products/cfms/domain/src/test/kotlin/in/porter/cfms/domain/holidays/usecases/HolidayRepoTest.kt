@@ -8,8 +8,8 @@ import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
-import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -62,11 +62,11 @@ class HolidayRepoTest {
     fun `should record a holiday`() = runBlocking {
         val holiday = HolidayFactory.buildHoliday()
 
-        coEvery { holidayRepo.record(holiday) } returns 1L
+        coEvery { holidayRepo.record(holiday) } returns 1
 
         val result = holidayRepo.record(holiday)
 
-        assertEquals(1L, result)
+        assertEquals(1, result)
         coVerify(exactly = 1) { holidayRepo.record(holiday) }
     }
 

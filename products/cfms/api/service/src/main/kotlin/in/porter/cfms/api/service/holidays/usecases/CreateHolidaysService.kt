@@ -17,7 +17,7 @@ constructor(
 
     private val logger = LoggerFactory.getLogger(CreateHolidaysService::class.java)
 
-    suspend fun invoke(request: CreateHolidaysRequest): Long {
+    suspend fun invoke(request: CreateHolidaysRequest): Int {
 
         val today = LocalDate.now()
 
