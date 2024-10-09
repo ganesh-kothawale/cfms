@@ -17,7 +17,7 @@ allprojects {
     mavenCentral()
     gradlePluginPortal()
     maven {
-      url = uri("https://repos.spring.io/plugins-release")
+      url = uri("https://repo.spring.io/plugins-release")
     }
 
     maven {
