@@ -15,7 +15,8 @@ import org.jetbrains.exposed.sql.Database
   [
     UtilsModule::class,
     HolidayModule::class,
-    OrderDetailsRepoModule::class
+    OrderDetailsRepoModule::class,
+    FranchiseReposModule::class
   ]
 )
 interface PsqlDataComponent {
