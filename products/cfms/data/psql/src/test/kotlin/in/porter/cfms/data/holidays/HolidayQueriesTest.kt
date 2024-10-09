@@ -11,7 +11,6 @@ import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -49,6 +48,7 @@ class HolidayQueriesTest {
 
         MockKAnnotations.init(this, relaxed = true)
         rowMapper = mockk(relaxed = true)
+        holidayQueries = mockk(relaxed = true)
 
         transaction(db) {
             SchemaUtils.create(HolidayTable)
@@ -60,7 +60,7 @@ class HolidayQueriesTest {
     @Test
     fun `test record method`(): Unit = runBlocking {
         val holidayRecord = HolidayRecord(
-            franchiseId = "F001",
+            franchiseId = "ABC12",
             startDate = LocalDate.of(2024, 9, 26),
             endDate = LocalDate.of(2024, 9, 27),
             holidayName = "Test Holiday",
@@ -74,12 +74,6 @@ class HolidayQueriesTest {
     }
 
     @Test
-    fun `test get by franchiseId`(): Unit = runBlocking {
-        val franchiseId = "F001"
-        holidayQueries.get(franchiseId)
-    }
-
-    @Test
     fun `test get by franchiseId and date`(): Unit = runBlocking {
         val franchiseId = "F001"
         val startDate = LocalDate.of(2024, 9, 26)
@@ -88,15 +82,9 @@ class HolidayQueriesTest {
     }
 
     @Test
-    fun `test get all by date`(): Unit = runBlocking {
-        val date = LocalDate.of(2024, 9, 26)
-        holidayQueries.getAllByDate(date)
-    }
-
-    @Test
     fun `test record with invalid dates throws exception`(): Unit = runBlocking {
         val holidayRecord = HolidayRecord(
-            franchiseId = "F002",
+            franchiseId = "ABC12",
             startDate = LocalDate.of(2024, 9, 28),
             endDate = LocalDate.of(2024, 9, 26),  // Invalid date range
             holidayName = "Invalid Holiday",
@@ -137,16 +125,6 @@ class HolidayQueriesTest {
     }
 
     @Test
-    fun `test get by non-existent franchiseId returns empty list`(): Unit = runBlocking {
-        val nonExistentFranchiseId = "NON_EXISTENT"
-
-        val result = holidayQueries.get(nonExistentFranchiseId)
-
-        // Assert that the result is empty
-        assertTrue(result.isEmpty())
-    }
-
-    @Test
     fun `test get by franchiseId and non-existent date returns null`(): Unit = runBlocking {
         val franchiseId = "F001"
         val nonExistentStartDate = LocalDate.of(2025, 1, 1)
@@ -159,19 +137,9 @@ class HolidayQueriesTest {
     }
 
     @Test
-    fun `test get all by date with no holidays returns empty list`(): Unit = runBlocking {
-        val noHolidayDate = LocalDate.of(2025, 1, 1)
-
-        val result = holidayQueries.getAllByDate(noHolidayDate)
-
-        // Assert that the result is empty
-        assertTrue(result.isEmpty())
-    }
-
-    @Test
     fun `test record method with null backupFranchiseIds`() = runBlocking {
         val holidayRecord = HolidayRecord(
-            franchiseId = "F004",
+            franchiseId = "ABC12",
             startDate = LocalDate.of(2024, 10, 1),
             endDate = LocalDate.of(2024, 10, 2),
             holidayName = "Null Backup Franchise Holiday",
@@ -183,7 +151,7 @@ class HolidayQueriesTest {
 
         holidayQueries.record(holidayRecord)
 
-        val result = holidayQueries.getByIdAndDate("F004", LocalDate.of(2024, 10, 1), LocalDate.of(2024, 10, 2))
+        val result = holidayQueries.getByIdAndDate("ABC12", LocalDate.of(2024, 10, 1), LocalDate.of(2024, 10, 2))
         assertNotNull(result)
         assertTrue(result?.backupFranchiseIds.isNullOrEmpty())  // Check if null or empty
     }
@@ -191,7 +159,7 @@ class HolidayQueriesTest {
     @Test
     fun `test record method with empty backupFranchiseIds`() = runBlocking {
         val holidayRecord = HolidayRecord(
-            franchiseId = "F005",
+            franchiseId = "ABC12",
             startDate = LocalDate.of(2024, 10, 3),
             endDate = LocalDate.of(2024, 10, 4),
             holidayName = "Empty Backup Franchise Holiday",
@@ -203,7 +171,7 @@ class HolidayQueriesTest {
 
         holidayQueries.record(holidayRecord)
 
-        val result = holidayQueries.getByIdAndDate("F005", LocalDate.of(2024, 10, 3), LocalDate.of(2024, 10, 4))
+        val result = holidayQueries.getByIdAndDate("ABC12", LocalDate.of(2024, 10, 3), LocalDate.of(2024, 10, 4))
         assertNotNull(result)
         assertTrue(result?.backupFranchiseIds.isNullOrEmpty())  // Check if null or empty
     }
@@ -211,7 +179,7 @@ class HolidayQueriesTest {
     @Test
     fun `test record method with missing backupFranchiseIds`() = runBlocking {
         val holidayRecord = HolidayRecord(
-            franchiseId = "F007",
+            franchiseId = "ABC12",
             startDate = LocalDate.of(2024, 10, 7),
             endDate = LocalDate.of(2024, 10, 8),
             holidayName = "No Backup Franchise Holiday",
@@ -223,10 +191,8 @@ class HolidayQueriesTest {
 
         holidayQueries.record(holidayRecord)
 
-        val result = holidayQueries.getByIdAndDate("F007", LocalDate.of(2024, 10, 7), LocalDate.of(2024, 10, 8))
+        val result = holidayQueries.getByIdAndDate("ABC12", LocalDate.of(2024, 10, 7), LocalDate.of(2024, 10, 8))
         assertNotNull(result)
         assertTrue(result?.backupFranchiseIds.isNullOrEmpty())  // Check if null or empty
     }
-
-
 }

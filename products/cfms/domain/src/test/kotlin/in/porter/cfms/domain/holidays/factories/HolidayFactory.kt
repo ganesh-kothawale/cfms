@@ -7,11 +7,11 @@ import java.time.LocalDate
 
 object HolidayFactory {
     fun buildHoliday(
-        franchiseId: String = "123",
+        franchiseId: String = "ABC12",
         startDate: LocalDate = LocalDate.now(),
         endDate: LocalDate = LocalDate.now().plusDays(1),
         leaveType: LeaveType = LeaveType.Normal,
-        backupFranchiseIds: String? = "321,456",
+        backupFranchiseIds: String? = "SME001",
         holidayName: String? = "Christmas",
         createdAt: Instant = Instant.now(),
         updatedAt: Instant = Instant.now()
