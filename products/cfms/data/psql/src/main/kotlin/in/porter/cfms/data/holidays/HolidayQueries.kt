@@ -36,7 +36,7 @@ constructor(
 
     suspend fun record(req: HolidayRecord): Int = transact {
         // Insert the holiday and return the generated ID
-        if (req.franchiseId==""){
+        if (req.franchiseId == "") {
             throw Exception("Franchise ID can not be null or empty.")
         }
         if (req.startDate.isAfter(req.endDate)) {
@@ -56,7 +56,13 @@ constructor(
         insertedId
     }
 
-    suspend fun get(franchiseId: String): List<HolidayRecord> = transact {
+    suspend fun getHolidayById(id: Int): UpdateHolidayRecord? = transact {
+        HolidayTable.select {
+            HolidayTable.id eq id
+        }.firstOrNull()?.let { updateMapper.toRecord(it) }
+    }
+
+suspend fun get(franchiseId: String): List<HolidayRecord> = transact {
         HolidayTable.select {
             HolidayTable.franchiseId eq franchiseId
         }.map { mapper.toRecord(it) }  // Map each row to a HolidayRecord
@@ -66,12 +72,6 @@ constructor(
         HolidayTable.select {
             HolidayTable.startDate lessEq date and (HolidayTable.endDate greaterEq date)
         }.map { mapper.toRecord(it) }  // Map each row to a HolidayRecord
-    }
-
-suspend fun getHolidayById(id: Int): UpdateHolidayRecord? = transact {
-        HolidayTable.select {
-            HolidayTable.holidayId eq id
-        }.firstOrNull()?.let { updateMapper.toRecord(it) }
     }
 
     // Update holiday by ID
@@ -89,5 +89,4 @@ suspend fun getHolidayById(id: Int): UpdateHolidayRecord? = transact {
     fun deleteHoliday(holidayId: Int): Int {
         return HolidayTable.deleteWhere { HolidayTable.holidayId eq holidayId }
     }
-
 }

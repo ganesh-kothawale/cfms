@@ -15,7 +15,7 @@ class PsqlHolidayRepo
 constructor(
     private val queries: HolidayQueries,
     private val mapper: HolidayMapper,
-    private val updateMapper: UpdateHolidayMapper
+    private val updateMapper : UpdateHolidayMapper
 ) : Traceable, HolidayRepo {
 
     override suspend fun getByIdAndDate(franchiseId: String, startDate: LocalDate, endDate: LocalDate): Holiday? =
