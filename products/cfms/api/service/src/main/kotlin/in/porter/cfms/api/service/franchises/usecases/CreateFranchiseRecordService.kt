@@ -20,7 +20,7 @@ constructor(
 ) : Traceable {
     suspend fun invoke(request: RecordFranchiseDetailsRequest): RecordFranchiseDetailsResponse = trace {
         try {
-            val generatedFranchiseId = CommonUtils.generateRandomAlphaNumeric(12)
+            val generatedFranchiseId = CommonUtils.generateRandomAlphaNumeric(10)
             mapper.toDomain(request, generatedFranchiseId)
                 .let { recordFranchiseDetails.invoke(it) }
 
