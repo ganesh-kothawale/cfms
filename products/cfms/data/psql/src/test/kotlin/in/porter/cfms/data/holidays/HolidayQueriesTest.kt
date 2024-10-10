@@ -42,7 +42,7 @@ class HolidayQueriesTest {
 
     @BeforeAll
     fun setup() {
-        postgresContainer = PostgreSQLContainer<Nothing>("postgres:13.3").apply {
+        postgresContainer = PostgreSQLContainer<Nothing>("postgres:14.13").apply {
             withDatabaseName("test")
             withUsername("test")
             withPassword("test")
