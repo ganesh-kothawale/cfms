@@ -51,44 +51,8 @@ constructor(
             // Call the service to list holidays
             val holidaysResponse = listHolidaysService.listHolidays(request)
 
-            // Map to the new response structure
-            val formattedResponse = ListHolidaysResponse(
-                page = holidaysResponse.page,
-                size = holidaysResponse.size,
-                totalPages = holidaysResponse.totalPages,
-                totalRecords = holidaysResponse.totalRecords,
-                holidays = holidaysResponse.holidays.map { holiday ->
-                    HolidayResponse(
-                        holidayId = holiday.holidayId,
-                        franchiseId = holiday.franchiseId,
-                        holidayPeriod = HolidayPeriod(
-                            fromDate = holiday.holidayPeriod.fromDate,
-                            toDate = holiday.holidayPeriod.toDate
-                        ),
-                        holidayDetails = HolidayDetails(
-                            name = holiday.holidayDetails.name,
-                            leaveType = holiday.holidayDetails.leaveType.toString(),
-                            backupFranchise = holiday.holidayDetails.backupFranchise
-                        ),
-                        franchise = FranchiseResponse(
-                            franchiseId = holiday.franchise.franchiseId,
-                            franchiseName = holiday.franchise.franchiseName,
-                            poc = FranchisePoc(
-                                name = holiday.franchise.poc.name,
-                                contact = holiday.franchise.poc.contact
-                            ),
-                            address = FranchiseAddress(
-                                gpsAddress = holiday.franchise.address.gpsAddress,
-                                city = holiday.franchise.address.city,  // Replace with actual data if available
-                                state = holiday.franchise.address.state // Replace with actual data if available
-                            )
-                        )
-                    )
-                }
-            )
-
             // Respond with the formatted result
-            call.respond(HttpStatusCode.OK, mapOf("data" to formattedResponse))
+            call.respond(HttpStatusCode.OK, mapOf("data" to holidaysResponse))
             logger.info("Sent response to list all holidays")
         } catch (e: CfmsException) {
             // Handle any validation or service-related exceptions
