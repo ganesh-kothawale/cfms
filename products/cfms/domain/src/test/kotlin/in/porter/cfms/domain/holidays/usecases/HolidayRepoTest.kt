@@ -1,6 +1,7 @@
 package `in`.porter.cfms.domain.holidays.usecases
 
 import `in`.porter.cfms.domain.holidays.factories.HolidayFactory
+import `in`.porter.cfms.domain.holidays.factories.ListHolidayFactory
 import `in`.porter.cfms.domain.holidays.factories.UpdateHolidayFactory
 import `in`.porter.cfms.domain.holidays.repos.HolidayRepo
 import io.mockk.coEvery
@@ -180,5 +181,132 @@ class HolidayRepoTest {
         assertNotNull(result)
         assertTrue(result.isEmpty())
     }
+
+    @Test
+    fun `should find holidays based on filters`() = runBlocking {
+        val franchiseId = "ABC12"
+        val leaveType = null
+        val startDate = LocalDate.of(2024, 1, 1)
+        val endDate = LocalDate.of(2024, 12, 31)
+        val page = 1
+        val size = 10
+        val holidays = listOf(ListHolidayFactory.buildListHoliday())
+
+        coEvery { holidayRepo.findHolidays(franchiseId, leaveType, startDate, endDate, page, size) } returns holidays
+
+        val result = holidayRepo.findHolidays(franchiseId, leaveType, startDate, endDate, page, size)
+
+        assertNotNull(result)
+        assertEquals(1, result.size)
+        coVerify(exactly = 1) { holidayRepo.findHolidays(franchiseId, leaveType, startDate, endDate, page, size) }
+    }
+
+    @Test
+    fun `should count holidays based on filters`() = runBlocking {
+        val franchiseId = "ABC12"
+        val leaveType = null
+        val startDate = LocalDate.of(2024, 1, 1)
+        val endDate = LocalDate.of(2024, 12, 31)
+        val count = 5
+
+        coEvery { holidayRepo.countHolidays(franchiseId, leaveType, startDate, endDate) } returns count
+
+        val result = holidayRepo.countHolidays(franchiseId, leaveType, startDate, endDate)
+
+        assertEquals(count, result)
+        coVerify(exactly = 1) { holidayRepo.countHolidays(franchiseId, leaveType, startDate, endDate) }
+    }
+
+    @Test
+    fun `should handle null franchiseId and return empty list`() = runBlocking {
+        val leaveType = null
+        val startDate = LocalDate.of(2024, 1, 1)
+        val endDate = LocalDate.of(2024, 12, 31)
+        val page = 1
+        val size = 10
+
+        coEvery { holidayRepo.findHolidays(null, leaveType, startDate, endDate, page, size) } returns emptyList()
+
+        val result = holidayRepo.findHolidays(null, leaveType, startDate, endDate, page, size)
+
+        assertNotNull(result)
+        assertTrue(result.isEmpty())
+        coVerify(exactly = 1) { holidayRepo.findHolidays(null, leaveType, startDate, endDate, page, size) }
+    }
+
+    @Test
+    fun `should return empty list when startDate is after endDate`() = runBlocking {
+        val franchiseId = "ABC12"
+        val leaveType = null
+        val startDate = LocalDate.of(2024, 12, 31)
+        val endDate = LocalDate.of(2024, 1, 1) // End date is before start date
+        val page = 1
+        val size = 10
+
+        coEvery { holidayRepo.findHolidays(franchiseId, leaveType, startDate, endDate, page, size) } returns emptyList()
+
+        val result = holidayRepo.findHolidays(franchiseId, leaveType, startDate, endDate, page, size)
+
+        assertNotNull(result)
+        assertTrue(result.isEmpty())
+        coVerify(exactly = 1) { holidayRepo.findHolidays(franchiseId, leaveType, startDate, endDate, page, size) }
+    }
+
+    @Test
+    fun `should return empty list for negative page number`() = runBlocking {
+        val franchiseId = "ABC12"
+        val leaveType = null
+        val startDate = LocalDate.of(2024, 1, 1)
+        val endDate = LocalDate.of(2024, 12, 31)
+        val page = -1 // Invalid negative page
+        val size = 10
+
+        coEvery { holidayRepo.findHolidays(franchiseId, leaveType, startDate, endDate, page, size) } returns emptyList()
+
+        val result = holidayRepo.findHolidays(franchiseId, leaveType, startDate, endDate, page, size)
+
+        assertNotNull(result)
+        assertTrue(result.isEmpty())
+        coVerify(exactly = 1) { holidayRepo.findHolidays(franchiseId, leaveType, startDate, endDate, page, size) }
+    }
+
+    @Test
+    fun `should return empty list for page size zero`() = runBlocking {
+        val franchiseId = "ABC12"
+        val leaveType = null
+        val startDate = LocalDate.of(2024, 1, 1)
+        val endDate = LocalDate.of(2024, 12, 31)
+        val page = 1
+        val size = 0 // Invalid page size
+
+        coEvery { holidayRepo.findHolidays(franchiseId, leaveType, startDate, endDate, page, size) } returns emptyList()
+
+        val result = holidayRepo.findHolidays(franchiseId, leaveType, startDate, endDate, page, size)
+
+        assertNotNull(result)
+        assertTrue(result.isEmpty())
+        coVerify(exactly = 1) { holidayRepo.findHolidays(franchiseId, leaveType, startDate, endDate, page, size) }
+    }
+
+    @Test
+    fun `should handle large page size correctly`() = runBlocking {
+        val franchiseId = "ABC12"
+        val leaveType = null
+        val startDate = LocalDate.of(2024, 1, 1)
+        val endDate = LocalDate.of(2024, 12, 31)
+        val page = 1
+        val size = Int.MAX_VALUE // Large size
+
+        coEvery { holidayRepo.findHolidays(franchiseId, leaveType, startDate, endDate, page, size) } returns emptyList()
+
+        val result = holidayRepo.findHolidays(franchiseId, leaveType, startDate, endDate, page, size)
+
+        assertNotNull(result)
+        assertTrue(result.isEmpty())
+        coVerify(exactly = 1) { holidayRepo.findHolidays(franchiseId, leaveType, startDate, endDate, page, size) }
+    }
+
+
+
 
 }
