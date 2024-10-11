@@ -1,4 +1,4 @@
-package `in`.porter.cfms.data.repos
+package `in`.porter.cfms.data.holidays.repos
 
 import `in`.porter.cfms.data.holidays.HolidayQueries
 import `in`.porter.cfms.data.holidays.HolidayTable
@@ -6,7 +6,6 @@ import `in`.porter.cfms.data.holidays.mappers.HolidayMapper
 import `in`.porter.cfms.data.holidays.mappers.ListHolidayMapper
 import `in`.porter.cfms.data.holidays.mappers.ListHolidaysFranchiseRowMapper
 import `in`.porter.cfms.data.holidays.mappers.UpdateHolidayMapper
-import `in`.porter.cfms.data.holidays.records.UpdateHolidayRecord
 import `in`.porter.cfms.domain.holidays.entities.Holiday
 import `in`.porter.cfms.domain.holidays.entities.LeaveType
 import `in`.porter.cfms.domain.holidays.entities.ListHoliday
