@@ -4,7 +4,7 @@ import `in`.porter.cfms.api.holidays.factories.UpdateHolidaysRequestMapperFactor
 import `in`.porter.cfms.api.models.exceptions.CfmsException
 import `in`.porter.cfms.api.models.holidays.UpdateHolidaysRequest
 import `in`.porter.cfms.api.service.holidays.mappers.UpdateHolidaysRequestMapper
-import `in`.porter.cfms.domain.holidays.entities.UpdateHolidayEntity
+import `in`.porter.cfms.domain.holidays.entities.UpdateHoliday
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
@@ -17,7 +17,7 @@ class UpdateHolidaysRequestMapperTest {
     fun `should map UpdateHolidaysRequest to UpdateHolidayEntity`() {
         val request: UpdateHolidaysRequest = UpdateHolidaysRequestMapperFactory.buildUpdateHolidaysRequest()
 
-        val result: UpdateHolidayEntity = mapper.toDomain(request)
+        val result: UpdateHoliday = mapper.toDomain(request)
         assertEquals(request.holidayId, result.holidayId)
         assertEquals(request.franchiseId, result.franchiseId)
         assertEquals(request.startDate, result.startDate)

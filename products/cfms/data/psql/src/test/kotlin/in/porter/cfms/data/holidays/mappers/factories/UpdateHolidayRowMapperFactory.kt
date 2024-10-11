@@ -5,7 +5,6 @@ import `in`.porter.cfms.data.holidays.records.UpdateHolidayRecord
 import `in`.porter.cfms.domain.holidays.entities.LeaveType
 import io.mockk.coEvery
 import io.mockk.mockk
-import org.jetbrains.exposed.dao.id.EntityID
 import org.jetbrains.exposed.sql.ResultRow
 import java.time.Instant
 import java.time.LocalDate

@@ -6,7 +6,7 @@ import org.jetbrains.exposed.sql.`java-time`.date
 
 object HolidayTable : Table("holidays") {
     val holidayId = integer("id").autoIncrement()
-    val franchiseId = varchar("franchise_id", 64)
+    val franchiseId = varchar("franchise_id", 64).references(FranchisesTable.franchiseId)
     val startDate = date("start_date")
     val endDate = date("end_date")
     val holidayName = varchar("holiday_name", 128).nullable()

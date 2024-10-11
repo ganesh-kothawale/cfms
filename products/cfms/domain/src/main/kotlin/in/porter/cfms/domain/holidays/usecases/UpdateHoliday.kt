@@ -2,7 +2,7 @@ package `in`.porter.cfms.domain.holidays.usecases
 
 import `in`.porter.cfms.domain.holidays.repos.HolidayRepo
 import `in`.porter.cfms.domain.exceptions.CfmsException
-import `in`.porter.cfms.domain.holidays.entities.UpdateHolidayEntity
+import `in`.porter.cfms.domain.holidays.entities.UpdateHoliday
 import `in`.porter.cfms.domain.holidays.usecases.CourierApplyLeaveCallingService.ApplyLeaveRequest
 import `in`.porter.cfms.domain.holidays.usecases.CourierApplyLeaveCallingService.ApplyLeaveResponse
 import org.slf4j.LoggerFactory
@@ -17,7 +17,7 @@ constructor(
 ) {
     private val logger = LoggerFactory.getLogger(UpdateHoliday::class.java)
 
-    suspend fun updateHoliday(holiday: UpdateHolidayEntity): Int {
+    suspend fun updateHoliday(holiday: UpdateHoliday): Int {
         // Fetch the existing holiday by ID
 
         logger.info("Checking validations before updating holiday: ${holiday.holidayId}")
@@ -41,6 +41,14 @@ constructor(
             holiday.copy(
                 startDate = existingHoliday.startDate // Prevent updating start date
             )
+        }
+
+        if (existingHoliday.startDate != holiday.startDate || existingHoliday.endDate != holiday.endDate) {
+            val existingHolidayCheck = holidayRepo.getByIdAndDate(holiday.franchiseId, holiday.startDate, holiday.endDate)
+            if (existingHolidayCheck != null && existingHolidayCheck.holidayId != holiday.holidayId) {
+                logger.info("Holiday conflict detected for dates ${holiday.startDate} - ${holiday.endDate}.")
+                throw CfmsException("Holiday is already applied for the given dates.")
+            }
         }
 
         logger.info("Calling courier service apply leave API")
@@ -68,10 +76,7 @@ constructor(
 
         // Insert the holiday into the database
 
-        val existingHolidayCheck = holidayRepo.getByIdAndDate(holiday.franchiseId.toString(), holiday.startDate, holiday.endDate)
-        if (existingHolidayCheck != null) {
-            throw CfmsException("Holiday is already applied for the given dates.")
-        }
+
         return holidayRepo.update(holiday)
     }
 

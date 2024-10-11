@@ -1,7 +1,7 @@
 package `in`.porter.cfms.data.holidays.mappers
 
 import `in`.porter.cfms.data.holidays.records.UpdateHolidayRecord
-import `in`.porter.cfms.domain.holidays.entities.UpdateHolidayEntity
+import `in`.porter.cfms.domain.holidays.entities.UpdateHoliday
 import javax.inject.Inject
 
 class UpdateHolidayMapper
@@ -10,7 +10,7 @@ constructor()
 {
 
     // Map UpdateHolidayEntity to HolidayRecord (for updating in the database)
-    fun toRecord(updateHoliday: UpdateHolidayEntity): UpdateHolidayRecord {
+    fun toRecord(updateHoliday: UpdateHoliday): UpdateHolidayRecord {
         return UpdateHolidayRecord(
             holidayId = updateHoliday.holidayId,  // Ensure ID is mapped for updating
             franchiseId = updateHoliday.franchiseId.toString(),
@@ -25,8 +25,8 @@ constructor()
     }
 
     // Optionally, map from database record to UpdateHolidayEntity (if needed for fetching)
-    fun toDomain(record: UpdateHolidayRecord): UpdateHolidayEntity {
-        return UpdateHolidayEntity(
+    fun toDomain(record: UpdateHolidayRecord): UpdateHoliday {
+        return UpdateHoliday(
             holidayId = record.holidayId,
             franchiseId = record.franchiseId,
             startDate = record.startDate,
