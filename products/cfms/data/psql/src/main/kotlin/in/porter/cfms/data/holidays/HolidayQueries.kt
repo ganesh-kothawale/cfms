@@ -21,7 +21,6 @@ import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
-import org.jetbrains.exposed.sql.insert
 import java.time.Instant
 import java.time.LocalDate
 import javax.inject.Inject
@@ -38,7 +37,7 @@ constructor(
 
 ) : ExposedRepo {
 
-    suspend fun getByIdAndDate(franchiseId: String, startDate: LocalDate, endDate: LocalDate) = transact {
+    suspend fun getByIdAndDate(franchiseId: String, startDate: LocalDate, endDate: LocalDate): UpdateHolidayRecord? = transact {
         HolidayTable.select {
             (HolidayTable.franchiseId eq franchiseId) and
                     (HolidayTable.startDate eq startDate) and
@@ -88,7 +87,7 @@ constructor(
     }
 
     // Update holiday by ID
-    suspend fun updateHoliday(record: UpdateHolidayRecord) = transact {
+    suspend fun updateHoliday(record: UpdateHolidayRecord):Int = transact {
         HolidayTable.update({ HolidayTable.holidayId eq record.holidayId }) {
             it[startDate] = record.startDate
             it[endDate] = record.endDate
