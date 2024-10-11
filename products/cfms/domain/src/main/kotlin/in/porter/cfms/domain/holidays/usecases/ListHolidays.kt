@@ -26,6 +26,17 @@ constructor(
         logger.info("Starting listHolidays method for franchiseId: {}, leaveType: {}, startDate: {}, endDate: {}, page: {}, size: {}",
             franchiseId, leaveType, startDate, endDate, page, size)
 
+        // Validate page and size
+        if (page < 1) {
+            logger.error("Page number must be greater than zero.")
+            throw CfmsException("Page number must be greater than zero.")
+        }
+
+        if (size < 1) {
+            logger.error("Page size must be greater than zero.")
+            throw CfmsException("Page size must be greater than zero.")
+        }
+
         val leaveTypeEnum = validateAndProcessLeaveType(leaveType)
 
         // Fetch holidays and count from the repository

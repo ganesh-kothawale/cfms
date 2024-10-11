@@ -31,8 +31,7 @@ fun Route.holidaysRoutes(httpComponent: HttpComponent) {
 
     get("") {
         try {
-            // Extract query parameters
-            val page = call.request.queryParameters["page"]?.toIntOrNull() ?: throw CfmsException("Page parameter is required")
+            val page = call.request.queryParameters["page"]?.toIntOrNull() ?: 1
             val size = call.request.queryParameters["size"]?.toIntOrNull() ?: 10
             val franchiseId = call.request.queryParameters["franchise_id"]?.takeIf { it.isNotBlank() }
             val leaveType = call.request.queryParameters["leave_type"]?.takeIf { it.isNotBlank() }
