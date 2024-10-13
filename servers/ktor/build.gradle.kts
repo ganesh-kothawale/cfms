@@ -60,21 +60,23 @@ tasks.register<Delete>("cleanResources") {
 }
 
 tasks.register<Copy>("copyConfig") {
-  doLast {
-    val configPath = File("build/config")
-    delete(configPath)
+  // Delete the config directory before copying
+  doFirst {
+    delete("build/config")
+  }
 
-    mapOf(
-      "config/dev/dom/common" to "dom/properties",
-      "config/dev/dom/ktor" to "dom/properties",
-    ).forEach { (from, to) ->
-      copy {
-        from(project.rootDir.resolve(from))
-        into(configPath.resolve(to))
-      }
-    }
+  // Define all copy specifications
+  mapOf(
+    "config/dev/dom/common" to "dom",
+    "config/dev/dom/ktor" to "dom",
+    "config/dev/common" to "dom"
+  ).forEach { (from, to) ->
+    println("Copying from $from to $to")
+    from(project.rootDir.resolve(from))
+    into("build/config/$to")
   }
 }
+
 if (env == "dev") {
   tasks.named("processResources") {
     dependsOn("copyConfig")

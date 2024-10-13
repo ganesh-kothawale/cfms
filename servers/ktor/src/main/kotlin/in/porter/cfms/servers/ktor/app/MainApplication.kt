@@ -99,5 +99,4 @@ fun Application.main() {
         route("cfms/private/orders") { ordersRoutes(httpComponent) }
         route("courier_partner") { courierPartnerRoutes(httpComponent) }
     }
-
 }

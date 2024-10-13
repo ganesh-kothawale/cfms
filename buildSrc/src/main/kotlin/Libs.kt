@@ -53,6 +53,9 @@ object Libs {
     const val ktorOkHttpClient = "$group:ktor-client-okhttp:$version"
     const val contentNegotiation = "$group:ktor-client-content-negotiation:$version"
 
+    const val serializationKotlinxJson = "$group:ktor-serialization-kotlinx-json:$version"
+    const val ktorServerTest = "io.ktor:ktor-server-tests:$version"
+
   }
 
   object Log4j {
@@ -65,7 +68,7 @@ object Libs {
 
   object Testing {
     private const val testContainersGroup = "org.testcontainers"
-    private const val testContainersVersion = "1.12.3"
+    private const val testContainersVersion = "1.17.5"
     const val testContainers = "$testContainersGroup:testcontainers:$testContainersVersion"
     const val testContainersPostgresql = "$testContainersGroup:postgresql:$testContainersVersion"
     const val testContainersJuniper = "$testContainersGroup:junit-jupiter:$testContainersVersion"
@@ -86,5 +89,20 @@ object Libs {
     const val core = "$group:micrometer-core:$version"
     const val cloudwatch = "$group:micrometer-registry-cloudwatch2:$version"
   }
+
+  object KotlinxSerialization {
+    private const val version = "1.5.1"
+    private const val group = "org.jetbrains.kotlinx"
+
+    const val json = "$group:kotlinx-serialization-json:$version"
+  }
+
+object Jackson {
+    private const val group = "com.fasterxml.jackson.datatype"
+    private const val version = "2.15.0"
+
+    const val javaTimeModule = "$group:jackson-datatype-jsr310:$version"
+  }
+
 
 }
