@@ -10,6 +10,8 @@ import `in`.porter.cfms.servers.ktor.external.usecases.holidays.CreateHolidaysHt
 import `in`.porter.cfms.servers.ktor.external.usecases.holidays.DeleteHolidaysHttpService
 import `in`.porter.cfms.servers.ktor.external.usecases.holidays.UpdateHolidaysHttpService
 import `in`.porter.cfms.servers.ktor.external.usecases.holidays.ListHolidaysHttpService
+import `in`.porter.cfms.servers.ktor.external.usecases.franchises.CreateFranchiseRecordHttpService
+import `in`.porter.cfms.servers.ktor.external.usecases.franchises.ListFranchisesHttpService
 
 @HttpScope
 @Component(
@@ -24,5 +26,6 @@ interface HttpComponent {
   val updateHolidaysHttpService: UpdateHolidaysHttpService
   val deleteHolidaysHttpService: DeleteHolidaysHttpService
   val listHolidaysHttpService : ListHolidaysHttpService
-
+  val createFranchiseRecordHttpService : CreateFranchiseRecordHttpService
+  val listFranchisesHttpService : ListFranchisesHttpService
 }

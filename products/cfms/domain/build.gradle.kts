@@ -8,4 +8,5 @@ dependencies {
   implementation(Libs.Ktor.clientJson)
   implementation(Libs.Ktor.serializationKotlinxJson)
   implementation(Libs.KotlinxSerialization.json)
- }
+  implementation(Libs.KotlinUtils.geos)
+}
