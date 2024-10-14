@@ -3,6 +3,7 @@ package `in`.porter.cfms.data.repos.usecases
 import `in`.porter.cfms.data.franchise.FranchiseQueries
 import `in`.porter.cfms.data.franchise.FranchisesTable
 import `in`.porter.cfms.data.franchise.mappers.FranchiseRowMapper
+import `in`.porter.cfms.data.franchise.mappers.ListFranchisesRowMapper
 import `in`.porter.cfms.data.franchise.records.FranchiseRecordData
 import io.mockk.MockKAnnotations
 import io.mockk.mockk
@@ -25,6 +26,7 @@ class FranchiseQueriesTest {
     private lateinit var mapper: FranchiseRowMapper
     private lateinit var postgresContainer: PostgreSQLContainer<Nothing>
     private lateinit var db: Database
+    private lateinit var listMapper: ListFranchisesRowMapper
 
     @BeforeAll
     fun setupDb() {
@@ -50,8 +52,9 @@ class FranchiseQueriesTest {
             SchemaUtils.create(FranchisesTable)
         }
 
-        mapper = mockk(relaxed = true)  // Mock with relaxed behavior
-        franchiseQueries = FranchiseQueries(db, Dispatchers.Unconfined, mapper)
+        mapper = mockk(relaxed = true)
+        listMapper = mockk(relaxed = true)// Mock with relaxed behavior
+        franchiseQueries = FranchiseQueries(db, Dispatchers.Unconfined, mapper, listMapper)
     }
 
     @BeforeEach
@@ -79,9 +82,9 @@ class FranchiseQueriesTest {
             hlpEnabled = true,
             kamUser = "User1",
             showCrNumber = false,
-            cutOffTime = Instant.now(),
-            startTime = Instant.now(),
-            endTime = Instant.now(),
+            cutOffTime = "17",
+            startTime = "9",
+            endTime = "17",
             longitude = BigDecimal("0.0"),
             latitude = BigDecimal("0.0"),
             radiusCoverage = BigDecimal("0.0"),
@@ -112,9 +115,9 @@ class FranchiseQueriesTest {
             hlpEnabled = true,
             kamUser = "User1",
             showCrNumber = false,
-            cutOffTime = Instant.now(),
-            startTime = Instant.now(),
-            endTime = Instant.now(),
+            cutOffTime = "17",
+            startTime = "9",
+            endTime = "17",
             longitude = BigDecimal("0.0"),
             latitude = BigDecimal("0.0"),
             radiusCoverage = BigDecimal("0.0"),
@@ -154,9 +157,9 @@ class FranchiseQueriesTest {
             hlpEnabled = false,
             kamUser = "User2",
             showCrNumber = true,
-            cutOffTime = Instant.now(),
-            startTime = Instant.now(),
-            endTime = Instant.now(),
+            cutOffTime = "17",
+            startTime = "9",
+            endTime = "17",
             longitude = BigDecimal("0.0"),
             latitude = BigDecimal("0.0"),
             radiusCoverage = BigDecimal("0.0"),
@@ -166,7 +169,7 @@ class FranchiseQueriesTest {
         franchiseQueries.save(franchiseData)
 
         val result = franchiseQueries.getByCode("franchise2@example.com")
-        assertNotNull(result,"Expected a non-null result")
+        assertNotNull(result, "Expected a non-null result")
     }
 
     @Test
