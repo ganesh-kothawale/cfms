@@ -17,7 +17,7 @@ import org.jetbrains.exposed.sql.Database
     UtilsModule::class,
     HolidayModule::class,
     OrderDetailsRepoModule::class,
-    FranchiseReposModule::class
+    FranchiseReposModule::class,
     CourierPartnerRepoModule::class
   ]
 )
