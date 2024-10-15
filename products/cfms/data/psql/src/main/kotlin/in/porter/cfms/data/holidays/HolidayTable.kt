@@ -1,5 +1,6 @@
 package `in`.porter.cfms.data.holidays
 
+import `in`.porter.cfms.data.franchise.FranchisesTable
 import `in`.porter.kotlinutils.exposed.columns.datetime.timestampWithoutTZAsInstant
 import org.jetbrains.exposed.sql.Table
 import org.jetbrains.exposed.sql.`java-time`.date

@@ -4,7 +4,7 @@ import `in`.porter.kotlinutils.exposed.columns.datetime.timestampWithoutTZAsInst
 import org.jetbrains.exposed.dao.id.IntIdTable
 
 object FranchisesTable : IntIdTable() {
-        val franchiseId = varchar("franchise_id", 255)
+        val franchiseId = varchar("franchise_id", 255).primaryKey()
         val address = varchar("address", 255)
         val city = varchar("city", 255)
         val state = varchar("state", 255)
@@ -20,9 +20,9 @@ object FranchisesTable : IntIdTable() {
         val franchisePan = varchar("franchise_pan", 255)
         val franchiseCanceledCheque = varchar("franchise_canceled_cheque", 255)
         val daysOfOperation = varchar("days_of_operation", 50)
-        val startTime = timestampWithoutTZAsInstant("start_time")
-        val endTime = timestampWithoutTZAsInstant("end_time")
-        val cutOffTime = timestampWithoutTZAsInstant("cut_off_time")
+        val startTime = varchar("start_time",6)
+        val endTime = varchar("end_time",6)
+        val cutOffTime = varchar("cut_off_time",6)
         val hlpEnabled = bool("hlp_enabled")
         val radiusCoverage = decimal("radius_coverage", 5, 2)
         val showCrNumber = bool("show_cr_number")
@@ -30,4 +30,7 @@ object FranchisesTable : IntIdTable() {
         val updatedAt = timestampWithoutTZAsInstant("updated_at")
         val kamUser = varchar("kam_user", 255)
         val teamId = integer("team_id")
+        val daysOfTheWeek = varchar("days_of_the_week", 50)
+        val isActive = bool("is_active")
+        val courierPartners = varchar("courier_partners", 255)
 }

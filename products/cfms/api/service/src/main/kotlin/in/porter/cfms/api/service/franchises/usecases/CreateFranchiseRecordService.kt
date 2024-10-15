@@ -3,11 +3,10 @@ package `in`.porter.cfms.api.service.franchises.usecases
 import `in`.porter.cfms.api.models.franchises.Data
 import `in`.porter.cfms.api.models.franchises.ErrorResponse
 import `in`.porter.cfms.api.models.franchises.RecordFranchiseDetailsRequest
-import `in`.porter.cfms.api.models.franchises.RecordFranchiseDetailsResponse
+import `in`.porter.cfms.api.models.franchises.FranchiseResponse
 import `in`.porter.cfms.api.service.exceptions.CfmsException
 import `in`.porter.cfms.api.service.franchises.mappers.RecordFranchiseDetailsRequestMapper
 import `in`.porter.cfms.api.service.utils.CommonUtils
-import `in`.porter.cfms.domain.franchise.usecases.internal.CreateFranchise
 import `in`.porter.cfms.domain.usecases.external.RecordFranchiseDetails
 import `in`.porter.kotlinutils.instrumentation.opentracing.Traceable
 import javax.inject.Inject
@@ -18,7 +17,7 @@ constructor(
     private val mapper: RecordFranchiseDetailsRequestMapper,
     private val recordFranchiseDetails: RecordFranchiseDetails
 ) : Traceable {
-    suspend fun invoke(request: RecordFranchiseDetailsRequest): RecordFranchiseDetailsResponse = trace {
+    suspend fun invoke(request: RecordFranchiseDetailsRequest): FranchiseResponse = trace {
         try {
             val generatedFranchiseId = CommonUtils.generateRandomAlphaNumeric(10)
             mapper.toDomain(request, generatedFranchiseId)
@@ -29,7 +28,7 @@ constructor(
                 franchise_id = generatedFranchiseId
             )
 
-            RecordFranchiseDetailsResponse(data = data)
+            FranchiseResponse(data = data)
         } catch (e: CfmsException) {
             val errorResponse = when (e) {
                 is CfmsException -> {
@@ -40,6 +39,7 @@ constructor(
                         )
                     )
                 }
+
                 else -> {
                     listOf(
                         ErrorResponse(
@@ -49,7 +49,7 @@ constructor(
                     )
                 }
             }
-            RecordFranchiseDetailsResponse(error = errorResponse)
+            FranchiseResponse(error = errorResponse)
         }
     }
 }
