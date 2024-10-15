@@ -1,14 +1,18 @@
 package `in`.porter.cfms.data.franchise
 
 import `in`.porter.cfms.data.franchise.mappers.FranchiseRowMapper
+import `in`.porter.cfms.data.franchise.mappers.ListFranchisesRowMapper
 import `in`.porter.cfms.data.franchise.records.FranchiseRecordData
-import `in`.porter.cfms.domain.franchise.entities.Franchise
+import `in`.porter.cfms.data.franchise.records.ListFranchisesRecord
 import `in`.porter.kotlinutils.exposed.ExposedRepo
 import kotlinx.coroutines.CoroutineDispatcher
 import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.StdOutSqlLogger
+import org.jetbrains.exposed.sql.addLogger
 import org.jetbrains.exposed.sql.insertAndGetId
 import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.selectAll
+import org.slf4j.LoggerFactory
 import java.time.Instant
 import javax.inject.Inject
 
@@ -18,7 +22,10 @@ constructor(
     override val db: Database,
     override val dispatcher: CoroutineDispatcher,
     private val mapper: FranchiseRowMapper,
+    private val listMapper: ListFranchisesRowMapper
 ) : ExposedRepo {
+
+    private val logger = LoggerFactory.getLogger(FranchiseQueries::class.java)
     suspend fun save(req: FranchiseRecordData): Int = transact {
         val now = Instant.now()
         FranchisesTable.insertAndGetId {
@@ -61,5 +68,27 @@ constructor(
         FranchisesTable.select { FranchisesTable.email eq email }
             .firstOrNull()
             ?.let { mapper.toRecord(it) }
+    }
+
+    suspend fun findAll(size: Int, offset: Int): List<ListFranchisesRecord> = transact {
+        addLogger(StdOutSqlLogger)
+        logger.info("Fetching franchises with size: $size and offset: $offset")
+        FranchisesTable
+            .selectAll()
+            .limit(size, offset)
+            .map { row ->
+                logger.info("Mapping row: $row")
+                listMapper.toRecord(row)
+
+            }
+    }
+
+    suspend fun countAll(): Int = transact {
+        addLogger(StdOutSqlLogger)
+        logger.info("Counting all franchises")
+        FranchisesTable
+            .selectAll()
+            .count()
+            .toInt()
     }
 }
