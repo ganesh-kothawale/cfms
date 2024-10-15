@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import `in`.porter.cfms.servers.ktor.external.usecases.holidays.holidaysRoutes
 import `in`.porter.cfms.servers.ktor.external.usecases.franchises.franchiseRoutes
+import `in`.porter.cfms.servers.ktor.external.usecases.tasks.tasksRoutes
 import io.ktor.server.application.*
 import io.ktor.http.*
 import io.ktor.server.response.*
@@ -96,5 +97,6 @@ fun Application.main() {
         get("/") { call.respond(HttpStatusCode.OK, Unit) }
         route ("/cfms/public/holidays"){ holidaysRoutes(httpComponent) }
         route("/cfms/public/franchises") { franchiseRoutes(httpComponent) }
+        route("/cfms/public/tasks") { tasksRoutes(httpComponent) }
     }
 }
