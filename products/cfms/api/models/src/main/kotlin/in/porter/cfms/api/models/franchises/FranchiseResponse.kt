@@ -10,7 +10,7 @@ data class ErrorResponse(
     val details: String
 )
 
-data class RecordFranchiseDetailsResponse(
+data class FranchiseResponse(
     val data: Data? = null,
     val error: List<ErrorResponse> = emptyList()
 )

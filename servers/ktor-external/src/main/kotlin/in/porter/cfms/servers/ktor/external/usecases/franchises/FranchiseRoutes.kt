@@ -6,7 +6,6 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.*
 import io.ktor.server.response.respond
 import io.ktor.server.routing.*
-import java.time.LocalDate
 
 fun Route.franchiseRoutes(httpComponent: HttpComponent) {
     post("") { httpComponent.createFranchiseRecordHttpService.invoke(call) }
@@ -34,4 +33,5 @@ fun Route.franchiseRoutes(httpComponent: HttpComponent) {
             )
         }
     }
+    put("") { httpComponent.updateFranchiseRecordHttpService.invoke(call) }
 }

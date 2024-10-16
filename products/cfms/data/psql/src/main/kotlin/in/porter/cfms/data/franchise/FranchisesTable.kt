@@ -31,5 +31,8 @@ object FranchisesTable : IntIdTable("franchises") {
     val updatedAt = timestampWithoutTZAsInstant("updated_at")
     val kamUser = varchar("kam_user", 255)
     val teamId = integer("team_id")
+    val daysOfTheWeek = varchar("days_of_the_week", 50)
+    val isActive = bool("is_active")
+    val courierPartners = varchar("courier_partners", 255)
 }
 

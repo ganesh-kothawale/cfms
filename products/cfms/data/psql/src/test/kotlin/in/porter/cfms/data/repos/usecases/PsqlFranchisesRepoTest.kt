@@ -7,9 +7,10 @@ import `in`.porter.cfms.data.franchise.mappers.FranchiseRecordMapper
 import `in`.porter.cfms.data.franchise.mappers.FranchiseRowMapper
 import `in`.porter.cfms.data.franchise.mappers.ListFranchisesMapper
 import `in`.porter.cfms.data.franchise.mappers.ListFranchisesRowMapper
+import `in`.porter.cfms.data.franchise.mappers.UpdateFranchiseRecordMapper
 import `in`.porter.cfms.data.franchise.records.FranchiseRecord
 import `in`.porter.cfms.data.franchise.records.FranchiseRecordData
-import `in`.porter.cfms.data.repos.PsqlFranchisesRepo
+import `in`.porter.cfms.data.franchise.repos.PsqlFranchisesRepo
 import io.mockk.*
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.ResultRow
@@ -30,6 +31,7 @@ class PsqlFranchisesRepoTest {
     private lateinit var franchiseRowMapper: FranchiseRowMapper
     private lateinit var listMapper: ListFranchisesMapper
     private lateinit var listRowMapper: ListFranchisesRowMapper
+    private lateinit var updatemapper: UpdateFranchiseRecordMapper
 
     @BeforeEach
     fun setup() {
@@ -37,8 +39,8 @@ class PsqlFranchisesRepoTest {
         mapper = FranchiseRecordMapper()
         listMapper = ListFranchisesMapper()
         franchiseRowMapper = FranchiseRowMapper()
-        psqlFranchisesRepo = PsqlFranchisesRepo(queries, mapper, listMapper)
-        franchiseFactory = FranchiseFactory() // Initialize the factory
+        psqlFranchisesRepo = PsqlFranchisesRepo(queries, mapper, listMapper,updatemapper)
+        franchiseFactory = FranchiseFactory()
     }
 
     @Test
@@ -87,6 +89,9 @@ class PsqlFranchisesRepoTest {
         every { mockResultRow[FranchisesTable.startTime] } returns "17"
         every { mockResultRow[FranchisesTable.endTime] } returns "9"
         every { mockResultRow[FranchisesTable.cutOffTime] } returns "17"
+        every { mockResultRow[FranchisesTable.startTime] } returns "09:00"
+        every { mockResultRow[FranchisesTable.endTime] } returns "17:00"
+        every { mockResultRow[FranchisesTable.cutOffTime] } returns "13:00"
         every { mockResultRow[FranchisesTable.hlpEnabled] } returns true
         every { mockResultRow[FranchisesTable.radiusCoverage] } returns BigDecimal("5.0")
         every { mockResultRow[FranchisesTable.showCrNumber] } returns true
