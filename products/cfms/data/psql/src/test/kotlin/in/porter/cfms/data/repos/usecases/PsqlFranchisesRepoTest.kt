@@ -5,6 +5,8 @@ import `in`.porter.cfms.data.franchise.FranchiseQueries
 import `in`.porter.cfms.data.franchise.FranchisesTable
 import `in`.porter.cfms.data.franchise.mappers.FranchiseRecordMapper
 import `in`.porter.cfms.data.franchise.mappers.FranchiseRowMapper
+import `in`.porter.cfms.data.franchise.mappers.ListFranchisesMapper
+import `in`.porter.cfms.data.franchise.mappers.ListFranchisesRowMapper
 import `in`.porter.cfms.data.franchise.mappers.UpdateFranchiseRecordMapper
 import `in`.porter.cfms.data.franchise.records.FranchiseRecord
 import `in`.porter.cfms.data.franchise.records.FranchiseRecordData
@@ -27,15 +29,18 @@ class PsqlFranchisesRepoTest {
     private lateinit var mapper: FranchiseRecordMapper
     private lateinit var franchiseFactory: FranchiseFactory
     private lateinit var franchiseRowMapper: FranchiseRowMapper
+    private lateinit var listMapper: ListFranchisesMapper
+    private lateinit var listRowMapper: ListFranchisesRowMapper
     private lateinit var updatemapper: UpdateFranchiseRecordMapper
 
     @BeforeEach
     fun setup() {
         queries = mockk()
         mapper = FranchiseRecordMapper()
+        listMapper = ListFranchisesMapper()
         franchiseRowMapper = FranchiseRowMapper()
-        psqlFranchisesRepo = PsqlFranchisesRepo(queries, mapper, updatemapper)
-        franchiseFactory = FranchiseFactory() // Initialize the factory
+        psqlFranchisesRepo = PsqlFranchisesRepo(queries, mapper, listMapper,updatemapper)
+        franchiseFactory = FranchiseFactory()
     }
 
     @Test
@@ -81,6 +86,9 @@ class PsqlFranchisesRepoTest {
         every { mockResultRow[FranchisesTable.franchisePan] } returns "PAN123456"
         every { mockResultRow[FranchisesTable.franchiseCanceledCheque] } returns "Cheque Image URL"
         every { mockResultRow[FranchisesTable.daysOfOperation] } returns "Mon-Fri"
+        every { mockResultRow[FranchisesTable.startTime] } returns "17"
+        every { mockResultRow[FranchisesTable.endTime] } returns "9"
+        every { mockResultRow[FranchisesTable.cutOffTime] } returns "17"
         every { mockResultRow[FranchisesTable.startTime] } returns "09:00"
         every { mockResultRow[FranchisesTable.endTime] } returns "17:00"
         every { mockResultRow[FranchisesTable.cutOffTime] } returns "13:00"
@@ -107,9 +115,9 @@ class PsqlFranchisesRepoTest {
             franchisePan = "PAN123456",
             franchiseCanceledCheque = "Cheque Image URL",
             daysOfOperation = "Mon-Fri",
-            startTime = "09:00",
-            endTime = "17:00",
-            cutOffTime = "13:00",
+            cutOffTime = "17",
+            startTime = "9",
+            endTime = "17",
             hlpEnabled = true,
             radiusCoverage = BigDecimal("5.0"),
             showCrNumber = true,

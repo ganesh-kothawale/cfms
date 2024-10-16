@@ -43,6 +43,7 @@ class CreateFranchise
                 status = req.status,
                 teamId = null,
                 daysOfOperation = req.daysOfOperation,
+
                 startTime = req.startTime,
                 endTime = req.endTime,
                 cutOffTime = req.cutOffTime,
