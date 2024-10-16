@@ -5,7 +5,7 @@ import java.time.Instant
 data class CreateTaskRequest(
     val flowType: String,
     val status: String,
-    val packageReceived: Int,
-    val scheduledSlot: Instant,  // Using String for now, will be converted in mapper/service
-    val teamId: Int
+    val packageReceived: Int?,
+    val scheduledSlot: Instant?,
+    val teamId: String
 )

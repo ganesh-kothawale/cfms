@@ -11,7 +11,7 @@ class CreateTask @Inject constructor(
 
     private val logger = LoggerFactory.getLogger(CreateTask::class.java)
 
-    suspend fun create(task: Task): Int {
+    suspend fun create(task: Task): String {
         logger.info("Creating a new task: $task")
 
         // Call the repository to persist the task and get the generated ID
