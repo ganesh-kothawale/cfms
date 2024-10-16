@@ -20,36 +20,8 @@ constructor(
         logger.info("Starting update for franchise: ${req.franchiseId}")
 
         // Fetch the existing franchise by ID
-        val franchise = franchiseRepo.getByCode(req.franchiseId)
+        franchiseRepo.getByCode(req.franchiseId)
             ?: throw CfmsException("Franchise not found")
-
-        // Validate that at least one of the other fields is provided
-        val hasMandatoryField = req.pocName.isNotBlank() ||
-                req.primaryNumber.isNotBlank() ||
-                req.email.isNotBlank() ||
-                req.address.isNotBlank() ||
-                req.latitude != BigDecimal.ZERO ||
-                req.longitude != BigDecimal.ZERO ||
-                req.city.isNotBlank() ||
-                req.state.isNotBlank() ||
-                req.pincode.isNotBlank() ||
-                req.porterHubName != null ||
-                req.franchiseGst != null ||
-                req.franchisePan != null ||
-                req.franchiseCanceledCheque != null ||
-                req.teamId != null ||
-                req.daysOfOperation != null ||
-                req.startTime.isNotBlank() ||
-                req.endTime.isNotBlank() ||
-                req.cutOffTime.isNotBlank() ||
-                req.kamUser != null ||
-                req.radiusCoverage != BigDecimal.ZERO ||
-                req.showCrNumber != null ||
-                req.courierPartners.isNotEmpty()
-
-        if (!hasMandatoryField) {
-            throw CfmsException("At least one detail other than franchise ID must be provided for the update.")
-        }
 
         // Proceed with the update
         val updateResult = franchiseRepo.update(req)

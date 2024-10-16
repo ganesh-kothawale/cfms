@@ -45,28 +45,30 @@ constructor(
 
                 logger.info("Parsed request: $request")
 
-                service.invoke(request)
-                val franchiseId = request.franchiseId
+
+                val response = service.invoke(request)
 
                 // If successful, return 200 OK with a franchise ID
-                if (franchiseId != null) {
-                    val successResponse = FranchiseResponse(
-                        data = Data(
-                            message = "Franchise updated successfully",
-                            franchise_id = franchiseId
-                        )
-                    )
-                    call.respond(HttpStatusCode.OK, successResponse)
-                } else {
-                    val errorResponse = FranchiseResponse(
-                        error = listOf(
-                            ErrorResponse(
-                                message = "Franchise update failed",
-                                details = "Unknown error"
+                if (response != null) {
+                    if (response > 0) {
+                        val successResponse = FranchiseResponse(
+                            data = Data(
+                                message = "Franchise updated successfully",
+                                franchise_id = request.franchiseId
                             )
                         )
-                    )
-                    call.respond(HttpStatusCode.InternalServerError, errorResponse)
+                        call.respond(HttpStatusCode.OK, successResponse)
+                    } else {
+                        val errorResponse = FranchiseResponse(
+                            error = listOf(
+                                ErrorResponse(
+                                    message = "Franchise update failed",
+                                    details = "Unknown error"
+                                )
+                            )
+                        )
+                        call.respond(HttpStatusCode.InternalServerError, errorResponse)
+                    }
                 }
 
             } catch (e: CfmsException) {

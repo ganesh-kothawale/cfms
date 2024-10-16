@@ -1,8 +1,9 @@
 package `in`.porter.cfms.api.service.franchises.mappers
 
-import `in`.porter.cfms.api.models.FranchiseStatus
+import `in`.porter.cfms.api.models.FranchiseStatus as FranchiseStatusApi
 import `in`.porter.cfms.api.models.franchises.UpdateFranchiseRequest
 import `in`.porter.cfms.api.service.exceptions.CfmsException
+import `in`.porter.cfms.domain.franchise.FranchiseStatus
 import `in`.porter.cfms.domain.franchise.entities.UpdateFranchise
 import org.slf4j.LoggerFactory
 import java.math.BigDecimal
@@ -15,18 +16,12 @@ class UpdateFranchiseDetailsRequestMapper @Inject constructor() {
     fun toDomain(request: UpdateFranchiseRequest): UpdateFranchise {
         logger.info("Mapping UpdateFranchiseRequest to UpdateFranchise")
 
-        // Validate franchise ID
-        if (request.franchiseId.isBlank()) {
-            throw CfmsException("Franchise ID cannot be empty.")
+
+        val poc = request.poc
+        if (poc.name.isBlank() || poc.primaryNumber.isBlank() || poc.email.isBlank()) {
+            throw CfmsException("POC information is incomplete.")
         }
 
-        // Validate POC if present
-        val poc = request.poc
-        if (poc.name.isNotBlank() || poc.primaryNumber.isNotBlank() || poc.email.isNotBlank()) {
-            if (poc.name.isBlank() || poc.primaryNumber.isBlank() || poc.email.isBlank()) {
-                throw CfmsException("POC information is incomplete.")
-            }
-        }
 
         // Construct UpdateFranchise object
         return UpdateFranchise(
@@ -67,10 +62,10 @@ class UpdateFranchiseDetailsRequestMapper @Inject constructor() {
         return timePattern.matches(time)
     }
 
-    private fun mapModelToDomainStatus(status: FranchiseStatus): `in`.porter.cfms.domain.franchise.FranchiseStatus =
+    private fun mapModelToDomainStatus(status: FranchiseStatusApi): FranchiseStatus =
         when (status) {
-            FranchiseStatus.Active -> `in`.porter.cfms.domain.franchise.FranchiseStatus.Active
-            FranchiseStatus.Inactive -> `in`.porter.cfms.domain.franchise.FranchiseStatus.Inactive
-            FranchiseStatus.Suspended -> `in`.porter.cfms.domain.franchise.FranchiseStatus.Suspended
+            FranchiseStatusApi.Active -> FranchiseStatus.Active
+            FranchiseStatusApi.Inactive -> FranchiseStatus.Inactive
+            FranchiseStatusApi.Suspended -> FranchiseStatus.Suspended
         }
 }
