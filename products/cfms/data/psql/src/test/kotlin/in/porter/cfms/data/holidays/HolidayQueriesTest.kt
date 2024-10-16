@@ -7,6 +7,7 @@ import `in`.porter.cfms.data.holidays.mappers.UpdateHolidayRowMapper
 import `in`.porter.cfms.data.holidays.records.HolidayRecord
 import `in`.porter.cfms.data.holidays.records.UpdateHolidayRecord
 import `in`.porter.cfms.domain.holidays.entities.LeaveType
+import `in`.porter.cfms.data.franchise.FranchisesTable
 import io.mockk.MockKAnnotations
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
@@ -26,6 +27,7 @@ import org.junit.jupiter.api.assertThrows
 import org.testcontainers.containers.PostgreSQLContainer
 import java.time.Instant
 import java.time.LocalDate
+
 
 @ExperimentalCoroutinesApi
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
