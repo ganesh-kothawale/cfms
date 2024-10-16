@@ -12,7 +12,7 @@ import `in`.porter.kotlinutils.instrumentation.opentracing.Traceable
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
-class PsqlFranchisesRepo
+abstract class PsqlFranchisesRepo
 @Inject constructor(
     private val queries: FranchiseQueries,
     private val mapper: FranchiseRecordMapper,
