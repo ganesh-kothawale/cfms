@@ -13,8 +13,8 @@ class FetchOrdersService @Inject constructor(
     private fun generateResponse(orders: List<Order>, totalCount: Int, request: FetchOrdersRequest): FetchOrdersResponse {
         val pagination = Pagination(
             page = request.page + 1,
-            limit = request.limit,
-            totalPages = (totalCount + request.limit - 1) / request.limit
+            size = request.size,
+            totalPages = (totalCount + request.size - 1) / request.size
         )
         return FetchOrdersResponse(
             orders = orders,

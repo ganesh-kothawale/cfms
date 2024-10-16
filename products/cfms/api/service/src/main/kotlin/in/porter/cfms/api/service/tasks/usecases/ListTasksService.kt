@@ -18,16 +18,16 @@ constructor(
 
     private val logger = LoggerFactory.getLogger(ListTasksService::class.java)
 
-    suspend fun listTasks(request: ListTasksRequest): ListTasksResponse {
-        logger.info("Received request to list tasks: {}", request)
+    suspend fun listTasks(page:Int , size: Int): ListTasksResponse {
+        logger.info("Received request to list tasks: {}", page, size)
 
         // Convert the request to the domain model using the request mapper
-        val domainRequest = requestMapper.toDomain(request.page, request.limit)
+        val domainRequest = requestMapper.toDomain(page, size)
 
         // Fetch tasks from the domain service
         val tasksResult = listTasks.listTasks(
             page = domainRequest.page,
-            limit = domainRequest.limit
+            size = domainRequest.size
         )
 
         logger.info("Fetched tasks: {}", tasksResult)
@@ -36,14 +36,14 @@ constructor(
         return responseMapper.toResponse(
             tasks = tasksResult.data,
             page = domainRequest.page,
-            limit = domainRequest.limit,
-            totalPages = calculateTotalPages(tasksResult.totalRecords, domainRequest.limit),
+            size = domainRequest.size,
+            totalPages = calculateTotalPages(tasksResult.totalRecords, domainRequest.size),
             totalRecords = tasksResult.totalRecords
         )
     }
 
-    private fun calculateTotalPages(totalRecords: Int, limit: Int): Int {
-        logger.info("Calculating total pages for totalRecords: {}, limit: {}", totalRecords, limit)
-        return if (totalRecords == 0) 0 else (totalRecords + limit - 1) / limit
+    private fun calculateTotalPages(totalRecords: Int, size: Int): Int {
+        logger.info("Calculating total pages for totalRecords: {}, size: {}", totalRecords, size)
+        return if (totalRecords == 0) 0 else (totalRecords + size - 1) / size
     }
 }

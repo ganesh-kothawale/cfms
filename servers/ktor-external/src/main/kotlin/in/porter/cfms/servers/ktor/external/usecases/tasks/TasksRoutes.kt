@@ -12,9 +12,9 @@ fun Route.tasksRoutes(httpComponent: HttpComponent) {
     get("") {
         try {
             val page = call.request.queryParameters["page"]?.toIntOrNull() ?: 1
-            val limit = call.request.queryParameters["limit"]?.toIntOrNull() ?: 10
+            val size = call.request.queryParameters["size"]?.toIntOrNull() ?: 10
 
-            httpComponent.listTasksHttpService.invoke(call, page, limit)
+            httpComponent.listTasksHttpService.invoke(call, page, size)
         } catch (e: CfmsException) {
             call.respond(HttpStatusCode.BadRequest, mapOf("error" to listOf(mapOf("message" to "Invalid request parameters", "details" to e.message))))
         }

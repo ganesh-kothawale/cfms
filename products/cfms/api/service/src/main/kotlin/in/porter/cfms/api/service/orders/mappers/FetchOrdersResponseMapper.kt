@@ -15,7 +15,7 @@ class FetchOrdersResponseMapper @Inject constructor(
             pagination = Pagination(
                 page = domainResponse.pagination.page,
                 totalPages = domainResponse.pagination.totalPages,
-                limit = domainResponse.pagination.limit
+                size = domainResponse.pagination.size
             )
         )
     }

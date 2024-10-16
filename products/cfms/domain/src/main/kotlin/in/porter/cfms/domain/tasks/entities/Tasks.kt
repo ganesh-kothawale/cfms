@@ -1,6 +1,6 @@
-package `in`.porter.cfms.data.tasks.records
+package `in`.porter.cfms.domain.tasks.entities
 
-data class ListTasksRecord(
+data class Tasks (
     val taskId: Int,
     val flowType: String,
     val status: String,

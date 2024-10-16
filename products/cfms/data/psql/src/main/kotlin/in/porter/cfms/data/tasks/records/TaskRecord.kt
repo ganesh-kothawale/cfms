@@ -1,8 +1,6 @@
-package `in`.porter.cfms.domain.tasks.entities
+package `in`.porter.cfms.data.tasks.records
 
-import java.time.LocalDateTime
-
-data class ListTasks (
+data class TaskRecord(
     val taskId: Int,
     val flowType: String,
     val status: String,
