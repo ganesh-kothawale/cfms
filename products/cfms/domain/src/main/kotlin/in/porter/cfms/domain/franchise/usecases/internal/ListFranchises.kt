@@ -1,6 +1,6 @@
 package `in`.porter.cfms.domain.franchise.usecases.internal
 
-import `in`.porter.cfms.domain.franchise.entities.ListFranchise
+import `in`.porter.cfms.domain.franchise.entities.FranchiseResult
 import `in`.porter.cfms.domain.franchise.repos.FranchiseRepo
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
@@ -32,8 +32,3 @@ constructor(
         )
     }
 }
-
-data class FranchiseResult(
-    val data: List<ListFranchise>,
-    val totalRecords: Int
-)

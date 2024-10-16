@@ -12,11 +12,10 @@ class FetchOrdersResponseMapper @Inject constructor(
     fun fromDomain(domainResponse: DomainFetchOrdersResponse): FetchOrderResponse {
         return FetchOrderResponse(
             orders = domainResponse.orders.map { orderMapper.fromDomain(it) },
-            pagination = Pagination(
-                page = domainResponse.pagination.page,
-                totalPages = domainResponse.pagination.totalPages,
-                size = domainResponse.pagination.size
-            )
+            page = domainResponse.page,
+            totalPages = domainResponse.totalPages,
+            size = domainResponse.size,
+            totalRecords = domainResponse.totalRecords
         )
     }
 }

@@ -34,4 +34,5 @@ fun Route.franchiseRoutes(httpComponent: HttpComponent) {
             )
         }
     }
+    put("") { httpComponent.updateFranchiseRecordHttpService.invoke(call) }
 }
