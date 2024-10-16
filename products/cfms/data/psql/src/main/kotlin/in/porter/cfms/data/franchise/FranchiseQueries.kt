@@ -109,7 +109,7 @@ constructor(
             record.data.franchiseGst?.let { statement[FranchisesTable.franchiseGst] = it }
             record.data.franchisePan?.let { statement[FranchisesTable.franchisePan] = it }
             record.data.franchiseCanceledCheque?.let { statement[FranchisesTable.franchiseCanceledCheque] = it }
-            record.data.status?.let { statement[FranchisesTable.status] = it }
+            record.data.status.let { statement[FranchisesTable.status] = it }
             record.data.teamId?.let { statement[FranchisesTable.teamId] = it }
             record.data.daysOfOperation?.let { statement[FranchisesTable.daysOfOperation] = it }
             record.data.startTime?.let { statement[FranchisesTable.startTime] = it }
