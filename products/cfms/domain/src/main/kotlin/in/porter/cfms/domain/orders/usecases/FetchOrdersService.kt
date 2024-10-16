@@ -10,26 +10,24 @@ import javax.inject.Inject
 class FetchOrdersService @Inject constructor(
     private val repo: OrderDetailsRepo,
 ) {
-    private fun generateResponse(orders: List<Order>, totalCount: Int, request: FetchOrdersRequest): FetchOrdersResponse {
-        val pagination = Pagination(
-            page = request.page + 1,
-            limit = request.limit,
-            totalPages = (totalCount + request.limit - 1) / request.limit
-        )
-        return FetchOrdersResponse(
-            orders = orders,
-            pagination = pagination
-        )
-    }
+    private fun generateResponse(
+        orders: List<Order>,
+        totalCount: Int,
+        request: FetchOrdersRequest
+    ): FetchOrdersResponse = FetchOrdersResponse(
+        orders = orders,
+        page = request.page + 1,
+        size = request.limit,
+        totalPages = (totalCount + request.limit - 1) / request.limit,
+        totalRecords = totalCount
+    )
 
-    suspend fun invoke(request: FetchOrdersRequest): FetchOrdersResponse {
-        return try {
-            val totalCount = repo.getOrderCount(request)
-            val orders = repo.fetchOrders(request)
-            generateResponse(orders, totalCount, request)
-        } catch (e: Exception) {
-            println("Error executing fetch orders: ${e.message}")
-            throw e
-        }
+    suspend fun invoke(request: FetchOrdersRequest): FetchOrdersResponse = try {
+        val totalCount = repo.getOrderCount(request)
+        val orders = repo.fetchOrders(request)
+        generateResponse(orders, totalCount, request)
+    } catch (e: Exception) {
+        println("Error executing fetch orders: ${e.message}")
+        throw e
     }
 }
