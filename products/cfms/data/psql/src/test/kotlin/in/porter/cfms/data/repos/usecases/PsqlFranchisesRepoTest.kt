@@ -5,9 +5,10 @@ import `in`.porter.cfms.data.franchise.FranchiseQueries
 import `in`.porter.cfms.data.franchise.FranchisesTable
 import `in`.porter.cfms.data.franchise.mappers.FranchiseRecordMapper
 import `in`.porter.cfms.data.franchise.mappers.FranchiseRowMapper
+import `in`.porter.cfms.data.franchise.mappers.UpdateFranchiseRecordMapper
 import `in`.porter.cfms.data.franchise.records.FranchiseRecord
 import `in`.porter.cfms.data.franchise.records.FranchiseRecordData
-import `in`.porter.cfms.data.repos.PsqlFranchisesRepo
+import `in`.porter.cfms.data.franchise.repos.PsqlFranchisesRepo
 import io.mockk.*
 import kotlinx.coroutines.runBlocking
 import org.jetbrains.exposed.sql.ResultRow
@@ -26,13 +27,14 @@ class PsqlFranchisesRepoTest {
     private lateinit var mapper: FranchiseRecordMapper
     private lateinit var franchiseFactory: FranchiseFactory
     private lateinit var franchiseRowMapper: FranchiseRowMapper
+    private lateinit var updatemapper: UpdateFranchiseRecordMapper
 
     @BeforeEach
     fun setup() {
         queries = mockk()
         mapper = FranchiseRecordMapper()
         franchiseRowMapper = FranchiseRowMapper()
-        psqlFranchisesRepo = PsqlFranchisesRepo(queries, mapper)
+        psqlFranchisesRepo = PsqlFranchisesRepo(queries, mapper, updatemapper)
         franchiseFactory = FranchiseFactory() // Initialize the factory
     }
 
@@ -79,9 +81,9 @@ class PsqlFranchisesRepoTest {
         every { mockResultRow[FranchisesTable.franchisePan] } returns "PAN123456"
         every { mockResultRow[FranchisesTable.franchiseCanceledCheque] } returns "Cheque Image URL"
         every { mockResultRow[FranchisesTable.daysOfOperation] } returns "Mon-Fri"
-        every { mockResultRow[FranchisesTable.startTime] } returns Instant.now()
-        every { mockResultRow[FranchisesTable.endTime] } returns Instant.now()
-        every { mockResultRow[FranchisesTable.cutOffTime] } returns Instant.now()
+        every { mockResultRow[FranchisesTable.startTime] } returns "09:00"
+        every { mockResultRow[FranchisesTable.endTime] } returns "17:00"
+        every { mockResultRow[FranchisesTable.cutOffTime] } returns "13:00"
         every { mockResultRow[FranchisesTable.hlpEnabled] } returns true
         every { mockResultRow[FranchisesTable.radiusCoverage] } returns BigDecimal("5.0")
         every { mockResultRow[FranchisesTable.showCrNumber] } returns true
@@ -105,9 +107,9 @@ class PsqlFranchisesRepoTest {
             franchisePan = "PAN123456",
             franchiseCanceledCheque = "Cheque Image URL",
             daysOfOperation = "Mon-Fri",
-            startTime = Instant.now(),
-            endTime = Instant.now(),
-            cutOffTime = Instant.now(),
+            startTime = "09:00",
+            endTime = "17:00",
+            cutOffTime = "13:00",
             hlpEnabled = true,
             radiusCoverage = BigDecimal("5.0"),
             showCrNumber = true,

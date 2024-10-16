@@ -2,13 +2,12 @@ package `in`.porter.cfms.data.franchise
 
 import `in`.porter.cfms.data.franchise.mappers.FranchiseRowMapper
 import `in`.porter.cfms.data.franchise.records.FranchiseRecordData
+import `in`.porter.cfms.data.franchise.records.UpdateFranchiseRecord
+import `in`.porter.cfms.data.holidays.records.UpdateHolidayRecord
 import `in`.porter.cfms.domain.franchise.entities.Franchise
 import `in`.porter.kotlinutils.exposed.ExposedRepo
 import kotlinx.coroutines.CoroutineDispatcher
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.insertAndGetId
-import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.*
 import java.time.Instant
 import javax.inject.Inject
 
@@ -52,7 +51,7 @@ constructor(
     }
 
     suspend fun getByCode(code: String) = transact {
-        FranchisesTable.select { FranchisesTable.email eq code }
+        FranchisesTable.select { FranchisesTable.franchiseId eq code }
             .firstOrNull()
             ?.let { mapper.toRecord(it) }
     }
@@ -62,4 +61,37 @@ constructor(
             .firstOrNull()
             ?.let { mapper.toRecord(it) }
     }
+    suspend fun updateFranchise(record: UpdateFranchiseRecord): Int = transact {
+        FranchisesTable.update({ FranchisesTable.franchiseId eq record.franchiseId }) { statement ->
+            record.data.pocName?.let { statement[FranchisesTable.pocName] = it }
+            record.data.primaryNumber?.let { statement[FranchisesTable.primaryNumber] = it }
+            record.data.email?.let { statement[FranchisesTable.email] = it }
+            record.data.address?.let { statement[FranchisesTable.address] = it }
+            record.data.latitude?.let { statement[FranchisesTable.latitude] = it }
+            record.data.longitude?.let { statement[FranchisesTable.longitude] = it }
+            record.data.city?.let { statement[FranchisesTable.city] = it }
+            record.data.state?.let { statement[FranchisesTable.state] = it }
+            record.data.pincode?.let { statement[FranchisesTable.pincode] = it }
+            record.data.porterHubName?.let { statement[FranchisesTable.porterHubName] = it }
+            record.data.franchiseGst?.let { statement[FranchisesTable.franchiseGst] = it }
+            record.data.franchisePan?.let { statement[FranchisesTable.franchisePan] = it }
+            record.data.franchiseCanceledCheque?.let { statement[FranchisesTable.franchiseCanceledCheque] = it }
+            record.data.status?.let { statement[FranchisesTable.status] = it }
+            record.data.teamId?.let { statement[FranchisesTable.teamId] = it }
+            record.data.daysOfOperation?.let { statement[FranchisesTable.daysOfOperation] = it }
+            record.data.startTime?.let { statement[FranchisesTable.startTime] = it }
+            record.data.endTime?.let { statement[FranchisesTable.endTime] = it }
+            record.data.cutOffTime?.let { statement[FranchisesTable.cutOffTime] = it }
+            record.data.hlpEnabled?.let { statement[FranchisesTable.hlpEnabled] = it }
+            record.data.radiusCoverage?.let { statement[FranchisesTable.radiusCoverage] = it }
+            record.data.showCrNumber?.let { statement[FranchisesTable.showCrNumber] = it }
+            record.data.kamUser?.let { statement[FranchisesTable.kamUser] = it }
+            record.data.isActive?.let { statement[FranchisesTable.isActive] = it }
+            record.data.daysOfTheWeek?.let { statement[FranchisesTable.daysOfTheWeek] = it }
+            record.data.courierPartners?.let { statement[FranchisesTable.courierPartners] = it.joinToString(",") }
+            statement[FranchisesTable.updatedAt] = Instant.now()
+        }
+    }
+
+
 }
