@@ -6,8 +6,13 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.*
 import io.ktor.server.response.respond
 import io.ktor.server.routing.*
+import org.slf4j.LoggerFactory
 
 fun Route.tasksRoutes(httpComponent: HttpComponent) {
+    val logger = LoggerFactory.getLogger("TasksRoutes")
+
+
+
 
     get("") {
         try {
@@ -18,5 +23,10 @@ fun Route.tasksRoutes(httpComponent: HttpComponent) {
         } catch (e: CfmsException) {
             call.respond(HttpStatusCode.BadRequest, mapOf("error" to listOf(mapOf("message" to "Invalid request parameters", "details" to e.message))))
         }
+    }
+
+    put("/status") {
+        logger.info("PUT request to /cfms/public/tasks/status received")
+        httpComponent.updateTasksStatusHttpService.invoke(call)
     }
 }
