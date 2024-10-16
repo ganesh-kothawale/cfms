@@ -20,8 +20,15 @@ class CreateTaskService @Inject constructor(
         // Map the request to the domain entity
         val domainTask = createTaskRequestMapper.toDomain(request)
 
+        // Generate a new task ID
+        val generatedTaskId = `in`.porter.cfms.api.service.utils.CommonUtils.generateRandomAlphaNumeric(10)
+        logger.info("Generated task ID: {}", generatedTaskId)
+
+        // Create a new instance of domainTask with the generated task ID
+        val taskWithId = domainTask.copy(taskId = generatedTaskId)
+
         // Call the domain layer to create the task
-        val taskId = createTask.create(domainTask)
+        val taskId = createTask.create(taskWithId)
 
         logger.info("Task created successfully with ID: {}", taskId)
 

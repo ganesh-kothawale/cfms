@@ -9,7 +9,7 @@ class CreateTaskRequestMapper @Inject constructor() {
 
     fun toDomain(request: CreateTaskRequest): Task {
         return Task(
-            taskId = 0, // This will be auto-generated in the data layer
+            taskId = "",
             flowType = request.flowType,
             status = request.status,
             packageReceived = request.packageReceived,

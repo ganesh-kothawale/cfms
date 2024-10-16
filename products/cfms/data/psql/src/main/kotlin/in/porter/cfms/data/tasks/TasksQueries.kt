@@ -52,7 +52,7 @@ constructor(
     }
 
     // Retrieve tasks by their IDs
-    suspend fun findByIds(taskIds: List<Int>): List<ListTasksRecord> = transact {
+    suspend fun findByIds(taskIds: List<String>): List<ListTasksRecord> = transact {
         addLogger(StdOutSqlLogger)
         logger.info("Fetching tasks with IDs: $taskIds")
         TasksTable
@@ -64,7 +64,7 @@ constructor(
     }
 
     // Update the status of tasks based on task IDs
-    suspend fun updateStatus(taskIds: List<Int>, status: String) = transact {
+    suspend fun updateStatus(taskIds: List<String>, status: String) = transact {
         addLogger(StdOutSqlLogger)
         logger.info("Updating status for tasks with IDs: $taskIds to status: $status")
         TasksTable
@@ -75,10 +75,11 @@ constructor(
         logger.info("Successfully updated status for tasks: $taskIds")
     }
 
-    suspend fun insert(taskRecord: TaskRecord): Int = transact {
+    suspend fun insert(taskRecord: TaskRecord): String = transact {
         logger.info("Inserting a new task into the database")
 
-        val generatedId = TasksTable.insert { row ->
+        TasksTable.insert { row ->
+            row[taskId] = taskRecord.taskId
             row[flowType] = taskRecord.flowType
             row[status] = taskRecord.status
             row[packageReceived] = taskRecord.packageReceived
@@ -86,8 +87,7 @@ constructor(
             row[teamId] = taskRecord.teamId
             row[createdAt] = taskRecord.createdAt?: Instant.now()
             row[updatedAt] = taskRecord.updatedAt?: Instant.now()
-        } get TasksTable.taskId
-
-        generatedId
+        }
+        taskRecord.taskId
     }
 }
