@@ -1,4 +1,4 @@
-package `in`.porter.cfms.api.holidays.usecases
+package `in`.porter.cfms.api.service.holidays.usecases
 
 import `in`.porter.cfms.api.service.holidays.mappers.ListHolidaysRequestMapper
 import org.junit.jupiter.api.Assertions.assertEquals

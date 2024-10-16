@@ -1,4 +1,4 @@
-package `in`.porter.cfms.api.holidays.factories
+package `in`.porter.cfms.api.service.holidays.factories
 
 import `in`.porter.cfms.api.models.holidays.LeaveType
 import `in`.porter.cfms.api.models.holidays.UpdateHolidaysRequest

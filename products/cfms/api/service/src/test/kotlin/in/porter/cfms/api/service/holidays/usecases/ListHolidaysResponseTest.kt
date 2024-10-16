@@ -1,6 +1,6 @@
-package `in`.porter.cfms.api.holidays.usecases
+package `in`.porter.cfms.api.service.holidays.usecases
 
-import `in`.porter.cfms.api.holidays.factories.ListHolidaysResponseTestFactory
+import `in`.porter.cfms.api.service.holidays.factories.ListHolidaysResponseTestFactory
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
