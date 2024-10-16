@@ -1,7 +1,5 @@
 package `in`.porter.cfms.domain.tasks.entities
 
-import java.time.LocalDateTime
-
 data class ListTasks (
     val taskId: Int,
     val flowType: String,

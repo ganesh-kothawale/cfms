@@ -8,7 +8,6 @@ import `in`.porter.kotlinutils.instrumentation.opentracing.Traceable
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.ApplicationCall
 import io.ktor.server.response.respond
-import kotlinx.coroutines.TimeoutCancellationException
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
