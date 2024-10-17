@@ -32,7 +32,7 @@ constructor(
 
         // Return the mapped response using the response mapper
         return ListFranchisesResponseMapper.toResponse(
-            franchises = franchisesResult.data,
+            franchisees = franchisesResult.data,
             page = domainRequest.page,
             size = domainRequest.size,
             totalPages = calculateTotalPages(franchisesResult.totalRecords, domainRequest.size),

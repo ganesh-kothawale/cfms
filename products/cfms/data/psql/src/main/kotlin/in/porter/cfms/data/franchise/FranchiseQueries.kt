@@ -14,7 +14,6 @@ import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
 import org.slf4j.LoggerFactory
 import `in`.porter.cfms.data.franchise.records.UpdateFranchiseRecord
-
 import org.jetbrains.exposed.sql.*
 import java.time.Instant
 import javax.inject.Inject

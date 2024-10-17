@@ -6,7 +6,7 @@ object Plugins {
   const val kotlinxSerialization = "plugin.serialization"
 
   const val flywayPlugin = "org.flywaydb.flyway"
-  const val flywayVersion = "6.2.0"
+  const val flywayVersion = "9.21.1"
 
   const val sonaTypePlugin = "org.sonatype.gradle.plugins.scan"
   const val sonaTypePluginVersion = "2.6.0"

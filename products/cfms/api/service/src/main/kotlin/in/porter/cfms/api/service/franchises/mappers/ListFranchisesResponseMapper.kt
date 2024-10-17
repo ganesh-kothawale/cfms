@@ -11,14 +11,14 @@ import `in`.porter.cfms.domain.franchise.entities.PointOfContact
 
 object ListFranchisesResponseMapper {
     fun toResponse(
-        franchises: List<ListFranchise>,
+        franchisees: List<ListFranchise>,
         page: Int,
         size: Int,
         totalPages: Int,
         totalRecords: Int
     ): ListFranchisesResponse {
         return ListFranchisesResponse(
-            franchises = franchises.map { toFranchiseeResponse(it) },
+            franchises = franchisees.map { toFranchiseeResponse(it) },
             page = page,
             size = size,
             totalPages = totalPages,

@@ -9,7 +9,7 @@ class FetchOrderRequestMapper
     fun fromApi(req: ApiFetchOrderRequest): DomainFetchOrderRequest {
         return DomainFetchOrderRequest(
             page = req.page,
-            limit = req.limit,
+            size = req.size,
             franchiseId = req.franchiseId
         )
 
