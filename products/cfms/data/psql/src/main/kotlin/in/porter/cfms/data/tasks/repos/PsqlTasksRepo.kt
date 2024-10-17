@@ -113,7 +113,7 @@ class PsqlTasksRepo
         }
 
     override suspend fun findTaskById(taskId: String): Tasks? = trace("findTaskById") {
-        val taskRecord = queries.findById(taskId)
+        val taskRecord = queries.findByTaskId(taskId)
         taskRecord?.let { taskMapper.toDomain(it) }  // Use the mapper to convert TaskRecord to domain Tasks
     }
 
@@ -125,4 +125,13 @@ class PsqlTasksRepo
 
         queries.updateTask(taskRecord)
     }
+
+    override suspend fun deleteTaskById(taskId: String) =
+        try {
+            logger.info("Deleting task with ID: $taskId")
+            queries.deleteTaskById(taskId)
+        } catch (e: Exception) {
+            logger.error("Error deleting task: ${e.message}", e)
+            throw CfmsException("Failed to delete task with ID: $taskId")
+        }
 }

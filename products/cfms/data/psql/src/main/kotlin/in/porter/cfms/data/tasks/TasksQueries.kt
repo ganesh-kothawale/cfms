@@ -8,6 +8,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.StdOutSqlLogger
 import org.jetbrains.exposed.sql.addLogger
+import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
@@ -90,7 +91,7 @@ constructor(
         taskRecord.taskId
     }
 
-    suspend fun findById(taskId: String): TaskRecord? = transact {
+    suspend fun findByTaskId(taskId: String): TaskRecord? = transact {
         TasksTable
             .select { TasksTable.taskId eq taskId }
             .mapNotNull { taskRowMapper.toRecord(it) }
@@ -108,5 +109,11 @@ constructor(
             it[teamId] = taskRecord.teamId
             it[updatedAt] = taskRecord.updatedAt?:Instant.now()
         }
+    }
+
+    suspend fun deleteTaskById(taskId: String): Unit = transact {
+        addLogger(StdOutSqlLogger)
+        logger.info("Deleting task with ID: $taskId")
+        TasksTable.deleteWhere { TasksTable.taskId eq taskId }
     }
 }
