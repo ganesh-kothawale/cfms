@@ -21,30 +21,30 @@ constructor(
     suspend fun invoke(
         call: ApplicationCall,
         page: Int,
-        limit: Int
+        size: Int
     ) {
         try {
-            // Validate page and limit
-            if (page < 1 || limit < 1 || limit > 100) {
-                logger.error("Invalid page or limit: page=$page, limit=$limit")
-                throw IllegalArgumentException("Page must be a positive integer, and limit must be between 1 and 100.")
+            // Validate page and size
+            if (page < 1 || size < 1 || size > 100) {
+                logger.error("Invalid page or size: page=$page, size=$size")
+                throw IllegalArgumentException("Page must be a positive integer, and size must be between 1 and 100.")
             }
 
-            logger.info("Received request to list all tasks with page: $page and limit: $limit")
+            logger.info("Received request to list all tasks with page: $page and size: $size")
 
             // Use the mapper to create the request model
-            val request = listTasksRequestMapper.toDomain(page = page, limit = limit)
+            val request = listTasksRequestMapper.toDomain(page = page, size = size)
             logger.info("Mapped request for listing tasks: {}", request)
 
             // Call the service to list tasks
-            val tasksResponse: ListTasksResponse = listTasksService.listTasks(request)
+            val tasksResponse: ListTasksResponse = listTasksService.listTasks(page,size)
+
 
             // Respond with the formatted result
             call.respond(HttpStatusCode.OK, mapOf("data" to tasksResponse))
             logger.info("Sent response with listed tasks")
 
         } catch (e: IllegalArgumentException) {
-            // Handle invalid page/limit parameters
             call.respond(
                 HttpStatusCode.BadRequest,
                 mapOf(

@@ -1,10 +1,12 @@
 package `in`.porter.cfms.data.holidays
 
 import `in`.porter.cfms.domain.holidays.entities.LeaveType
+import `in`.porter.cfms.data.franchise.FranchisesTable
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.transactions.transaction
 import java.time.Instant
 import java.time.LocalDate
+
 
 fun insertFranchiseRecord(franchiseId: String) {
     transaction {
@@ -25,9 +27,9 @@ fun insertFranchiseRecord(franchiseId: String) {
             it[franchisePan] = "PAN1"
             it[franchiseCanceledCheque] = "Cheque1"
             it[daysOfOperation] = "Mon-Fri"
-            it[startTime] = Instant.now()
-            it[endTime] = Instant.now().plusSeconds(3600)
-            it[cutOffTime] = Instant.now().plusSeconds(1800)
+            it[startTime] = "09:00"
+            it[endTime] = "17:00"
+            it[cutOffTime] = "12:00"
             it[hlpEnabled] = true
             it[radiusCoverage] = 10.00.toBigDecimal()
             it[showCrNumber] = false

@@ -2,7 +2,6 @@ package `in`.porter.cfms.data.tasks
 
 import `in`.porter.cfms.data.tasks.mappers.ListTasksRowMapper
 import `in`.porter.cfms.data.tasks.mappers.TaskRowMapper
-import `in`.porter.cfms.data.tasks.records.ListTasksRecord
 import `in`.porter.cfms.data.tasks.records.TaskRecord
 import `in`.porter.kotlinutils.exposed.ExposedRepo
 import kotlinx.coroutines.CoroutineDispatcher
@@ -29,7 +28,7 @@ constructor(
     private val logger = LoggerFactory.getLogger(TasksQueries::class.java)
 
     // Retrieve tasks with pagination
-    suspend fun findAll(size: Int, offset: Int): List<ListTasksRecord> = transact {
+    suspend fun findAll(size: Int, offset: Int): List<TaskRecord> = transact {
         addLogger(StdOutSqlLogger)
         logger.info("Fetching tasks with size: $size and offset: $offset")
         TasksTable
@@ -52,7 +51,7 @@ constructor(
     }
 
     // Retrieve tasks by their IDs
-    suspend fun findByIds(taskIds: List<String>): List<ListTasksRecord> = transact {
+    suspend fun findByIds(taskIds: List<String>): List<TaskRecord> = transact {
         addLogger(StdOutSqlLogger)
         logger.info("Fetching tasks with IDs: $taskIds")
         TasksTable
@@ -89,5 +88,25 @@ constructor(
             row[updatedAt] = taskRecord.updatedAt?: Instant.now()
         }
         taskRecord.taskId
+    }
+
+    suspend fun findById(taskId: String): TaskRecord? = transact {
+        TasksTable
+            .select { TasksTable.taskId eq taskId }
+            .mapNotNull { taskRowMapper.toRecord(it) }
+            .singleOrNull()
+    }
+
+    suspend fun updateTask(taskRecord: TaskRecord): Unit = transact {
+        logger.info("Updating task with ID: ${taskRecord.taskId}")
+
+        TasksTable.update({ TasksTable.taskId eq taskRecord.taskId }) {
+            it[flowType] = taskRecord.flowType
+            it[status] = taskRecord.status
+            it[packageReceived] = taskRecord.packageReceived
+            it[scheduledSlot] = taskRecord.scheduledSlot
+            it[teamId] = taskRecord.teamId
+            it[updatedAt] = taskRecord.updatedAt?:Instant.now()
+        }
     }
 }

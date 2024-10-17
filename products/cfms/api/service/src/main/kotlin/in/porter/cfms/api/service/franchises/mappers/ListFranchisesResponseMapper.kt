@@ -18,7 +18,7 @@ object ListFranchisesResponseMapper {
         totalRecords: Int
     ): ListFranchisesResponse {
         return ListFranchisesResponse(
-            franchisees = franchisees.map { toFranchiseeResponse(it) },
+            franchises = franchisees.map { toFranchiseeResponse(it) },
             page = page,
             size = size,
             totalPages = totalPages,

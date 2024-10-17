@@ -19,12 +19,12 @@ class FetchOrdersHTTPService
         trace {
             try {
                 val page = call.request.queryParameters["page"]?.toIntOrNull() ?: 1
-                val limit = call.request.queryParameters["limit"]?.toIntOrNull() ?: 10
+                val size = call.request.queryParameters["size"]?.toIntOrNull() ?: 10
                 val franchiseId = call.request.queryParameters["franchise_id"]
 
-                FetchOrderApiRequest(page = page, limit = limit, franchiseId = franchiseId)
+                FetchOrderApiRequest(page = page, size = size, franchiseId = franchiseId)
                     .let { fetchOrdersApiService.invoke(it) }
-                    .let { call.respond(HttpStatusCode.OK, it) }
+                    .let { call.respond(HttpStatusCode.OK, mapOf("data" to it)) }
 
             } catch (e: IllegalArgumentException) {
                 call.respond(HttpStatusCode.BadRequest, "Invalid request: ${e.message}")
