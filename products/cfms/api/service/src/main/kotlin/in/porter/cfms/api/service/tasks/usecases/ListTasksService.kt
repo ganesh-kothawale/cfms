@@ -36,6 +36,7 @@ constructor(
         return responseMapper.toResponse(
             tasks = tasksResult.data,
             page = domainRequest.page,
+
             size = domainRequest.size,
             totalPages = calculateTotalPages(tasksResult.totalRecords, domainRequest.size),
             totalRecords = tasksResult.totalRecords

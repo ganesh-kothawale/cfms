@@ -1,5 +1,6 @@
 package `in`.porter.cfms.domain.tasks.usecases
 
+
 import `in`.porter.cfms.domain.tasks.entities.Tasks
 import `in`.porter.cfms.domain.tasks.repos.TasksRepo
 import org.slf4j.LoggerFactory
@@ -19,7 +20,6 @@ constructor(
         // Fetch the total number of task records
         val totalRecords = tasksRepo.countAllTasks()
 
-        // Fetch the paginated list of tasks
         val tasks = tasksRepo.findAllTasks(page, size)
 
         // Log the result

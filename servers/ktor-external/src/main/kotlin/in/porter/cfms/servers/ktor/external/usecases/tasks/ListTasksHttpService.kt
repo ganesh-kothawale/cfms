@@ -8,7 +8,6 @@ import `in`.porter.kotlinutils.instrumentation.opentracing.Traceable
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.ApplicationCall
 import io.ktor.server.response.respond
-import kotlinx.coroutines.TimeoutCancellationException
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
@@ -45,14 +44,13 @@ constructor(
             logger.info("Sent response with listed tasks")
 
         } catch (e: IllegalArgumentException) {
-            // Handle invalid page/size parameters
             call.respond(
                 HttpStatusCode.BadRequest,
                 mapOf(
                     "error" to listOf(
                         mapOf(
-                            "message" to "Invalid page or size parameter",
-                            "details" to "Page must be a positive integer, and size must be between 1 and 100."
+                            "message" to "Invalid page or limit parameter",
+                            "details" to "Page must be a positive integer, and limit must be between 1 and 100."
                         )
                     )
                 )

@@ -12,7 +12,6 @@ class ListTasksRowMapper @Inject constructor() {
 
     fun toRecord(resultRow: ResultRow): TaskRecord {
         logger.info("Mapping result row to TaskRecord")
-
         return TaskRecord(
             taskId = resultRow[TasksTable.taskId],
             flowType = resultRow[TasksTable.flowType],
