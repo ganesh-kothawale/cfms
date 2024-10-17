@@ -1,5 +1,6 @@
 package `in`.porter.cfms.data.holidays
 
+import `in`.porter.cfms.data.franchise.FranchisesTable
 import `in`.porter.cfms.data.holidays.mappers.HolidayRowMapper
 import `in`.porter.cfms.data.holidays.mappers.ListHolidayMapper
 import `in`.porter.cfms.data.holidays.mappers.ListHolidaysFranchiseRowMapper

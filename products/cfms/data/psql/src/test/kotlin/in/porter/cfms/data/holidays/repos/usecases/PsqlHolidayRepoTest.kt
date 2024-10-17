@@ -1,6 +1,6 @@
 package `in`.porter.cfms.data.holidays.repos.usecases
 
-import `in`.porter.cfms.data.holidays.FranchisesTable
+import `in`.porter.cfms.data.franchise.FranchisesTable
 import `in`.porter.cfms.data.holidays.HolidayQueries
 import `in`.porter.cfms.data.holidays.HolidayTable
 import `in`.porter.cfms.data.holidays.mappers.HolidayMapper
