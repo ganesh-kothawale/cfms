@@ -14,7 +14,6 @@ object TasksTable : Table("tasks") {
     val teamId = varchar("team_id",10)
     val createdAt = timestampWithoutTZAsInstant("created_at")
     val updatedAt = timestampWithoutTZAsInstant("updated_at")
-
     override val primaryKey = PrimaryKey(id, name = "PK_Tasks_ID")
     init {
         index(true, taskId)

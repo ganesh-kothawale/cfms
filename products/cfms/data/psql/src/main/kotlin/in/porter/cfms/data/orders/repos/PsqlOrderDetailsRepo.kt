@@ -26,7 +26,7 @@ class PsqlOrderDetailsRepo
     }
 
     override suspend fun fetchOrders(request: FetchOrdersRequest): List<Order> {
-       return queries.fetchOrders(request.limit, request.limit * (request.page - 1),request.franchiseId)
+       return queries.fetchOrders(request.size, request.size * (request.page - 1),request.franchiseId)
             .let  {it.map { mapper.toDomain(it) }}
     }
 

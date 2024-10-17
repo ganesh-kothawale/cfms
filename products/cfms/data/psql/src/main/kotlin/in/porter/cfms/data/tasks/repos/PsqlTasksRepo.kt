@@ -5,9 +5,8 @@ import `in`.porter.cfms.data.tasks.TasksQueries
 import `in`.porter.cfms.data.tasks.mappers.ListTasksMapper
 import `in`.porter.cfms.data.tasks.mappers.ListTasksRowMapper
 import `in`.porter.cfms.data.tasks.mappers.TaskRowMapper
-import `in`.porter.cfms.data.tasks.records.ListTasksRecord
 import `in`.porter.cfms.data.tasks.records.TaskRecord
-import `in`.porter.cfms.domain.tasks.entities.ListTasks
+import `in`.porter.cfms.domain.tasks.entities.Tasks
 import `in`.porter.cfms.domain.tasks.entities.Task
 import `in`.porter.cfms.domain.tasks.repos.TasksRepo
 import `in`.porter.kotlinutils.instrumentation.opentracing.Traceable
@@ -24,7 +23,8 @@ class PsqlTasksRepo
 
     private val logger = LoggerFactory.getLogger(PsqlTasksRepo::class.java)
 
-    override suspend fun findAllTasks(page: Int, size: Int): List<ListTasks> =
+    override suspend fun findAllTasks(page: Int, size: Int): List<Tasks> =
+
         trace("findAllTasks") { _: io.opentracing.Span ->
             try {
                 logger.info("Retrieving tasks with page: $page, size: $size")
@@ -35,9 +35,9 @@ class PsqlTasksRepo
 
                 logger.info("Retrieved ${records.size} tasks")
                 logger.info("Mapping records to domain objects")
+                // Map each TaskRecord to a Task entity
+                records.map { record: TaskRecord ->
 
-                // Map each ListTasksRecord to a Task entity
-                records.map { record: ListTasksRecord ->
                     logger.info("Mapping record: $record")
                     listTasksMapper.toDomain(record)
                 }
@@ -58,14 +58,15 @@ class PsqlTasksRepo
         }
 
     // New method for finding tasks by IDs
-    override suspend fun findTasksByIds(taskIds: List<String>): List<ListTasks> =
+    override suspend fun findTasksByIds(taskIds: List<String>): List<Tasks> =
         trace("findTasksByIds") { _: io.opentracing.Span ->
             try {
                 logger.info("Retrieving tasks by IDs: $taskIds")
                 val records = queries.findByIds(taskIds)
 
                 logger.info("Retrieved ${records.size} tasks")
-                records.map { record: ListTasksRecord ->
+                records.map { record: TaskRecord ->
+
                     logger.info("Mapping record: $record")
                     listTasksMapper.toDomain(record)
                 }

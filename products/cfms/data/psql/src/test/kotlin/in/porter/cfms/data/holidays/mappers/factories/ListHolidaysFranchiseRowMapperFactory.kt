@@ -1,6 +1,6 @@
 package `in`.porter.cfms.data.holidays.mappers.factories
 
-import `in`.porter.cfms.data.holidays.FranchisesTable
+import `in`.porter.cfms.data.franchise.FranchisesTable
 import org.jetbrains.exposed.sql.ResultRow
 import io.mockk.every
 import io.mockk.mockk

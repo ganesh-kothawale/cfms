@@ -67,7 +67,7 @@ class CreateFranchiseRecordServiceTest {
         )
 
         // Mock behavior for the service's invoke method
-        val expectedResponse = RecordFranchiseDetailsResponse(
+        val expectedResponse = FranchiseResponse(
             data = Data(
                 message = "Franchise created successfully",
                 franchise_id = generatedFranchiseId
