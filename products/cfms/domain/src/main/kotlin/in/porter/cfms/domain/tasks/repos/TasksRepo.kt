@@ -9,4 +9,6 @@ interface TasksRepo {
     suspend fun findTasksByIds(taskIds: List<String>): List<Tasks>
     suspend fun updateStatusForTasks(taskIds: List<String>, status: String)
     suspend fun create(task: Task): String
+    suspend fun findTaskById(taskId: String): Tasks?
+    suspend fun update(task: Tasks)
 }

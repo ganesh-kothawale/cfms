@@ -89,4 +89,24 @@ constructor(
         }
         taskRecord.taskId
     }
+
+    suspend fun findById(taskId: String): TaskRecord? = transact {
+        TasksTable
+            .select { TasksTable.taskId eq taskId }
+            .mapNotNull { taskRowMapper.toRecord(it) }
+            .singleOrNull()
+    }
+
+    suspend fun updateTask(taskRecord: TaskRecord): Unit = transact {
+        logger.info("Updating task with ID: ${taskRecord.taskId}")
+
+        TasksTable.update({ TasksTable.taskId eq taskRecord.taskId }) {
+            it[flowType] = taskRecord.flowType
+            it[status] = taskRecord.status
+            it[packageReceived] = taskRecord.packageReceived
+            it[scheduledSlot] = taskRecord.scheduledSlot
+            it[teamId] = taskRecord.teamId
+            it[updatedAt] = taskRecord.updatedAt?:Instant.now()
+        }
+    }
 }
