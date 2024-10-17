@@ -1,12 +1,11 @@
-package `in`.porter.cfms.api.holidays.usecases
+package `in`.porter.cfms.api.service.holidays.usecases
 
-import `in`.porter.cfms.api.holidays.factories.ListHolidaysResponseTestFactory
-import `in`.porter.cfms.api.holidays.factories.ListHolidaysServiceTestFactory
 import `in`.porter.cfms.api.models.holidays.ListHolidaysRequest
-import `in`.porter.cfms.api.service.holidays.usecases.ListHolidaysService
+import `in`.porter.cfms.api.service.holidays.factories.ListHolidaysResponseTestFactory
+import `in`.porter.cfms.api.service.holidays.factories.ListHolidaysServiceTestFactory
 import `in`.porter.cfms.domain.holidays.entities.ListHoliday
-import `in`.porter.cfms.domain.holidays.usecases.ListHolidays
 import `in`.porter.cfms.domain.holidays.usecases.HolidaySearchResult
+import `in`.porter.cfms.domain.holidays.usecases.ListHolidays
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.runBlocking

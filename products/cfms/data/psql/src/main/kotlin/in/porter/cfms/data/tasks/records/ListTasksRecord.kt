@@ -1,14 +1,12 @@
 package `in`.porter.cfms.data.tasks.records
 
-import java.time.Instant
-
-data class TaskRecord(
+data class ListTasksRecord(
     val taskId: String,
     val flowType: String,
     val status: String,
     val packageReceived: Int?,
-    val scheduledSlot: Instant?,
+    val scheduledSlot: String?,
     val teamId: String,
-    val createdAt: Instant?,
-    val updatedAt: Instant?
+    val createdAt: String,
+    val updatedAt: String
 )

@@ -1,9 +1,9 @@
-package `in`.porter.cfms.data.tasks.records
+package `in`.porter.cfms.domain.tasks.entities
 
 import java.time.Instant
 
-data class TaskRecord(
-    val taskId: String,
+data class Task(
+    val taskId: String = "" ,
     val flowType: String,
     val status: String,
     val packageReceived: Int?,

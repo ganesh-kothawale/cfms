@@ -1,6 +1,6 @@
-package `in`.porter.cfms.api.holidays.usecases
+package `in`.porter.cfms.api.service.holidays.usecases
 
-import `in`.porter.cfms.api.holidays.factories.UpdateHolidaysRequestMapperFactory
+import `in`.porter.cfms.api.service.holidays.factories.UpdateHolidaysRequestMapperFactory
 import `in`.porter.cfms.api.models.exceptions.CfmsException
 import `in`.porter.cfms.api.models.holidays.UpdateHolidaysRequest
 import `in`.porter.cfms.api.service.holidays.mappers.UpdateHolidaysRequestMapper
