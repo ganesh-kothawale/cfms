@@ -4,10 +4,8 @@ import `in`.porter.cfms.data.courierPartners.CourierPartnersTable.name
 import `in`.porter.cfms.data.courierPartners.mappers.CourierPartnerRecordMapper
 import `in`.porter.cfms.data.courierPartners.records.CourierPartnerData
 import `in`.porter.cfms.data.courierPartners.records.CourierPartnerTableData
-import `in`.porter.cfms.data.courierPartners.records.CourierTableData
 import `in`.porter.kotlinutils.exposed.ExposedRepo
 import kotlinx.coroutines.CoroutineDispatcher
-import org.apache.logging.log4j.kotlin.Logging
 import org.jetbrains.exposed.sql.*
 import javax.inject.Inject
 
@@ -44,7 +42,9 @@ constructor(
     }
 
     suspend fun getName(cpId: Int): String? = transact {
-        CourierPartnersTable.select { CourierPartnersTable.id eq cpId }.firstOrNull()?.let { it[name] }
+        CourierPartnersTable.select { CourierPartnersTable.id eq cpId }
+            .firstOrNull()
+            ?.let { it[name] }
     }
 
 }

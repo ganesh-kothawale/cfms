@@ -4,7 +4,6 @@ import `in`.porter.cfms.data.courierPartners.CpConnectionTable
 import `in`.porter.cfms.data.courierPartners.records.CourierPartnerData
 import `in`.porter.cfms.data.courierPartners.records.CourierPartnerTableData
 import `in`.porter.cfms.domain.courierPartner.entities.CourierPartnerDomain
-import `in`.porter.cfms.domain.courierPartner.entities.CourierPartnerRecord
 import `in`.porter.cfms.domain.courierPartner.entities.CreateCourierPartnerRequest
 import org.jetbrains.exposed.sql.Query
 import org.jetbrains.exposed.sql.ResultRow
@@ -16,10 +15,10 @@ class CourierPartnerRecordMapper
   @Inject
   constructor(){
 
-  fun toRecord(createCourierPartnerRequest: CreateCourierPartnerRequest) = CourierPartnerData(
-    courierPartnerId = createCourierPartnerRequest.courierPartnerId,
-    franchiseId = createCourierPartnerRequest.franchiseId,
-    manifestImageUrl = createCourierPartnerRequest.manifestImageLink,
+  fun toRecord(request: CreateCourierPartnerRequest) = CourierPartnerData(
+    courierPartnerId = request.courierPartnerId,
+    franchiseId = request.franchiseId,
+    manifestImageUrl = request.manifestImageLink,
     createdAt =  Instant.now()
     )
 

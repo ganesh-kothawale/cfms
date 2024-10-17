@@ -16,8 +16,8 @@ constructor(
 ) : Traceable, CourierPartnerRepo {
   companion object : Logging
 
-  override suspend fun create(createCourierPartnerRequest: CreateCourierPartnerRequest): Int = trace {
-      mapper.toRecord(createCourierPartnerRequest)
+  override suspend fun create(request: CreateCourierPartnerRequest): Int = trace {
+      mapper.toRecord(request)
         .let { queries.record(it) }
     }
 
