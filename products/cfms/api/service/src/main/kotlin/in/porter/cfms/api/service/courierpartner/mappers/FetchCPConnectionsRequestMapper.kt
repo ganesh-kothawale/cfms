@@ -10,7 +10,7 @@ constructor() {
 
     fun toDomain(req: FetchCPConnectionsApiRequest) = FetchCPConnectionsRequest(
         page = req.page,
-        size = req.pageSize,
+        size = req.size,
         franchiseId = req.franchiseId
     )
 }

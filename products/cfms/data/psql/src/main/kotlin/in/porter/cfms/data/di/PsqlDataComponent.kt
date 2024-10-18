@@ -8,6 +8,8 @@ import `in`.porter.cfms.domain.orders.repos.OrderDetailsRepo
 import `in`.porter.cfms.domain.holidays.repos.HolidayRepo
 import `in`.porter.cfms.domain.franchise.repos.FranchiseRepo
 import `in`.porter.cfms.domain.cpConnections.repos.CPConnectionRepo
+import `in`.porter.cfms.domain.hlp.repos.HlpsRepo
+import `in`.porter.cfms.domain.tasks.repos.TasksRepo
 import io.micrometer.core.instrument.MeterRegistry
 import org.jetbrains.exposed.sql.Database
 
@@ -20,7 +22,9 @@ import org.jetbrains.exposed.sql.Database
     OrderDetailsRepoModule::class,
     FranchiseReposModule::class,
     CPConnectionRepoModule::class,
-    CourierPartnerRepoModule::class
+    CourierPartnerRepoModule::class,
+    HlpReposModule::class,
+    TasksModule::class
   ]
 )
 interface PsqlDataComponent {
@@ -30,6 +34,8 @@ interface PsqlDataComponent {
   val cpConnectionRepo: CPConnectionRepo
   val courierPartnersRepo: CourierPartnersRepo
   val franchiseRepo: FranchiseRepo
+  val hlpRepo: HlpsRepo
+  val tasksRepo: TasksRepo
 
   @Component.Builder
   interface Builder {

@@ -55,9 +55,9 @@ class CreateFranchiseRecordServiceTest {
             hlpEnabled = true,
             status = FranchiseStatus.Active,
             daysOfOperation = "Mon-Fri",
-            cutOffTime = Instant.now(),
-            startTime = Instant.now(),
-            endTime = Instant.now(),
+            cutOffTime = "17",
+            startTime = "9",
+            endTime = "17",
             porterHubName = "Hub A",
             franchiseGst = "GST123",
             franchisePan = "PAN123",
@@ -67,7 +67,7 @@ class CreateFranchiseRecordServiceTest {
         )
 
         // Mock behavior for the service's invoke method
-        val expectedResponse = RecordFranchiseDetailsResponse(
+        val expectedResponse = FranchiseResponse(
             data = Data(
                 message = "Franchise created successfully",
                 franchise_id = generatedFranchiseId
@@ -101,9 +101,9 @@ class CreateFranchiseRecordServiceTest {
             hlpEnabled = true,
             status = FranchiseStatus.Active,
             daysOfOperation = "Mon-Fri",
-            cutOffTime = Instant.now(),
-            startTime = Instant.now(),
-            endTime = Instant.now(),
+            cutOffTime = "17",
+            startTime = "9",
+            endTime = "17",
             porterHubName = "Hub A",
             franchiseGst = "GST123",
             franchisePan = "PAN123",

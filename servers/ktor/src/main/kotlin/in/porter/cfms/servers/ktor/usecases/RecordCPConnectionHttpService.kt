@@ -30,7 +30,7 @@ constructor(
                 return@trace
             }
             service.invoke(request)
-                .let { call.respond(HttpStatusCode.OK, it.message) }
+                .let { call.respond(HttpStatusCode.OK, it) }
         } catch (e: CfmsException) {
             call.respond(HttpStatusCode.UnprocessableEntity, e)
         }

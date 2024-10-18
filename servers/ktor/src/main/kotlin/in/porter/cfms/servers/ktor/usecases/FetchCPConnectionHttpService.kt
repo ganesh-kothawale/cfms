@@ -39,7 +39,7 @@ constructor(
       val response = service.invoke(request)
       call.respond(HttpStatusCode.OK, response)
 
-    } catch (e: CfmsException) {
+    } catch (e: Exception) {
       call.respond(HttpStatusCode.UnprocessableEntity, e)
     }
   }

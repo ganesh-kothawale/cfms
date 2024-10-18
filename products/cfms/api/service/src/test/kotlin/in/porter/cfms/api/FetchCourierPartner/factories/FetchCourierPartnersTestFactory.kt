@@ -9,7 +9,7 @@ class FetchCourierPartnersTestFactory {
         franchiseId: String = ""
     ) = FetchCPConnectionsApiRequest(
         page = page,
-        pageSize = pageSize,
+        size = pageSize,
         franchiseId = franchiseId
     )
 }
