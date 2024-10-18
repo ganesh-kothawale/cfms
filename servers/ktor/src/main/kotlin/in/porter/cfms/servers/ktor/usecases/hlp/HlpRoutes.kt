@@ -6,4 +6,5 @@ import io.ktor.server.routing.*
 
 fun Route.hlpRoutes(httpComponent: HttpComponent) {
     post("") { httpComponent.recordHlpDetailsHttpService.invoke(call) }
+    put("") { httpComponent.updateHlpDetailsHttpService.invoke(call) }
 }
