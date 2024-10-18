@@ -5,6 +5,7 @@ import `in`.porter.cfms.servers.commons.usecases.external.Run
 import `in`.porter.cfms.data.di.PsqlDataComponent
 
 import dagger.Component
+import `in`.porter.cfms.servers.ktor.usecases.hlp.FetchHlpRecordsHttpService
 import `in`.porter.cfms.servers.ktor.usecases.hlp.RecordHlpDetailsHttpService
 import `in`.porter.cfms.servers.ktor.usecases.hlp.UpdateHlpDetailsHttpService
 import `in`.porter.cfms.servers.ktor.usecases.orders.FetchOrdersHTTPService
@@ -26,4 +27,5 @@ interface HttpComponent {
   val updateOrderStatusHTTPService: UpdateOrderStatusHTTPService
   val recordHlpDetailsHttpService: RecordHlpDetailsHttpService
   val updateHlpDetailsHttpService: UpdateHlpDetailsHttpService
+  val fetchHlpRecordsHttpService: FetchHlpRecordsHttpService
 }

@@ -1,9 +1,6 @@
-package `in`.porter.cfms.domain.hlp.entities
-
-import java.time.Instant
+package `in`.porter.cfms.api.models.hlp
 
 data class HlpDetails(
-    val id: Int,
     val hlpOrderId: String,
     val hlpOrderStatus: String?,
     val otp: String?,
@@ -11,6 +8,4 @@ data class HlpDetails(
     val riderNumber: String?,
     val vehicleType: String?,
     val franchiseId: String,
-    val createdAt: Instant,
-    val updatedAt: Instant,
 )
