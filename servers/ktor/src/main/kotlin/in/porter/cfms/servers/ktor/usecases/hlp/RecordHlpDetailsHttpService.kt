@@ -1,4 +1,4 @@
-package `in`.porter.cfms.servers.ktor.external.usecases.hlp
+package `in`.porter.cfms.servers.ktor.usecases.hlp
 
 import `in`.porter.cfms.api.models.exceptions.CfmsException
 import `in`.porter.cfms.api.models.hlp.RecordHlpDetailsRequest

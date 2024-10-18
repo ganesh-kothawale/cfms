@@ -18,6 +18,7 @@ constructor(
     suspend fun invoke(request: RecordHlpDetailsRequest) = trace {
         try {
             mapper.toDomain(request)
+                .also { println("[RecordHlpDetailsService]") }
                 .let { recordHlpDetails.invoke(it) }
         } catch (e: CfmsException) {
             throw CfmsExceptionApi(e.message)

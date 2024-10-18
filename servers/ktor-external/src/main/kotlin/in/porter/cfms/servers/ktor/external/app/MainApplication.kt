@@ -96,6 +96,5 @@ fun Application.main() {
         get("/") { call.respond(HttpStatusCode.OK, Unit) }
         route ("/cfms/public/holidays"){ holidaysRoutes(httpComponent) }
         route("/cfms/public/franchises") { franchiseRoutes(httpComponent) }
-        route("/cfms/public/hlps") {}
     }
 }
