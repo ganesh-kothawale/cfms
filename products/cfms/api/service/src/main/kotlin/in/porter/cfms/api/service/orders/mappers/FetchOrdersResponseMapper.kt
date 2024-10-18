@@ -16,7 +16,6 @@ class FetchOrdersResponseMapper @Inject constructor(
             totalPages = domainResponse.totalPages,
             size = domainResponse.size,
             totalRecords = domainResponse.totalRecords
-
         )
     }
 }

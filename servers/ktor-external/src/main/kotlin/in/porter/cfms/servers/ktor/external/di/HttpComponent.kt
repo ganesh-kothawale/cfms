@@ -12,6 +12,8 @@ import `in`.porter.cfms.servers.ktor.external.usecases.holidays.UpdateHolidaysHt
 import `in`.porter.cfms.servers.ktor.external.usecases.holidays.ListHolidaysHttpService
 import `in`.porter.cfms.servers.ktor.external.usecases.franchises.CreateFranchiseRecordHttpService
 import `in`.porter.cfms.servers.ktor.external.usecases.franchises.ListFranchisesHttpService
+import `in`.porter.cfms.servers.ktor.external.usecases.tasks.ListTasksHttpService
+import `in`.porter.cfms.servers.ktor.external.usecases.tasks.UpdateTasksStatusHttpService
 import `in`.porter.cfms.servers.ktor.external.usecases.franchises.UpdateFranchiseRecordHttpService
 
 @HttpScope
@@ -29,5 +31,7 @@ interface HttpComponent {
   val listHolidaysHttpService : ListHolidaysHttpService
   val createFranchiseRecordHttpService : CreateFranchiseRecordHttpService
   val listFranchisesHttpService : ListFranchisesHttpService
+  val listTasksHttpService : ListTasksHttpService
+  val updateTasksStatusHttpService : UpdateTasksStatusHttpService
   val updateFranchiseRecordHttpService : UpdateFranchiseRecordHttpService
 }

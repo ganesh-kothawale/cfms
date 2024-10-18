@@ -1,7 +1,6 @@
 package `in`.porter.cfms.domain.franchise.usecases.internal
 
 import `in`.porter.cfms.domain.franchise.entities.FranchiseResult
-import `in`.porter.cfms.domain.franchise.entities.ListFranchise
 import `in`.porter.cfms.domain.franchise.repos.FranchiseRepo
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
@@ -11,7 +10,9 @@ class ListFranchises
 constructor(
     private val franchiseRepo: FranchiseRepo
 ) {
+
     private val logger = LoggerFactory.getLogger(ListFranchises::class.java)
+
     suspend fun listFranchises(page: Int, size: Int): FranchiseResult {
         logger.info("Listing franchises with page: $page, size: $size")
 
@@ -31,3 +32,4 @@ constructor(
         )
     }
 }
+

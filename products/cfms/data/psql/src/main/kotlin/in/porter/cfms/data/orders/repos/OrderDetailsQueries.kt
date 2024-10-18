@@ -66,16 +66,16 @@ constructor(
         }
     }
 
-    suspend fun fetchOrders(limit: Int, offset: Int, franchiseId: String?): List<Order> = transact {
+    suspend fun fetchOrders(size: Int, offset: Int, franchiseId: String?): List<Order> = transact {
         if (franchiseId != null) {
             OrdersTable.selectAll()
                 .andWhere { OrdersTable.franchiseId eq franchiseId }
                 .orderBy(OrdersTable.createdAt, SortOrder.DESC)
-                .limit(limit, offset)
+                .limit(size, offset)
         } else {
             OrdersTable.selectAll()
                 .orderBy(OrdersTable.createdAt, SortOrder.DESC)
-                .limit(limit, offset)
+                .limit(size, offset)
         }
             .let { mapper.mapOrders(it) }
     }

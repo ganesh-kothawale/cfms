@@ -10,6 +10,7 @@ import javax.inject.Inject
 class FetchOrdersService @Inject constructor(
     private val repo: OrderDetailsRepo,
 ) {
+
     private fun generateResponse(
         orders: List<Order>,
         totalCount: Int,
@@ -17,8 +18,8 @@ class FetchOrdersService @Inject constructor(
     ): FetchOrdersResponse = FetchOrdersResponse(
         orders = orders,
         page = request.page + 1,
-        size = request.limit,
-        totalPages = (totalCount + request.limit - 1) / request.limit,
+        size = request.size,
+        totalPages = (totalCount + request.size - 1) / request.size,
         totalRecords = totalCount
     )
 
