@@ -6,9 +6,9 @@ import org.jetbrains.exposed.sql.ResultRow
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
-class ListReconRowMapper @Inject constructor() {
+class ReconRowMapper @Inject constructor() {
 
-    private val logger = LoggerFactory.getLogger(ListReconRowMapper::class.java)
+    private val logger = LoggerFactory.getLogger(ReconRowMapper::class.java)
 
     fun toRecord(resultRow: ResultRow): ReconRecord {
         logger.info("Mapping result row to ReconRecord")

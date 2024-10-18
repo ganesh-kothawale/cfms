@@ -5,8 +5,8 @@ import `in`.porter.cfms.domain.recon.entities.Recon
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
-class ListReconMapper @Inject constructor() {
-    private val logger = LoggerFactory.getLogger(ListReconMapper::class.java)
+class ReconMapper @Inject constructor() {
+    private val logger = LoggerFactory.getLogger(ReconMapper::class.java)
 
     fun toDomain(record: ReconRecord): Recon {
         logger.info("Mapping record to domain: $record")
