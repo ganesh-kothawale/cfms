@@ -2,35 +2,27 @@ package `in`.porter.cfms.data.courierPartners.repos
 
 import `in`.porter.cfms.data.courierPartners.CourierPartnerQueries
 import `in`.porter.cfms.data.courierPartners.mappers.CourierPartnerRecordMapper
-import `in`.porter.cfms.domain.courierPartner.entities.*
-import `in`.porter.cfms.domain.courierPartner.repos.CourierPartnerRepo
+import `in`.porter.cfms.domain.courierPartners.entities.CourierPartner
+import `in`.porter.cfms.domain.courierPartners.repos.CourierPartnersRepo
 import `in`.porter.kotlinutils.instrumentation.opentracing.Traceable
-import org.apache.logging.log4j.kotlin.Logging
 import javax.inject.Inject
 
 class PsqlCourierPartnerRepo
 @Inject
 constructor(
-  private val queries: CourierPartnerQueries,
-  private val mapper: CourierPartnerRecordMapper
-) : Traceable, CourierPartnerRepo {
-  companion object : Logging
+    private val queries: CourierPartnerQueries,
+    private val mapper: CourierPartnerRecordMapper,
+) : Traceable, CourierPartnersRepo {
 
-  override suspend fun create(request: CreateCourierPartnerRequest): Int = trace {
-      mapper.toRecord(request)
-        .let { queries.record(it) }
-    }
+    override suspend fun getById(id: Int): CourierPartner? =
+        trace("getById") {
+            queries.getById(id)
+                ?.let { mapper.fromRecord(it) }
+        }
 
-  override suspend fun fetchCpRecords(request: FetchCpRecordsRequest): List<CourierPartnerDomain> {
-    return queries.fetchCp(request.pageSize, request.pageSize * (request.page - 1),request.franchiseId)
-      .let  {it.map { mapper.toDomain(it) }}
-  }
-  override suspend fun getCpCount(): Int {
-    return queries.getCpCount()
-  }
-
-  override suspend fun getCpName(cpId: Int): String? {
-    return queries.getName(cpId)
-  }
-
+    override suspend fun getByIds(ids: List<Int>): List<CourierPartner> =
+        trace("getByIds") {
+            queries.getByIds(ids)
+                .map { mapper.fromRecord(it) }
+        }
 }

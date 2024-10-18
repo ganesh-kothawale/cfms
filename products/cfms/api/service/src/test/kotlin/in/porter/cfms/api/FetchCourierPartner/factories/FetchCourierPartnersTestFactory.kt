@@ -1,16 +1,15 @@
 package `in`.porter.cfms.api.FetchCourierPartner.factories
 
-import `in`.porter.cfms.api.models.courierpartner.CreateCourierPartnerApiRequest
-import `in`.porter.cfms.api.models.courierpartner.FetchCpRecordsApiRequest
+import `in`.porter.cfms.api.models.cpConnections.FetchCPConnectionsApiRequest
 
 class FetchCourierPartnersTestFactory {
     fun buildFetchCourierPartnersRequest(
         page: Int = 1,
         pageSize: Int = 2,
-        franchiseId: Int = 3
-    ) = FetchCpRecordsApiRequest(
+        franchiseId: String = ""
+    ) = FetchCPConnectionsApiRequest(
         page = page,
-        page_size = pageSize,
-        franchise_id = franchiseId
+        pageSize = pageSize,
+        franchiseId = franchiseId
     )
 }

@@ -3,10 +3,11 @@ package `in`.porter.cfms.data.di
 import dagger.BindsInstance
 import dagger.Component
 import `in`.porter.cfms.data.orders.di.OrderDetailsRepoModule
+import `in`.porter.cfms.domain.courierPartners.repos.CourierPartnersRepo
 import `in`.porter.cfms.domain.orders.repos.OrderDetailsRepo
 import `in`.porter.cfms.domain.holidays.repos.HolidayRepo
 import `in`.porter.cfms.domain.franchise.repos.FranchiseRepo
-import `in`.porter.cfms.domain.courierPartner.repos.CourierPartnerRepo
+import `in`.porter.cfms.domain.cpConnections.repos.CPConnectionRepo
 import io.micrometer.core.instrument.MeterRegistry
 import org.jetbrains.exposed.sql.Database
 
@@ -18,6 +19,7 @@ import org.jetbrains.exposed.sql.Database
     HolidayModule::class,
     OrderDetailsRepoModule::class,
     FranchiseReposModule::class,
+    CPConnectionRepoModule::class,
     CourierPartnerRepoModule::class
   ]
 )
@@ -25,7 +27,8 @@ interface PsqlDataComponent {
 
   val holidayRepo : HolidayRepo
   val orderDetailsRepo: OrderDetailsRepo
-  val courierPartnerRepo: CourierPartnerRepo
+  val cpConnectionRepo: CPConnectionRepo
+  val courierPartnersRepo: CourierPartnersRepo
   val franchiseRepo: FranchiseRepo
 
   @Component.Builder
