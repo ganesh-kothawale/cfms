@@ -3,6 +3,7 @@ package `in`.porter.cfms.data.hlp.repos
 import `in`.porter.cfms.data.hlp.HlpQueries
 import `in`.porter.cfms.data.hlp.mappers.HlpRecordMapper
 import `in`.porter.cfms.domain.hlp.entities.HlpDetailsDraft
+import `in`.porter.cfms.domain.hlp.entities.UpdateHlpDetailsRequest
 import `in`.porter.cfms.domain.hlp.repos.HlpsRepo
 import `in`.porter.kotlinutils.instrumentation.opentracing.Traceable
 import javax.inject.Inject
@@ -16,5 +17,10 @@ constructor(
     override suspend fun create(draft: HlpDetailsDraft) {
         mapper.toData(draft)
             .let { queries.save(it) }
+    }
+
+    override suspend fun update(req: UpdateHlpDetailsRequest) {
+        mapper.toUpdateHlpRecord(req)
+            .let { queries.update(it) }
     }
 }
