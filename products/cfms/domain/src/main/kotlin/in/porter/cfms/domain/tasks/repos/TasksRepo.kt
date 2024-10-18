@@ -11,4 +11,5 @@ interface TasksRepo {
     suspend fun create(task: Task): String
     suspend fun findTaskById(taskId: String): Tasks?
     suspend fun update(task: Tasks)
+    suspend fun deleteTaskById(taskId: String)
 }
