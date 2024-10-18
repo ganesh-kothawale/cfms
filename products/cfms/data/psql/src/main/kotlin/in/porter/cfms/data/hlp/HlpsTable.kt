@@ -4,13 +4,13 @@ import `in`.porter.kotlinutils.exposed.columns.datetime.timestampWithoutTZAsInst
 import org.jetbrains.exposed.dao.id.IntIdTable
 
 object HlpsTable : IntIdTable("hlps") {
-    val hlpOrderId = varchar("hlp_order_id", 50)
-    val hlpOrderStatus = varchar("hlp_order_status", 50)
-    val otp = varchar("otp", 50)
-    val riderName = varchar("rider_name", 50)
-    val riderNumber = varchar("rider_number", 50)
-    val vehicleType = varchar("vehicle_type", 50)
-    val franchiseId = varchar("franchise_id", 50)
+    val hlpOrderId = varchar("hlp_order_id", 64)
+    val hlpOrderStatus = varchar("hlp_order_status", 64).nullable()
+    val otp = varchar("otp", 64).nullable()
+    val riderName = varchar("rider_name", 128).nullable()
+    val riderNumber = varchar("rider_number", 64).nullable()
+    val vehicleType = varchar("vehicle_type", 64).nullable()
+    val franchiseId = varchar("franchise_id", 64)
     val createdAt = timestampWithoutTZAsInstant("created_at")
     val updatedAt = timestampWithoutTZAsInstant("updated_at")
 }

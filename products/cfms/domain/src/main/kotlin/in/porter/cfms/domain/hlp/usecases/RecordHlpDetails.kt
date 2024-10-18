@@ -12,7 +12,6 @@ constructor(
 ) : Traceable {
 
     suspend fun invoke(hlpDetails: HlpDetailsDraft) = trace {
-        println("RecordHlpDetails")
         repo.create(hlpDetails)
     }
 }

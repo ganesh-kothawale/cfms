@@ -15,7 +15,6 @@ constructor(
 ) : Traceable, HlpsRepo {
     override suspend fun create(draft: HlpDetailsDraft) {
         mapper.toData(draft)
-            .also { println("[PsqlHlpsRepo]") }
             .let { queries.save(it) }
     }
 }

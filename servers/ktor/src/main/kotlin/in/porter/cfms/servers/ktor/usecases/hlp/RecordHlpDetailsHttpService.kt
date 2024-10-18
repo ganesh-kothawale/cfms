@@ -2,6 +2,7 @@ package `in`.porter.cfms.servers.ktor.usecases.hlp
 
 import `in`.porter.cfms.api.models.exceptions.CfmsException
 import `in`.porter.cfms.api.models.hlp.RecordHlpDetailsRequest
+import `in`.porter.cfms.api.models.tasks.UpdateTaskStatusRequest
 import `in`.porter.cfms.api.service.hlp.usecases.RecordHlpDetailsService
 import `in`.porter.kotlinutils.instrumentation.opentracing.Traceable
 import io.ktor.http.*
@@ -22,9 +23,20 @@ constructor(
     suspend fun invoke(call: ApplicationCall) {
         trace {
             try {
-                call.receive<RecordHlpDetailsRequest>()
-                    .also { logger.info { "[RecordHlpDetailsHttpService] request: $it" } }
-                    .let { service.invoke(it) }
+                val request = try {
+                    call.receive<RecordHlpDetailsRequest>()
+                } catch (e: Exception) {
+                    logger.error("Failed to convert request body to UpdateTaskStatusRequest: ${e.message}")
+                    call.respond(
+                        HttpStatusCode.BadRequest, mapOf(
+                            "error" to "Invalid request parameters.",
+                            "details" to e.message
+                        )
+                    )
+                    return@trace
+                }
+                logger.info { "[RecordHlpDetailsHttpService] request: $request" }
+                service.invoke(request)
                     .let { call.respond(HttpStatusCode.OK, it) }
             } catch (e: CfmsException) {
                 call.respond(HttpStatusCode.UnprocessableEntity, e)

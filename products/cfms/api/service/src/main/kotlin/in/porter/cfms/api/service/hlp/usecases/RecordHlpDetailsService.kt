@@ -1,6 +1,9 @@
 package `in`.porter.cfms.api.service.hlp.usecases
 
+import `in`.porter.cfms.api.models.hlp.Data
+import `in`.porter.cfms.api.models.hlp.ErrorResponse
 import `in`.porter.cfms.api.models.hlp.RecordHlpDetailsRequest
+import `in`.porter.cfms.api.models.hlp.RecordHlpDetailsResponse
 import `in`.porter.cfms.api.service.hlp.mappers.RecordHlpDetailsRequestMapper
 import `in`.porter.cfms.domain.exceptions.CfmsException
 import `in`.porter.cfms.domain.hlp.usecases.RecordHlpDetails
@@ -18,10 +21,35 @@ constructor(
     suspend fun invoke(request: RecordHlpDetailsRequest) = trace {
         try {
             mapper.toDomain(request)
-                .also { println("[RecordHlpDetailsService]") }
                 .let { recordHlpDetails.invoke(it) }
-        } catch (e: CfmsException) {
-            throw CfmsExceptionApi(e.message)
+
+            val data = Data(
+                message = "HLP record created successfully",
+                hlpOrderId = request.hlpOrderId
+            )
+
+            RecordHlpDetailsResponse(data = data)
+        } catch (e: Exception) {
+            val errorResponse = when (e) {
+                is CfmsException -> {
+                    listOf(
+                        ErrorResponse(
+                            message = "Invalid input data",
+                            details = e.message
+                        )
+                    )
+                }
+
+                else -> {
+                    listOf(
+                        ErrorResponse(
+                            message = "Failed to create HLP record",
+                            details = e.message ?: "An unexpected error occurred on the server."
+                        )
+                    )
+                }
+            }
+            RecordHlpDetailsResponse(error = errorResponse)
         }
     }
 }

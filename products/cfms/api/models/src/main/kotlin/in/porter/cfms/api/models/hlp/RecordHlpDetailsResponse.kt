@@ -1,6 +1,6 @@
 package `in`.porter.cfms.api.models.hlp
 
-data class RecordFranchiseDetailsResponse(
+data class RecordHlpDetailsResponse(
     val data: Data? = null,
     val error: List<ErrorResponse> = emptyList()
 )
