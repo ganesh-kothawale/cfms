@@ -14,6 +14,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.module.kotlin.KotlinModule
+import `in`.porter.cfms.servers.ktor.usecases.hlp.hlpRoutes
 import `in`.porter.cfms.servers.ktor.usecases.orders.ordersRoutes
 import io.ktor.server.application.*
 import io.ktor.http.*
@@ -95,5 +96,6 @@ fun Application.main() {
     routing {
         get("/") { call.respond(HttpStatusCode.OK, Unit) }
         route("cfms/private/orders") { ordersRoutes(httpComponent) }
+        route("cfms/public/hlps") { hlpRoutes(httpComponent) }
     }
 }
