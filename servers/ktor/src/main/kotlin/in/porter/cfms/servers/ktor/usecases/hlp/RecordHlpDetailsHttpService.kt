@@ -26,7 +26,7 @@ constructor(
                 val request = try {
                     call.receive<RecordHlpDetailsRequest>()
                 } catch (e: Exception) {
-                    logger.error("Failed to convert request body to UpdateTaskStatusRequest: ${e.message}")
+                    logger.error("Failed to convert request body to RecordHlpDetailsRequest: ${e.message}")
                     call.respond(
                         HttpStatusCode.BadRequest, mapOf(
                             "error" to "Invalid request parameters.",
