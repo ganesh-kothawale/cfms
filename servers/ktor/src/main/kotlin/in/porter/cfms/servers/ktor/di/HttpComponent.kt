@@ -11,6 +11,8 @@ import `in`.porter.cfms.servers.ktor.usecases.hlp.UpdateHlpDetailsHttpService
 import `in`.porter.cfms.servers.ktor.usecases.orders.FetchOrdersHTTPService
 import `in`.porter.cfms.servers.ktor.usecases.orders.CreateOrderHTTPService
 import `in`.porter.cfms.servers.ktor.usecases.orders.UpdateOrderStatusHTTPService
+import `in`.porter.cfms.servers.ktor.usecases.RecordCPConnectionHttpService
+import `in`.porter.cfms.servers.ktor.usecases.FetchCPConnectionHttpService
 
 @HttpScope
 @Component(
@@ -22,6 +24,9 @@ import `in`.porter.cfms.servers.ktor.usecases.orders.UpdateOrderStatusHTTPServic
 interface HttpComponent {
   val run: Run
 
+
+  val recordCPConnectionHttpService: RecordCPConnectionHttpService
+  val fetchCPConnectionsHttpService: FetchCPConnectionHttpService
   val createOrderHTTPService: CreateOrderHTTPService
   val fetchOrdersHTTPService: FetchOrdersHTTPService
   val updateOrderStatusHTTPService: UpdateOrderStatusHTTPService
