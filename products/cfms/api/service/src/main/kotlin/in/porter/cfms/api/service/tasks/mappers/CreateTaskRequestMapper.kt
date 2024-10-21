@@ -1,14 +1,14 @@
 package `in`.porter.cfms.api.service.tasks.mappers
 
 import `in`.porter.cfms.api.models.tasks.CreateTaskRequest
-import `in`.porter.cfms.domain.tasks.entities.Task
+import `in`.porter.cfms.domain.tasks.entities.Tasks
 import java.time.Instant
 import javax.inject.Inject
 
 class CreateTaskRequestMapper @Inject constructor() {
 
-    fun toDomain(request: CreateTaskRequest, generatedTaskId: String): Task {
-        return Task(
+    fun toDomain(request: CreateTaskRequest, generatedTaskId: String): Tasks {
+        return Tasks(
             taskId = generatedTaskId,
             flowType = request.flowType,
             status = request.status,
