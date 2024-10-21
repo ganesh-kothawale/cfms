@@ -87,9 +87,8 @@ class PsqlTasksRepo
             try {
                 logger.info("Creating a new task in the database")
                 // Map the domain task to a record
-                val taskRecord = taskMapper.toRecord(task)
-                // Insert the record into the database and return the generated task ID
-                queries.insert(taskRecord)
+                taskMapper.toRecord(task)
+                    .let { queries.insert(it) }
             } catch (e: Exception) {
                 logger.error("Error occurred while creating a task: ${e.message}", e)
                 throw CfmsException("Failed to create task: ${e.message}")
@@ -98,7 +97,7 @@ class PsqlTasksRepo
 
     override suspend fun findTaskById(taskId: String): Tasks? = trace("findTaskById") {
         queries.findByTaskId(taskId)
-        ?.let { taskMapper.toDomain(it) }
+            ?.let { taskMapper.toDomain(it) }
     }
 
     override suspend fun update(task: Tasks): Unit = trace("updateTask") {

@@ -50,11 +50,10 @@ class PsqlReconRepo
         trace("create") {
             try {
                 logger.info("Creating a new recon in the database")
-                val reconRecord = reconRecordMapper.toRecord(recon)
-                queries.insert(reconRecord)
-                logger.info("Recon created successfully with ID: ${reconRecord.reconId}")
-                reconRecord.reconId
-
+                reconRecordMapper.toRecord(recon)
+                    .let {queries.insert(it)}
+                logger.info("Recon created successfully with ID: ${recon.reconId}")
+                recon.reconId
             } catch (e: Exception) {
                 logger.error("Error occurred while creating recon: ${e.message}", e)
                 throw CfmsException("Failed to create recon: ${e.message}")

@@ -21,9 +21,9 @@ class PsqlAuditLogsRepo @Inject constructor(
         trace("createAuditLog") {
             try {
                 logger.info("Creating a new audit log in the database")
-                val auditLogRecord = auditLogMapper.toRecord(auditLog)
-                queries.insert(auditLogRecord)
-                logger.info("Audit log created successfully: ${auditLogRecord.auditLogId}")
+                auditLogMapper.toRecord(auditLog)
+                    .let{queries.insert(it)}
+                logger.info("Audit log created successfully:")
             } catch (e: Exception) {
                 logger.error("Error occurred while creating an audit log: ${e.message}", e)
                 throw Exception("Failed to create audit log: ${e.message}")
