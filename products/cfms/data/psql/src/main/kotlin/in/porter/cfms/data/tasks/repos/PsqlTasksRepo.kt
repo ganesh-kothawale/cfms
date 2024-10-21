@@ -4,7 +4,6 @@ import `in`.porter.cfms.data.exceptions.CfmsException
 import `in`.porter.cfms.data.tasks.TasksQueries
 import `in`.porter.cfms.data.tasks.mappers.TaskMapper
 import `in`.porter.cfms.data.tasks.records.TaskRecord
-import `in`.porter.cfms.domain.tasks.entities.Task
 import `in`.porter.cfms.domain.tasks.entities.Tasks
 import `in`.porter.cfms.domain.tasks.repos.TasksRepo
 import `in`.porter.kotlinutils.instrumentation.opentracing.Traceable

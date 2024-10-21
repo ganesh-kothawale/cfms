@@ -1,12 +1,12 @@
 package `in`.porter.cfms.domain.tasks.usecases
 
-import `in`.porter.cfms.domain.exceptions.CfmsException
 import `in`.porter.cfms.domain.tasks.repos.TasksRepo
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
 class DeleteTask @Inject constructor(
-    private val tasksRepo: TasksRepo
+    private val tasksRepo: TasksRepo,
+    private val getTasks: GetTasks
 ) {
 
     private val logger = LoggerFactory.getLogger(DeleteTask::class.java)
@@ -14,8 +14,7 @@ class DeleteTask @Inject constructor(
     suspend fun delete(taskId: String) {
         logger.info("Attempting to delete task with ID: $taskId")
 
-        // Find the task by its ID
-        tasksRepo.findTaskById(taskId)
+        getTasks.findTaskById(taskId)
 
         tasksRepo.deleteTaskById(taskId)
 

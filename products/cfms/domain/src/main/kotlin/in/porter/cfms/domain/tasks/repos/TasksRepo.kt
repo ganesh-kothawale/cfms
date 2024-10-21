@@ -1,7 +1,6 @@
 package `in`.porter.cfms.domain.tasks.repos
 
 import `in`.porter.cfms.domain.tasks.entities.Tasks
-import `in`.porter.cfms.domain.tasks.entities.Task
 
 interface TasksRepo {
     suspend fun findAllTasks(page: Int, size: Int): List<Tasks>
