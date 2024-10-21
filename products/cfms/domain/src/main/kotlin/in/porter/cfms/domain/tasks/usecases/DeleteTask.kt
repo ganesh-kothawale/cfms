@@ -17,7 +17,6 @@ class DeleteTask @Inject constructor(
         // Find the task by its ID
         tasksRepo.findTaskById(taskId)
 
-        // Delete the task using the repository
         tasksRepo.deleteTaskById(taskId)
 
         logger.info("Task with ID $taskId successfully deleted")
