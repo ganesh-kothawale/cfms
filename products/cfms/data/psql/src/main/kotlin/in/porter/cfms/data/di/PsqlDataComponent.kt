@@ -26,7 +26,9 @@ import org.jetbrains.exposed.sql.Database
     CPConnectionRepoModule::class,
     CourierPartnerRepoModule::class,
     HlpReposModule::class,
-    TasksModule::class
+    TasksModule::class,
+    AuditLogsModule::class,
+    ReconModule::class
   ]
 )
 interface PsqlDataComponent {
@@ -39,6 +41,7 @@ interface PsqlDataComponent {
   val hlpRepo: HlpsRepo
   val tasksRepo: TasksRepo
   val auditLogsRepo: AuditLogRepo
+  val reconRepo: ReconRepo
 
   @Component.Builder
   interface Builder {
