@@ -3,6 +3,7 @@ package `in`.porter.cfms.data.di
 import dagger.BindsInstance
 import dagger.Component
 import `in`.porter.cfms.data.orders.di.OrderDetailsRepoModule
+import `in`.porter.cfms.domain.auditlogs.repos.AuditLogRepo
 import `in`.porter.cfms.domain.orders.repos.OrderDetailsRepo
 import `in`.porter.cfms.domain.holidays.repos.HolidayRepo
 import `in`.porter.cfms.domain.franchise.repos.FranchiseRepo
@@ -20,7 +21,8 @@ import org.jetbrains.exposed.sql.Database
         OrderDetailsRepoModule::class,
         FranchiseReposModule::class,
         TasksModule::class,
-        ReconModule::class
+        ReconModule::class,
+        AuditLogsModule::class
     ]
 )
 interface PsqlDataComponent {
@@ -30,6 +32,7 @@ interface PsqlDataComponent {
     val franchiseRepo: FranchiseRepo
     val tasksRepo: TasksRepo
     val reconRepo: ReconRepo
+    val auditLogsRepo: AuditLogRepo
 
     @Component.Builder
     interface Builder {
