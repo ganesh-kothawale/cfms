@@ -13,7 +13,6 @@ object Libs {
     const val sentryKtorFeature = "$group:sentry-ktor-feature:$version"
     const val ktorWebServer = "$group:webserver-ktor:$version"
     const val awsSqs = "$group:aws-sqs:$version"
-    const val awsS3 = "$group:aws-s3:$version"
     const val distributedlocksApi = "$group:distributedlocks-api:$version"
     const val locksRedission = "$group:distributedlocks-redisson:$version"
     const val geos = "$group:geos:$version"

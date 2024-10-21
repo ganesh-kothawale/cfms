@@ -25,13 +25,13 @@ spec:
         annotations:
           argocd.argoproj.io/sync-wave: "-2"
         filePaths:
-          - values/common/dom/migrations
+          - values/common/dom/migrations/*
     externalSecrets:
       - name: cfms-ktor-secrets
         mountPath: /home/app/configuration/secrets
         data:
           - secretKey: psql_secrets.properties
-            remoteRefKey: psql-secrets-properties-ktor
+            remoteRefKey: dom-cfms-stag-secrets-cfms-ktor
           - secretKey: flyway.conf
             remoteRefKey: flyway-config-secrets
           - secretKey: application_secrets.properties
