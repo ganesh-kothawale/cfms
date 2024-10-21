@@ -6,5 +6,5 @@ import io.ktor.server.routing.*
 
 fun Route.cpConnectionRoutes(httpComponent: HttpComponent) {
   post("") { httpComponent.recordCPConnectionHttpService.invoke(call) }
-  get("") {httpComponent.fetchCPConnectionsHttpService.invoke(call)}
+  get("") { httpComponent.fetchCPConnectionsHttpService.invoke(call) }
 }

@@ -17,7 +17,6 @@ constructor(
   companion object : Logging
 
   override suspend fun create(request: RecordCPConnectionRequest): Unit = trace {
-    println("2")
       mapper.toRecordData(request)
         .let { queries.record(it) }
     }

@@ -16,7 +16,7 @@ constructor(
   suspend fun invoke(request: FetchCPConnectionsRequest): FetchCPConnectionsResponse {
     val totalRecords = repo.getAllCount()
     val cpConnections = repo.getByPagination(request)
-    val cpIds = cpConnections.map { it.cpId }
+    val cpIds = cpConnections.map { it.cpId }.distinct()
     val cps = courierPartnersRepo.getByIds(cpIds)
 
     return FetchCPConnectionsResponse(

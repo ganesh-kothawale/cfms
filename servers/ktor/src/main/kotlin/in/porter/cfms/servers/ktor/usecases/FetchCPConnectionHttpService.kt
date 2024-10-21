@@ -23,7 +23,7 @@ constructor(
     try {
       val request = try {
         call.receive<FetchCPConnectionsApiRequest>()
-      } catch (e: CfmsException) {
+      } catch (e: Exception) {
         logger.info("error in request")
 
         call.respond(
@@ -37,7 +37,7 @@ constructor(
       logger.info("executed")
 
       val response = service.invoke(request)
-      call.respond(HttpStatusCode.OK, response)
+      call.respond(HttpStatusCode.OK, mapOf("data" to response))
 
     } catch (e: Exception) {
       call.respond(HttpStatusCode.UnprocessableEntity, e)

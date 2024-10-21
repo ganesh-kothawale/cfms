@@ -19,7 +19,6 @@ constructor(
     suspend fun invoke(req: RecordCPConnectionApiRequest): RecordCPConnectionResponse = trace {
         try {
             mapper.toDomain(req)
-                .also { println("[RecordCPConnectionService]") }
                 .let { recordCPConnection.invoke(it) }
                 .let { RecordCPConnectionResponse("CP connection recorded successfully.") }
         } catch (e: CfmsException) {
