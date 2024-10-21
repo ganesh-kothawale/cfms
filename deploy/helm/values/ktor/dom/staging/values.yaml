@@ -25,7 +25,7 @@ spec:
         annotations:
           argocd.argoproj.io/sync-wave: "-2"
         filePaths:
-          - values/common/dom/migrations
+          - values/common/dom/migrations/*
     externalSecrets:
       - name: cfms-ktor-secrets
         mountPath: /home/app/configuration/secrets
