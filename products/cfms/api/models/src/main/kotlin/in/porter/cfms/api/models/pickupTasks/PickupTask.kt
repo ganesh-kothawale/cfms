@@ -11,4 +11,5 @@ data class PickupTask (
     val status: TasksStatus,
     val createdAt: Instant,
     val updatedAt: Instant
+
 )

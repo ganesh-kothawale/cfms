@@ -28,7 +28,7 @@ constructor(
         logger.info("Fetched pickupTasks: {}", pickupTasksResult)
 
         return responseMapper.toResponse(
-            pickupTasks = pickupTasksResult.data,
+            pickups = pickupTasksResult.data,
             page = domainRequest.page,
             size = domainRequest.size,
             totalPages = calculateTotalPages(pickupTasksResult.totalRecords, domainRequest.size),

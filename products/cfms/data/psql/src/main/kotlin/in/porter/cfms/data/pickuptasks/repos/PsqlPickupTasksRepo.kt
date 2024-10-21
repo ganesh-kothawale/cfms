@@ -4,7 +4,7 @@ import `in`.porter.cfms.data.exceptions.CfmsException
 import `in`.porter.cfms.data.pickuptasks.PickupTasksQueries
 import `in`.porter.cfms.data.pickuptasks.mappers.PickupTasksMapper
 import `in`.porter.cfms.data.pickuptasks.mappers.PickupTasksRowMapper
-import `in`.porter.cfms.data.pickuptasks.records.PickupTaskRecord
+import `in`.porter.cfms.data.pickuptasks.records.HlpWithOrdersRecord
 import `in`.porter.cfms.domain.pickuptasks.PickupTasksRepo
 import `in`.porter.cfms.domain.pickuptasks.entities.PickupTask
 import `in`.porter.kotlinutils.instrumentation.opentracing.Traceable
@@ -14,7 +14,6 @@ import javax.inject.Inject
 class PsqlPickupTasksRepo @Inject constructor(
     private val queries: PickupTasksQueries,
     private val pickupTasksMapper: PickupTasksMapper,
-    private val pickupTasksRowMapper: PickupTasksRowMapper
 ) : Traceable, PickupTasksRepo {
     private val logger = LoggerFactory.getLogger(PsqlPickupTasksRepo::class.java)
     override suspend fun findAllPickupTasks(page: Int, size: Int): List<PickupTask> =
@@ -26,7 +25,7 @@ class PsqlPickupTasksRepo @Inject constructor(
 
                 logger.info("Retrieved ${records.size} tasks")
 
-                records.map { record: PickupTaskRecord ->
+                records.map { record: HlpWithOrdersRecord ->
                     logger.info("Mapping record: $record")
                     pickupTasksMapper.toDomain(record)
                 }
