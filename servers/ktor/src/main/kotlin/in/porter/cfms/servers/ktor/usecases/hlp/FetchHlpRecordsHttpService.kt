@@ -32,10 +32,7 @@ constructor(
                             "error" to listOf(
                                 mapOf(
                                     "message" to "Invalid request parameters",
-                                    "details" to listOf(
-                                        "page" to "Page number must be a positive integer.",
-                                        "size" to "Size must be a positive integer."
-                                    )
+                                    "details" to "page and size must be positive integers"
                                 )
                             )
                         )

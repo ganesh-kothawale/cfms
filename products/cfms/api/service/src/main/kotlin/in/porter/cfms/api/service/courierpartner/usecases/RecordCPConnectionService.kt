@@ -1,5 +1,7 @@
 package `in`.porter.cfms.api.service.courierpartner.usecases
 
+import `in`.porter.cfms.api.models.cpConnections.Data
+import `in`.porter.cfms.api.models.cpConnections.ErrorResponse
 import `in`.porter.cfms.api.service.courierpartner.mappers.RecordCPConnectionRequestMapper
 import `in`.porter.cfms.api.models.cpConnections.RecordCPConnectionApiRequest
 import `in`.porter.cfms.api.models.cpConnections.RecordCPConnectionResponse
@@ -20,9 +22,28 @@ constructor(
         try {
             mapper.toDomain(req)
                 .let { recordCPConnection.invoke(it) }
-                .let { RecordCPConnectionResponse("CP connection recorded successfully.") }
-        } catch (e: CfmsException) {
-            throw CfmsException(e.message)
+                .let { RecordCPConnectionResponse(Data("CP connection recorded successfully.")) }
+        } catch (e: Exception) {
+            val errorResponse = when (e) {
+                is CfmsException -> {
+                    listOf(
+                        ErrorResponse(
+                            message = "Invalid input data",
+                            details = e.message
+                        )
+                    )
+                }
+
+                else -> {
+                    listOf(
+                        ErrorResponse(
+                            message = "Failed to record CP connection",
+                            details = e.message ?: "An unexpected error occurred on the server."
+                        )
+                    )
+                }
+            }
+            RecordCPConnectionResponse(error = errorResponse)
         }
     }
 }

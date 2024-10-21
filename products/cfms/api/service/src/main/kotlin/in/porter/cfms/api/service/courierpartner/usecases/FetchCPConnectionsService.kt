@@ -1,5 +1,6 @@
 package `in`.porter.cfms.api.service.courierpartner.usecases
 
+import `in`.porter.cfms.api.models.cpConnections.ErrorResponse
 import `in`.porter.cfms.api.service.courierpartner.mappers.FetchCPConnectionsRequestMapper
 import `in`.porter.cfms.api.service.courierpartner.mappers.FetchCPConnectionsResponseMapper
 import `in`.porter.cfms.api.models.cpConnections.FetchCPConnectionsApiRequest
@@ -22,8 +23,27 @@ constructor(
             requestMapper.toDomain(req)
                 .let { fetchCPConnections.invoke(it) }
                 .let { responseMapper.fromDomain(it) }
-        } catch (e: CfmsException) {
-            throw CfmsException(e.message)
+        } catch (e: Exception) {
+            val errorResponse = when (e) {
+                is CfmsException -> {
+                    listOf(
+                        ErrorResponse(
+                            message = "Invalid input data",
+                            details = e.message
+                        )
+                    )
+                }
+
+                else -> {
+                    listOf(
+                        ErrorResponse(
+                            message = "Failed to retrieve CP connections",
+                            details = e.message ?: "An unexpected error occurred on the server."
+                        )
+                    )
+                }
+            }
+            FetchCPConnectionsApiResponse.Error(errorResponse)
         }
     }
 }

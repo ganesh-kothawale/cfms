@@ -8,9 +8,17 @@ class FetchCPConnectionsRequestMapper
 @Inject
 constructor() {
 
-    fun toDomain(req: FetchCPConnectionsApiRequest) = FetchCPConnectionsRequest(
-        page = req.page,
-        size = req.size,
-        franchiseId = req.franchiseId
-    )
+    fun toDomain(req: FetchCPConnectionsApiRequest): FetchCPConnectionsRequest {
+        validateRequest(req)
+        return FetchCPConnectionsRequest(
+            page = req.page,
+            size = req.size,
+            franchiseId = req.franchiseId
+        )
+    }
+
+    private fun validateRequest(req: FetchCPConnectionsApiRequest) {
+        if (req.page < 1 || req.size < 1 || req.size > 100)
+            throw IllegalArgumentException("Page must be a positive integer, and size must be between 1 and 100.")
+    }
 }
