@@ -1,11 +1,9 @@
 package `in`.porter.cfms.servers.ktor.usecases.orders
 
-import com.google.api.Logging
 import `in`.porter.cfms.api.models.orders.FetchOrderApiRequest
 import `in`.porter.cfms.api.service.orders.usecases.FetchOrdersApiService
 import `in`.porter.kotlinutils.instrumentation.opentracing.Traceable
 import io.ktor.server.application.*
-import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.http.HttpStatusCode
 import javax.inject.Inject
