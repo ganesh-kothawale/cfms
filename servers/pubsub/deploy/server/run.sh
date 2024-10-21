@@ -3,17 +3,16 @@
 function _log {
   echo "$(date +"%F %T") ${SELF_NAME} $1"
 }
-
 _log "starting the server"
 
-exec > >(tee -i "logs/start.log")
-exec 2>&1
+echo "CONFG_PATH=$CONFIG_PATH"
+echo "pwd=$(pwd)"
 
-DD_AGENT_HOST=$(curl http://169.254.169.254/latest/meta-data/local-ipv4)
-export DD_AGENT_HOST
+echo "Staring java run"
 
 java \
   -javaagent:datadog/dd-java-agent.jar \
-  -Ddd.trace.config=datadog/datadog.properties \
+  -Ddd.trace.config=${CONFIG_PATH}/properties/datadog.properties \
+  -Dlog4j.configurationFile="${CONFIG_PATH}/properties/log4j2.yml" \
   -Ddd.agent.port=8126 \
   -jar pubsub-server.jar
