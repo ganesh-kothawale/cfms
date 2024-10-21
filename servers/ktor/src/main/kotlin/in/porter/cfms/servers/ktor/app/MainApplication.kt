@@ -17,6 +17,7 @@ import com.fasterxml.jackson.module.kotlin.KotlinModule
 import `in`.porter.cfms.servers.ktor.usecases.hlp.hlpRoutes
 import `in`.porter.cfms.servers.ktor.usecases.orders.ordersRoutes
 import `in`.porter.cfms.servers.ktor.usecases.pickuptasks.pickupTasksRoutes
+import `in`.porter.cfms.servers.ktor.usecases.cpConnectionRoutes
 import io.ktor.server.application.*
 import io.ktor.http.*
 import io.ktor.server.response.*
@@ -72,6 +73,7 @@ fun Application.main() {
             it.requestId?.also { requestId ->
                 tags.add(SentryKtorFeature.SentryTag("requestId", requestId))
             }
+
             tags
         }
     }
@@ -97,6 +99,7 @@ fun Application.main() {
     routing {
         get("/") { call.respond(HttpStatusCode.OK, Unit) }
         route("cfms/private/orders") { ordersRoutes(httpComponent) }
+        route("cfms/private/cps") { cpConnectionRoutes(httpComponent) }
         route("cfms/public/hlps") { hlpRoutes(httpComponent) }
         route("cfms/public/pickup_tasks") { pickupTasksRoutes(httpComponent) }
     }

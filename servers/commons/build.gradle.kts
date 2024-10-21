@@ -29,7 +29,6 @@ dependencies {
 
   implementation(Libs.KotlinUtils.openTracing)
   implementation(Libs.KotlinUtils.awsSqs)
-  implementation(Libs.KotlinUtils.awsS3)
   implementation(Libs.KotlinUtils.serdeJackson)
   implementation(Libs.KotlinUtils.ktorWebClient)
 
