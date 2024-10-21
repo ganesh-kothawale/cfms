@@ -23,11 +23,11 @@ constructor(
 
         // Convert the request to the domain model using the request mapper
         val domainRequest = requestMapper.toDomain(page, size)
-
         // Fetch tasks from the domain service
         val tasksResult = listTasks.listTasks(
             page = domainRequest.page,
             size = domainRequest.size
+
         )
 
         logger.info("Fetched tasks: {}", tasksResult)
@@ -36,7 +36,6 @@ constructor(
         return responseMapper.toResponse(
             tasks = tasksResult.data,
             page = domainRequest.page,
-
             size = domainRequest.size,
             totalPages = calculateTotalPages(tasksResult.totalRecords, domainRequest.size),
             totalRecords = tasksResult.totalRecords

@@ -1,7 +1,9 @@
 package `in`.porter.cfms.api.service.holidays.usecases
 
+import `in`.porter.cfms.api.models.auditlogs.CreateAuditLogRequest
 import `in`.porter.cfms.api.models.exceptions.CfmsException
 import `in`.porter.cfms.api.models.holidays.UpdateHolidaysRequest
+import `in`.porter.cfms.api.service.auditlogs.usecases.CreateAuditLogService
 import `in`.porter.cfms.api.service.holidays.mappers.UpdateHolidaysRequestMapper
 import `in`.porter.cfms.domain.holidays.usecases.UpdateHoliday
 import org.slf4j.LoggerFactory
@@ -12,7 +14,8 @@ class UpdateHolidaysService
 @Inject
 constructor(
     private val mapper: UpdateHolidaysRequestMapper,  // Mapper to convert API request to domain object
-    private val updateHoliday: UpdateHoliday          // Domain use case to handle holiday updates
+    private val updateHoliday: UpdateHoliday,          // Domain use case to handle holiday updates
+    private val createAuditLogService: CreateAuditLogService
 ) {
 
     private val logger = LoggerFactory.getLogger(UpdateHolidaysService::class.java)
@@ -39,7 +42,24 @@ constructor(
             val holidayDomain = mapper.toDomain(request)
 
             // Invoke domain logic to update holiday
-            return updateHoliday.updateHoliday(holidayDomain)
+            updateHoliday.updateHoliday(holidayDomain)
+
+            logger.info("Holiday updated successfully with ID: {}", request.holidayId)
+
+            // Create audit log after the holiday update
+            createAuditLogService.createAuditLog(
+                CreateAuditLogRequest(
+                    entityId = request.holidayId.toString(),
+                    entityType = "Holiday",
+                    status = "Updated",
+                    message = "Holiday updated successfully",
+                    // TODO: Replace hardcoded user ID with actual user ID once it's available
+                    updatedBy = 123
+                )
+            )
+
+            return request.holidayId
+
         }catch (e: CfmsException){
 
             logger.error("Exception occurred while updating holiday: {}", e.message)

@@ -6,6 +6,7 @@ import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.`java-time`.timestamp
 
 object OrdersTable : IntIdTable("orders_test") {
+    val orderId = varchar("order_id", 10)
     val orderNumber = varchar("order_number", 255)
     val awbNumber = varchar("awb_number", 255).nullable()
     val courierPartner = varchar("courier_partner", 255)

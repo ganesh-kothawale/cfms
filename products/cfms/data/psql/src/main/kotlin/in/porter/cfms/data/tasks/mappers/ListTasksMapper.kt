@@ -1,6 +1,5 @@
 package `in`.porter.cfms.data.tasks.mappers
 
-import `in`.porter.cfms.domain.tasks.entities.ListTasks
 import `in`.porter.cfms.data.tasks.records.TaskRecord
 import `in`.porter.cfms.domain.tasks.entities.Tasks
 import org.slf4j.LoggerFactory
