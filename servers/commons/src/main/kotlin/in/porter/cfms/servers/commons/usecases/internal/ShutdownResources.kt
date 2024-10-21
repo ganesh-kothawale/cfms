@@ -1,6 +1,5 @@
 package `in`.porter.cfms.servers.commons.usecases.internal
 
-import `in`.porter.kotlinutils.sqs.coroutines.client.SQSClient
 import com.zaxxer.hikari.HikariDataSource
 import io.ktor.client.*
 import io.micrometer.core.instrument.MeterRegistry
@@ -15,8 +14,7 @@ internal class ShutdownResources
 constructor(
   private val hikariDataSource: HikariDataSource,
   private val httpClient: HttpClient,
-  private val meterRegistry: MeterRegistry,
-  private val sqsClient: SQSClient
+  private val meterRegistry: MeterRegistry
 ) {
 
   companion object : Logging
@@ -29,7 +27,6 @@ constructor(
           launch { hikariDataSource.close() }
           launch { httpClient.close() }
           launch { meterRegistry.close() }
-          launch { sqsClient.close() }
         }
       }
       logger.info { "Resources shut down complete" }

@@ -18,8 +18,7 @@ import `in`.porter.cfms.servers.ktor.external.usecases.franchises.UpdateFranchis
 import `in`.porter.cfms.servers.ktor.external.usecases.recon.ListReconHttpService
 
 @HttpScope
-@Component(
-  dependencies = [
+@Component(dependencies = [
     RootComponent::class,
     PsqlDataComponent::class
   ]
