@@ -2,22 +2,19 @@ package `in`.porter.cfms.data.recon.repos
 
 import `in`.porter.cfms.data.exceptions.CfmsException
 import `in`.porter.cfms.data.recon.ReconQueries
-import `in`.porter.cfms.data.recon.ReconTable
 import `in`.porter.cfms.data.recon.mappers.ReconMapper
 import `in`.porter.cfms.data.recon.mappers.ReconRowMapper
 import `in`.porter.cfms.data.recon.records.ReconRecord
 import `in`.porter.cfms.domain.recon.entities.Recon
 import `in`.porter.cfms.domain.recon.repos.ReconRepo
 import `in`.porter.kotlinutils.instrumentation.opentracing.Traceable
-import org.jetbrains.exposed.sql.insert
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
 class PsqlReconRepo
 @Inject constructor(
     private val queries: ReconQueries,
-    private val reconMapper: ReconMapper,
-    private val reconRowMapper: ReconRowMapper
+    private val reconMapper: ReconMapper
 ) : Traceable, ReconRepo {
 
     private val logger = LoggerFactory.getLogger(PsqlReconRepo::class.java)
@@ -88,5 +85,19 @@ class PsqlReconRepo
                 logger.error("Error occurred while creating recon: ${e.message}", e)
                 throw CfmsException("Failed to create recon: ${e.message}")
             }
+        }
+
+    override suspend fun findReconById(reconId: String): Recon? = trace("findReconById") {
+        val reconRecord = queries.findByReconId(reconId)
+        reconRecord?.let { reconMapper.toDomain(it) }  // Use the mapper to convert ReconRecord to domain Recon
+    }
+
+    override suspend fun deleteReconById(reconId: String) =
+        try {
+            logger.info("Deleting recon with ID: $reconId")
+            queries.deleteReconById(reconId)
+        } catch (e: Exception) {
+            logger.error("Error deleting recon: ${e.message}", e)
+            throw CfmsException("Failed to delete recon with ID: $reconId")
         }
 }

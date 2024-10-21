@@ -7,10 +7,11 @@ import kotlinx.coroutines.CoroutineDispatcher
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.StdOutSqlLogger
 import org.jetbrains.exposed.sql.addLogger
+import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
 import org.slf4j.LoggerFactory
-import java.time.Instant
 import javax.inject.Inject
 
 class ReconQueries
@@ -71,6 +72,19 @@ constructor(
             row[updatedAt] = reconRecord.updatedAt
         }
         reconRecord.reconId
+    }
+
+    suspend fun findByReconId(reconId: String): ReconRecord? = transact {
+        ReconTable
+            .select { ReconTable.reconId eq reconId }
+            .mapNotNull { reconRowMapper.toRecord(it) }  // Mapping the result row to ReconRecord
+            .singleOrNull()
+    }
+
+    suspend fun deleteReconById(reconId: String): Unit = transact {
+        addLogger(StdOutSqlLogger)
+        logger.info("Deleting recon with ID: $reconId")
+        ReconTable.deleteWhere { ReconTable.reconId eq reconId }
     }
 
 }
