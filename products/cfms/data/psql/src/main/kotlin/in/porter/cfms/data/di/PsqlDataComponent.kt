@@ -7,39 +7,42 @@ import `in`.porter.cfms.domain.orders.repos.OrderDetailsRepo
 import `in`.porter.cfms.domain.holidays.repos.HolidayRepo
 import `in`.porter.cfms.domain.franchise.repos.FranchiseRepo
 import `in`.porter.cfms.domain.hlp.repos.HlpsRepo
+import `in`.porter.cfms.domain.pickuptasks.PickupTasksRepo
 import `in`.porter.cfms.domain.tasks.repos.TasksRepo
 import io.micrometer.core.instrument.MeterRegistry
 import org.jetbrains.exposed.sql.Database
 
 @PsqlDataScope
 @Component(
-  modules =
-  [
-    UtilsModule::class,
-    HolidayModule::class,
-    OrderDetailsRepoModule::class,
-    FranchiseReposModule::class,
-    HlpReposModule::class,
-    TasksModule::class
-  ]
+    modules =
+    [
+        UtilsModule::class,
+        HolidayModule::class,
+        OrderDetailsRepoModule::class,
+        FranchiseReposModule::class,
+        HlpReposModule::class,
+        TasksModule::class,
+        PickupTasksModule::class
+    ]
 )
 interface PsqlDataComponent {
 
-  val holidayRepo : HolidayRepo
-  val orderDetailsRepo: OrderDetailsRepo
-  val franchiseRepo: FranchiseRepo
-  val hlpRepo: HlpsRepo
-  val tasksRepo: TasksRepo
+    val holidayRepo: HolidayRepo
+    val orderDetailsRepo: OrderDetailsRepo
+    val franchiseRepo: FranchiseRepo
+    val hlpRepo: HlpsRepo
+    val tasksRepo: TasksRepo
+    val pickupTasksRepo: PickupTasksRepo
 
-  @Component.Builder
-  interface Builder {
-    @BindsInstance
-    fun database(db: Database): Builder
+    @Component.Builder
+    interface Builder {
+        @BindsInstance
+        fun database(db: Database): Builder
 
-    @BindsInstance
-    fun meterRegistry(meterRegistry: MeterRegistry): Builder
+        @BindsInstance
+        fun meterRegistry(meterRegistry: MeterRegistry): Builder
 
-    fun build(): PsqlDataComponent
-  }
+        fun build(): PsqlDataComponent
+    }
 
 }

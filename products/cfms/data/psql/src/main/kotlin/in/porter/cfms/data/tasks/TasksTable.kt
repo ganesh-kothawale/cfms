@@ -9,11 +9,10 @@ object TasksTable : Table("tasks") {
     val status = varchar("status", 50)
     val packageReceived = integer("package_received")
     val scheduledSlot = timestampWithoutTZAsInstant("scheduled_slot")
-    val teamId = integer("team_id") // Assuming there is a TeamsTable
+    val teamId = integer("team_id")
     val createdAt = timestampWithoutTZAsInstant("created_at")
     val updatedAt = timestampWithoutTZAsInstant("updated_at")
 
-    // Indexes if required
     init {
         index(true, taskId)
     }
