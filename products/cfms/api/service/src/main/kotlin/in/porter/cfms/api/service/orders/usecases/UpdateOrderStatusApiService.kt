@@ -17,7 +17,7 @@ class UpdateOrderStatusApiService @Inject constructor(
 ) {
 
     suspend fun invoke(request: UpdateOrderStatusApiRequest, orderId: String?): CourierOrderResponse {
-        return try {
+        try {
             val updatedOrderId = mapper.toDomain(request, orderId)
                 .let { service.invoke(it) }
 
