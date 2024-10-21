@@ -1,12 +1,15 @@
 package `in`.porter.cfms.api.service.tasks.usecases
 
+import `in`.porter.cfms.api.models.auditlogs.CreateAuditLogRequest
 import `in`.porter.cfms.api.models.exceptions.CfmsException
+import `in`.porter.cfms.api.service.auditlogs.usecases.CreateAuditLogService
 import `in`.porter.cfms.domain.tasks.usecases.DeleteTask
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
 class DeleteTaskService @Inject constructor(
-    private val deleteTask: DeleteTask
+    private val deleteTask: DeleteTask,
+    private val createAuditLogService: CreateAuditLogService
 ) {
 
     private val logger = LoggerFactory.getLogger(DeleteTaskService::class.java)
@@ -19,6 +22,18 @@ class DeleteTaskService @Inject constructor(
             deleteTask.delete(taskId)
 
             logger.info("Task with ID $taskId deleted successfully")
+
+            // Create audit log after the task is successfully updated
+            createAuditLogService.createAuditLog(
+                CreateAuditLogRequest(
+                    entityId = taskId,
+                    entityType = "Task",
+                    status = "Deleted",
+                    message = "Task deleted successfully",
+                    //TODO : currently passing hardcoded user ID once UserID development is done need to replace with actual user ID value
+                    updatedBy = 123
+                )
+            )
 
         } catch (e: CfmsException) {
             logger.error("Task deletion error: ${e.message}")

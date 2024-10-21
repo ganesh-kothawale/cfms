@@ -1,7 +1,9 @@
 package `in`.porter.cfms.api.service.holidays.usecases
 
+import `in`.porter.cfms.api.models.auditlogs.CreateAuditLogRequest
 import `in`.porter.cfms.api.models.exceptions.CfmsException
 import `in`.porter.cfms.api.models.holidays.CreateHolidaysRequest
+import `in`.porter.cfms.api.service.auditlogs.usecases.CreateAuditLogService
 import `in`.porter.cfms.api.service.holidays.mappers.CreateHolidaysRequestMapper
 import `in`.porter.cfms.domain.holidays.usecases.CreateHoliday
 import org.slf4j.LoggerFactory
@@ -12,7 +14,8 @@ class CreateHolidaysService
 @Inject
 constructor(
     private val createHoliday: CreateHoliday,  // Renamed to CreateHoliday
-    private val mapper: CreateHolidaysRequestMapper
+    private val mapper: CreateHolidaysRequestMapper,
+    private val createAuditLogService: CreateAuditLogService
 ) {
 
     private val logger = LoggerFactory.getLogger(CreateHolidaysService::class.java)
@@ -40,6 +43,19 @@ constructor(
             // Delegate the responsibility of checking existing holidays and storing the holiday
             val holidayId = createHoliday.createHoliday(holiday)
             logger.info("Holiday stored successfully with ID: {}", holidayId)
+
+            // Create audit log after the holiday is successfully created
+            createAuditLogService.createAuditLog(
+                CreateAuditLogRequest(
+                    entityId = holidayId.toString(),
+                    entityType = "Holiday",
+                    status = "Created",
+                    message = "Holiday created successfully",
+                    //TODO : currently passing hardcoded user ID once UserID development is done need to replace with actual user ID value
+                    updatedBy = 123
+                )
+            )
+
             return holidayId
 
         } catch (e: Exception) {
