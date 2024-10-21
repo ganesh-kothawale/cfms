@@ -7,9 +7,9 @@ import java.time.Instant
 
 class CreateReconRequestMapper @Inject constructor() {
 
-    fun toDomain(request: CreateReconRequest): Recon {
+    fun toDomain(request: CreateReconRequest, generatedReconId:String): Recon {
         return Recon(
-            reconId = "",  // Will be generated in the domain layer
+            reconId = generatedReconId,
             orderId = request.orderId,
             taskId = request.taskId,
             teamId = request.teamId,

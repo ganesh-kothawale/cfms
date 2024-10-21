@@ -7,9 +7,9 @@ import javax.inject.Inject
 
 class CreateTaskRequestMapper @Inject constructor() {
 
-    fun toDomain(request: CreateTaskRequest): Task {
+    fun toDomain(request: CreateTaskRequest, generatedTaskId: String): Task {
         return Task(
-            taskId = "",
+            taskId = generatedTaskId,
             flowType = request.flowType,
             status = request.status,
             packageReceived = request.packageReceived,

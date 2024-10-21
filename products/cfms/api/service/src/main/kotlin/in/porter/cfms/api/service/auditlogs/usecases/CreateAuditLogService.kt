@@ -16,20 +16,9 @@ class CreateAuditLogService @Inject constructor(
 
     suspend fun createAuditLog(request: CreateAuditLogRequest) {
         logger.info("Received request to create an audit log: {}", request)
-
-        // Map the request to the domain entity
-        val domainAuditLog = createAuditLogRequestMapper.toDomain(request)
-
-        // Generate a new audit log ID
         val generatedAuditLogId = CommonUtils.generateRandomAlphaNumeric(10)
-        logger.info("Generated audit log ID: {}", generatedAuditLogId)
-
-        // Create a new instance of domainAuditLog with the generated audit log ID
-        val auditLogWithId = domainAuditLog.copy(auditLogId = generatedAuditLogId)
-
-        // Call the domain layer to create the audit log
-        createAuditLog.create(auditLogWithId)
-
+        val domainAuditLog = createAuditLogRequestMapper.toDomain(request,generatedAuditLogId)
+        createAuditLog.create(domainAuditLog)
         logger.info("Audit log created successfully with ID: {}", generatedAuditLogId)
     }
 }

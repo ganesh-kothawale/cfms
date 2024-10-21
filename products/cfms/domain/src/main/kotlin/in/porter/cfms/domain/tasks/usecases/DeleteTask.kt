@@ -16,7 +16,6 @@ class DeleteTask @Inject constructor(
 
         // Find the task by its ID
         tasksRepo.findTaskById(taskId)
-            ?: throw CfmsException("Task with ID $taskId not found")
 
         // Delete the task using the repository
         tasksRepo.deleteTaskById(taskId)

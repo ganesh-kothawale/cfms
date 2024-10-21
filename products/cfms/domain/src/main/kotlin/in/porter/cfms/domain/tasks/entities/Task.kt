@@ -9,6 +9,6 @@ data class Task(
     val packageReceived: Int?,
     val scheduledSlot: Instant?,
     val teamId: String,
-    val createdAt: Instant?,
-    val updatedAt: Instant?
+    val createdAt: Instant,
+    val updatedAt: Instant
 )

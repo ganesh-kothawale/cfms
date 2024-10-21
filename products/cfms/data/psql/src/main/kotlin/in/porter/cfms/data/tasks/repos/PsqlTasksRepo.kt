@@ -2,7 +2,6 @@ package `in`.porter.cfms.data.tasks.repos
 
 import `in`.porter.cfms.data.exceptions.CfmsException
 import `in`.porter.cfms.data.tasks.TasksQueries
-import `in`.porter.cfms.data.tasks.mappers.ListTasksMapper
 import `in`.porter.cfms.data.tasks.mappers.TaskMapper
 import `in`.porter.cfms.data.tasks.records.TaskRecord
 import `in`.porter.cfms.domain.tasks.entities.Task
@@ -15,7 +14,6 @@ import javax.inject.Inject
 class PsqlTasksRepo
 @Inject constructor(
     private val queries: TasksQueries,
-    private val listTasksMapper: ListTasksMapper,
     private val taskMapper: TaskMapper
 ) : Traceable, TasksRepo {
 
@@ -37,7 +35,7 @@ class PsqlTasksRepo
                 records.map { record: TaskRecord ->
 
                     logger.info("Received request to map record: $record")
-                    listTasksMapper.toDomain(record)
+                    taskMapper.toDomain(record)
                 }
             } catch (e: Exception) {
                 logger.error("Error occurred while retrieving tasks: ${e.message}", e)
@@ -66,7 +64,7 @@ class PsqlTasksRepo
                 records.map { record: TaskRecord ->
 
                     logger.info("Mapping record: $record")
-                    listTasksMapper.toDomain(record)
+                    taskMapper.toDomain(record)
                 }
             } catch (e: Exception) {
                 logger.error("Error occurred while retrieving tasks by IDs: ${e.message}", e)
@@ -113,16 +111,13 @@ class PsqlTasksRepo
         }
 
     override suspend fun findTaskById(taskId: String): Tasks? = trace("findTaskById") {
-        val taskRecord = queries.findByTaskId(taskId)
-        taskRecord?.let { taskMapper.toDomain(it) }  // Use the mapper to convert TaskRecord to domain Tasks
+        queries.findByTaskId(taskId)
+        ?.let { taskMapper.toDomain(it) }
     }
 
     override suspend fun update(task: Tasks): Unit = trace("updateTask") {
         logger.info("Updating task in repository for ID: ${task.taskId}")
-
-        // Convert domain task to task record using the mapper
         val taskRecord = taskMapper.toRecord(task)
-
         queries.updateTask(taskRecord)
     }
 

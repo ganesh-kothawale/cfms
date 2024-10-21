@@ -22,20 +22,9 @@ class CreateReconService @Inject constructor(
 
     suspend fun createRecon(request: CreateReconRequest): CreateReconResponse {
         logger.info("Received request to create recon: {}", request)
-
-        // Map the request to the domain entity
-        val domainRecon = createReconRequestMapper.toDomain(request)
-
-        // Generate a new recon ID
         val generatedReconId = CommonUtils.generateRandomAlphaNumeric(10)
-        logger.info("Generated recon ID: {}", generatedReconId)
-
-        // Create a new instance of domainRecon with the generated recon ID
-        val reconWithId = domainRecon.copy(reconId = generatedReconId)
-
-        // Call the domain layer to create the recon
-        val reconId = createRecon.create(reconWithId)
-
+        val domainRecon = createReconRequestMapper.toDomain(request, generatedReconId)
+        val reconId = createRecon.create(domainRecon)
         logger.info("Recon created successfully with ID: {}", reconId)
 
         // Create audit log after the recon is successfully created
@@ -49,8 +38,6 @@ class CreateReconService @Inject constructor(
                 updatedBy = 123
             )
         )
-
-        // Return the response
         return createReconResponseMapper.toResponse(reconId, "Recon created successfully")
     }
 }

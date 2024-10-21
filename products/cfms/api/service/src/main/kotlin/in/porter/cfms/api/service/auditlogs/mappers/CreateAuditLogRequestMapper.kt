@@ -7,9 +7,9 @@ import javax.inject.Inject
 
 class CreateAuditLogRequestMapper @Inject constructor() {
 
-    fun toDomain(request: CreateAuditLogRequest): AuditLog {
+    fun toDomain(request: CreateAuditLogRequest, generatedAuditLogId: String): AuditLog {
         return AuditLog(
-            auditLogId = "",
+            auditLogId = generatedAuditLogId,
             entityId = request.entityId,
             entityType = request.entityType,
             status = request.status,
