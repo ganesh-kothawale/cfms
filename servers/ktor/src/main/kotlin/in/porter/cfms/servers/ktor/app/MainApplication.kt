@@ -16,6 +16,7 @@ import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import `in`.porter.cfms.servers.ktor.usecases.hlp.hlpRoutes
 import `in`.porter.cfms.servers.ktor.usecases.orders.ordersRoutes
+import `in`.porter.cfms.servers.ktor.usecases.pickuptasks.pickupTasksRoutes
 import io.ktor.server.application.*
 import io.ktor.http.*
 import io.ktor.server.response.*
@@ -97,5 +98,6 @@ fun Application.main() {
         get("/") { call.respond(HttpStatusCode.OK, Unit) }
         route("cfms/private/orders") { ordersRoutes(httpComponent) }
         route("cfms/public/hlps") { hlpRoutes(httpComponent) }
+        route("cfms/public/pickup_tasks") { pickupTasksRoutes(httpComponent) }
     }
 }

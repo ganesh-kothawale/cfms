@@ -7,7 +7,7 @@ import `in`.porter.cfms.api.models.franchises.FranchiseResponse
 import `in`.porter.cfms.api.service.exceptions.CfmsException
 import `in`.porter.cfms.api.service.franchises.mappers.RecordFranchiseDetailsRequestMapper
 import `in`.porter.cfms.api.service.utils.CommonUtils
-import `in`.porter.cfms.domain.usecases.external.RecordFranchiseDetails
+import `in`.porter.cfms.domain.franchise.usecases.internal.RecordFranchiseDetails
 import `in`.porter.kotlinutils.instrumentation.opentracing.Traceable
 import javax.inject.Inject
 

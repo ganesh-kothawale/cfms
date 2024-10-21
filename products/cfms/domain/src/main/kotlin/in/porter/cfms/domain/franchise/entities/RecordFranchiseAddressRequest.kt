@@ -1,4 +1,4 @@
-package `in`.porter.cfms.domain.usecases.entities
+package `in`.porter.cfms.domain.franchise.entities
 
 import java.math.BigDecimal
 

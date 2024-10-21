@@ -5,7 +5,7 @@ import `in`.porter.cfms.api.models.franchises.*
 import `in`.porter.cfms.api.service.exceptions.CfmsException
 import `in`.porter.cfms.api.service.franchises.mappers.RecordFranchiseDetailsRequestMapper
 import `in`.porter.cfms.api.service.franchises.usecases.CreateFranchiseRecordService
-import `in`.porter.cfms.domain.usecases.external.RecordFranchiseDetails
+import `in`.porter.cfms.domain.franchise.usecases.internal.RecordFranchiseDetails
 import io.mockk.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.resetMain
@@ -15,7 +15,6 @@ import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import java.math.BigDecimal
-import java.time.Instant
 import java.util.UUID
 
 

@@ -11,6 +11,7 @@ import `in`.porter.cfms.servers.ktor.usecases.hlp.UpdateHlpDetailsHttpService
 import `in`.porter.cfms.servers.ktor.usecases.orders.FetchOrdersHTTPService
 import `in`.porter.cfms.servers.ktor.usecases.orders.CreateOrderHTTPService
 import `in`.porter.cfms.servers.ktor.usecases.orders.UpdateOrderStatusHTTPService
+import `in`.porter.cfms.servers.ktor.usecases.pickuptasks.FetchPickupTasksHttpService
 
 @HttpScope
 @Component(
@@ -28,4 +29,5 @@ interface HttpComponent {
   val recordHlpDetailsHttpService: RecordHlpDetailsHttpService
   val updateHlpDetailsHttpService: UpdateHlpDetailsHttpService
   val fetchHlpRecordsHttpService: FetchHlpRecordsHttpService
+  val fetchPickupTasksHttpService: FetchPickupTasksHttpService
 }
