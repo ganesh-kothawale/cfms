@@ -1,0 +1,11 @@
+ALTER TABLE teams
+    RENAME COLUMN team_id TO id;
+
+ALTER TABLE teams
+    ADD COLUMN team_id VARCHAR(10) UNIQUE NOT NULL;
+
+ALTER TABLE teams
+    ADD COLUMN short_name VARCHAR(50);
+
+ALTER TABLE teams
+    ALTER COLUMN parent_team_id SET DATA TYPE VARCHAR(10);
