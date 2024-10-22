@@ -1,6 +1,5 @@
 package `in`.porter.cfms.data.tasks
 
-import `in`.porter.cfms.data.tasks.mappers.ListTasksRowMapper
 import `in`.porter.cfms.data.tasks.mappers.TaskRowMapper
 import `in`.porter.cfms.data.tasks.records.TaskRecord
 import `in`.porter.kotlinutils.exposed.ExposedRepo
@@ -22,7 +21,6 @@ class TasksQueries
 constructor(
     override val db: Database,
     override val dispatcher: CoroutineDispatcher,
-    private val listTasksMapper: ListTasksRowMapper,
     private val taskRowMapper: TaskRowMapper
 ) : ExposedRepo {
 
@@ -37,7 +35,7 @@ constructor(
             .limit(size, offset)
             .map { row ->
                 logger.info("Mapping row: $row")
-                listTasksMapper.toRecord(row)
+                taskRowMapper.toRecord(row)
             }
     }
 
@@ -59,7 +57,7 @@ constructor(
             .select { TasksTable.taskId inList taskIds }
             .map { row ->
                 logger.info("Mapping row: $row")
-                listTasksMapper.toRecord(row)
+                taskRowMapper.toRecord(row)
             }
     }
 
@@ -94,8 +92,8 @@ constructor(
     suspend fun findByTaskId(taskId: String): TaskRecord? = transact {
         TasksTable
             .select { TasksTable.taskId eq taskId }
-            .mapNotNull { taskRowMapper.toRecord(it) }
-            .singleOrNull()
+            .map { taskRowMapper.toRecord(it) }
+            .firstOrNull()
     }
 
     suspend fun updateTask(taskRecord: TaskRecord): Unit = transact {

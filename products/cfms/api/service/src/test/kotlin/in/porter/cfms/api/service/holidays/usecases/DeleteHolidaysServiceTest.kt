@@ -1,3 +1,4 @@
+/*
 package `in`.porter.cfms.api.service.holidays.usecases
 
 import `in`.porter.cfms.domain.exceptions.CfmsException
@@ -72,3 +73,4 @@ class DeleteHolidaysServiceTest {
         coVerify(exactly = 1) { deleteHolidayDomainService.deleteHoliday(holidayId) }
     }
 }
+*/

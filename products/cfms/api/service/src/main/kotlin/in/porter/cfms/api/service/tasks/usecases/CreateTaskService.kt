@@ -6,6 +6,7 @@ import `in`.porter.cfms.api.models.tasks.CreateTaskResponse
 import `in`.porter.cfms.api.service.auditlogs.usecases.CreateAuditLogService
 import `in`.porter.cfms.api.service.tasks.mappers.CreateTaskRequestMapper
 import `in`.porter.cfms.domain.tasks.usecases.CreateTask
+import `in`.porter.cfms.api.service.utils.CommonUtils
 import javax.inject.Inject
 import org.slf4j.LoggerFactory
 
@@ -19,23 +20,10 @@ class CreateTaskService @Inject constructor(
 
     suspend fun createTask(request: CreateTaskRequest): CreateTaskResponse {
         logger.info("Received request to create a task: {}", request)
-
-        // Map the request to the domain entity
-        val domainTask = createTaskRequestMapper.toDomain(request)
-
-        // Generate a new task ID
-        val generatedTaskId = `in`.porter.cfms.api.service.utils.CommonUtils.generateRandomAlphaNumeric(10)
-        logger.info("Generated task ID: {}", generatedTaskId)
-
-        // Create a new instance of domainTask with the generated task ID
-        val taskWithId = domainTask.copy(taskId = generatedTaskId)
-
-        // Call the domain layer to create the task
-        val taskId = createTask.create(taskWithId)
-
+        val generatedTaskId = CommonUtils.generateRandomAlphaNumeric(10)
+        val domainTask = createTaskRequestMapper.toDomain(request,generatedTaskId)
+        val taskId = createTask.create(domainTask)
         logger.info("Task created successfully with ID: {}", taskId)
-
-        // Create audit log after the task is successfully created
         createAuditLogService.createAuditLog(
             CreateAuditLogRequest(
                 entityId = taskId,
