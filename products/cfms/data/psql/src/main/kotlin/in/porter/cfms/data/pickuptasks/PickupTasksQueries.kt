@@ -19,25 +19,30 @@ constructor(
 ) : ExposedRepo {
 
     private val logger = LoggerFactory.getLogger(PickupTasksQueries::class.java)
-    suspend fun findAll(size: Int, offset: Int): List<HlpWithOrdersRecord> = transact {
+    suspend fun findAll(size: Int, offset: Int): Pair<List<HlpWithOrdersRecord>, Int> = transact {
         addLogger(StdOutSqlLogger)
         logger.info("Retrieving pickup-tasks with size: $size, offset: $offset")
 
-        // Initialize the row mapper
+        // First, fetch the total count of unique hlpOrderIds
+        val totalRecords = PickupTasksTable
+            .innerJoin(HlpsTable, { PickupTasksTable.hlpId }, { HlpsTable.hlpOrderId })
+            .select { HlpsTable.hlpOrderId.isNotNull() }
+            .distinct() // Ensure we count only unique hlpOrderIds
+            .count() // Get the count of unique hlpOrderIds
 
-        // Fetch and map all rows using the row mapper
+        // Fetch and map all rows using the row mapper with limit and offset
         val results = PickupTasksTable
             .innerJoin(HlpsTable, { PickupTasksTable.hlpId }, { HlpsTable.hlpOrderId })
-            .innerJoin(OrdersTable, { PickupTasksTable.orderId }, { OrdersTable.orderNumber })
+            .innerJoin(OrdersTable, { PickupTasksTable.orderId }, { OrdersTable.orderId })
             .selectAll()
             .limit(size, offset)
             .map { row ->
                 logger.info("Mapping row: $row")
-                pickupTasksRowMapper.toRecord(row) // Map the row to HlpWithOrdersRecord, containing one PickupOrderRecord
+                pickupTasksRowMapper.toRecord(row) // Map the row to a PickupOrderRecord object
             }
 
-        // Now group the results by `hlpOrderId` and collect all `pickupOrders` for each group
-        results.groupBy { it.hlpOrderId }.map { (hlpOrderId, groupedOrders) ->
+        // Group the results by `hlpOrderId` and collect all `pickupOrders` for each group
+        val groupedResults = results.groupBy { it.hlpOrderId }.map { (hlpOrderId, groupedOrders) ->
             val firstRecord = groupedOrders.first()
             HlpWithOrdersRecord(
                 taskId = firstRecord.taskId,
@@ -49,7 +54,11 @@ constructor(
                 pickupOrders = groupedOrders.flatMap { it.pickupOrders }
             )
         }
+
+        // Return both the grouped results and the total count
+        return@transact Pair(groupedResults, totalRecords)
     }
+
 
 
     suspend fun countAll(): Int = transact {

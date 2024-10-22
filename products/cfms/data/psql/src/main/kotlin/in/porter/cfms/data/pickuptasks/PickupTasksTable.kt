@@ -11,7 +11,7 @@ import org.jetbrains.exposed.sql.Table
 object PickupTasksTable : Table("pickup_details") {
     val pickupTaskId = varchar("pickup_details_id", 10)
     val taskId = varchar ("task_id",10).references(TasksTable.taskId)
-    val orderId = varchar("order_id", 10).references(OrdersTable.orderNumber)
+    val orderId = varchar("order_id", 10).references(OrdersTable.orderId)
     val hlpId = varchar("hlp_id", 10).references(HlpsTable.hlpOrderId)
     val franchiseId = varchar("franchise_id", 10).references(FranchisesTable.franchiseId)
     val status = varchar("status", 50)

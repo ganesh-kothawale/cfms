@@ -21,10 +21,13 @@ class PsqlPickupTasksRepo @Inject constructor(
             try {
                 logger.info("Retrieving tasks with page: $page, size: $size")
                 val offset = (page - 1) * size
-                val records = queries.findAll(size, offset)
 
-                logger.info("Retrieved ${records.size} tasks")
+                // Call the modified findAll function
+                val (records, totalRecords) = queries.findAll(size, offset)
 
+                logger.info("Retrieved $totalRecords unique pickup tasks")
+
+                // Map each record to a PickupTask domain object
                 records.map { record: HlpWithOrdersRecord ->
                     logger.info("Mapping record: $record")
                     pickupTasksMapper.toDomain(record)
@@ -34,7 +37,6 @@ class PsqlPickupTasksRepo @Inject constructor(
                 throw CfmsException("Failed to retrieve tasks: ${e.message}")
             }
         }
-
     override suspend fun countAllPickupTasks(): Int =
         trace("countAllPickupTasks") {
             try {

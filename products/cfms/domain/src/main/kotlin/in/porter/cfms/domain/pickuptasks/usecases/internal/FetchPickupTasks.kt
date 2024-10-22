@@ -18,14 +18,14 @@ constructor(
     suspend fun invoke(page: Int, size: Int): PickupTaskResult {
         logger.info("Listing pickupTasks with page: $page, size: $size")
 
-        val totalRecords = pickupTasksRepo.countAllPickupTasks()
+//        val totalRecords = pickupTasksRepo.countAllPickupTasks()
         val pickupTasks =  pickupTasksRepo.findAllPickupTasks(page, size)
 
-        logger.info("Fetched ${pickupTasks.size} tasks out of $totalRecords total records.")
+        logger.info("Fetched ${pickupTasks.size} tasks out of total records.")
 
         return PickupTaskResult(
             data = pickupTasks,
-            totalRecords = totalRecords
+            totalRecords = pickupTasks.size
         )
     }
 
