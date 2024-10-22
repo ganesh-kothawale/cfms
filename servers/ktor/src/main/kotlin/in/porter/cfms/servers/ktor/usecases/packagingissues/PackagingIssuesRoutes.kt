@@ -1,19 +1,21 @@
-package `in`.porter.cfms.servers.ktor.usecases.recon
+package `in`.porter.cfms.servers.ktor.usecases.packagingissues
 
 import `in`.porter.cfms.api.models.exceptions.CfmsException
 import `in`.porter.cfms.servers.ktor.di.HttpComponent
 import io.ktor.http.HttpStatusCode
-import io.ktor.server.application.*
+import io.ktor.server.application.call
 import io.ktor.server.response.respond
-import io.ktor.server.routing.*
+import io.ktor.server.routing.Route
+import io.ktor.server.routing.get
+import kotlin.text.toIntOrNull
 
-fun Route.reconRoutes(httpComponent: HttpComponent) {
+fun Route.packagingIssuesRoutes(httpComponent: HttpComponent) {
 
     get("") {
         try {
             val page = call.request.queryParameters["page"]?.toIntOrNull() ?: 1
             val size = call.request.queryParameters["size"]?.toIntOrNull() ?: 10
-            httpComponent.listReconHttpService.invoke(call, page, size)
+            httpComponent.packagingIssuesHttpService.invoke(call, page, size)
 
         } catch (e: CfmsException) {
             call.respond(
