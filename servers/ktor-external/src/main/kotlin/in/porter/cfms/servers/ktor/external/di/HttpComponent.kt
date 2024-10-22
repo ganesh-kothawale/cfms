@@ -15,6 +15,7 @@ import `in`.porter.cfms.servers.ktor.external.usecases.franchises.ListFranchises
 import `in`.porter.cfms.servers.ktor.external.usecases.tasks.ListTasksHttpService
 import `in`.porter.cfms.servers.ktor.external.usecases.tasks.UpdateTasksStatusHttpService
 import `in`.porter.cfms.servers.ktor.external.usecases.franchises.UpdateFranchiseRecordHttpService
+import `in`.porter.cfms.servers.ktor.external.usecases.pickuptasks.FetchPickupTasksHttpService
 import `in`.porter.cfms.servers.ktor.external.usecases.recon.ListReconHttpService
 
 @HttpScope
@@ -35,4 +36,5 @@ interface HttpComponent {
   val updateTasksStatusHttpService : UpdateTasksStatusHttpService
   val updateFranchiseRecordHttpService : UpdateFranchiseRecordHttpService
   val listReconHttpService : ListReconHttpService
+  val fetchPickupTasksHttpService : FetchPickupTasksHttpService
 }

@@ -1,7 +1,7 @@
 package `in`.porter.cfms.domain.franchise.factories
 
 import `in`.porter.cfms.domain.franchise.entities.Franchise
-import `in`.porter.cfms.domain.usecases.entities.RecordFranchiseDetailsRequest
+import `in`.porter.cfms.domain.franchise.entities.RecordFranchiseDetailsRequest
 import java.time.Instant
 
 class FranchiseBuilderFactory {
