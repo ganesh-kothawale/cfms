@@ -19,29 +19,21 @@ constructor(
 ) : ExposedRepo {
 
     private val logger = LoggerFactory.getLogger(PickupTasksQueries::class.java)
-    suspend fun findAll(size: Int, offset: Int): Pair<List<HlpWithOrdersRecord>, Int> = transact {
+    suspend fun findAll(size: Int, offset: Int): List<HlpWithOrdersRecord> = transact {
         addLogger(StdOutSqlLogger)
         logger.info("Retrieving pickup-tasks with size: $size, offset: $offset")
 
-        // First, fetch the total count of unique hlpOrderIds
-        val totalRecords = PickupTasksTable
-            .innerJoin(HlpsTable, { PickupTasksTable.hlpId }, { HlpsTable.hlpOrderId })
-            .select { HlpsTable.hlpOrderId.isNotNull() }
-            .distinct() // Ensure we count only unique hlpOrderIds
-            .count() // Get the count of unique hlpOrderIds
-
-        // Fetch and map all rows using the row mapper with limit and offset
+        // Step 1: Fetch all data without applying limit yet
         val results = PickupTasksTable
             .innerJoin(HlpsTable, { PickupTasksTable.hlpId }, { HlpsTable.hlpOrderId })
             .innerJoin(OrdersTable, { PickupTasksTable.orderId }, { OrdersTable.orderId })
             .selectAll()
-            .limit(size, offset)
             .map { row ->
                 logger.info("Mapping row: $row")
-                pickupTasksRowMapper.toRecord(row) // Map the row to a PickupOrderRecord object
+                pickupTasksRowMapper.toRecord(row)
             }
 
-        // Group the results by `hlpOrderId` and collect all `pickupOrders` for each group
+        // Step 2: Group the results by `hlpOrderId`
         val groupedResults = results.groupBy { it.hlpOrderId }.map { (hlpOrderId, groupedOrders) ->
             val firstRecord = groupedOrders.first()
             HlpWithOrdersRecord(
@@ -50,14 +42,13 @@ constructor(
                 riderName = firstRecord.riderName,
                 riderNumber = firstRecord.riderNumber,
                 vehicleType = firstRecord.vehicleType,
-                // Collect all PickupOrderRecords from the grouped orders
                 pickupOrders = groupedOrders.flatMap { it.pickupOrders }
             )
         }
 
-        // Return both the grouped results and the total count
-        return@transact Pair(groupedResults, totalRecords)
+        return@transact groupedResults.drop(offset).take(size)
     }
+
 
 
 
