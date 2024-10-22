@@ -39,6 +39,7 @@ constructor(
             // Call the service to list tasks
             val tasksResponse: ListTasksResponse = listTasksService.listTasks(page,size)
 
+
             // Respond with the formatted result
             call.respond(HttpStatusCode.OK, mapOf("data" to tasksResponse))
             logger.info("Sent response with listed tasks")
