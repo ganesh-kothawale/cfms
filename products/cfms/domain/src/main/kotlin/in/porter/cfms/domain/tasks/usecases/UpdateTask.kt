@@ -8,7 +8,8 @@ import java.time.Instant
 import javax.inject.Inject
 
 class UpdateTask @Inject constructor(
-    private val tasksRepo: TasksRepo
+    private val tasksRepo: TasksRepo,
+    private val getTasks: GetTasks
 ) {
 
     private val logger = LoggerFactory.getLogger(UpdateTask::class.java)
@@ -17,8 +18,7 @@ class UpdateTask @Inject constructor(
         logger.info("Received request to update task with ID: ${task.taskId}")
 
         // Find the existing task
-        val existingTask = tasksRepo.findTaskById(task.taskId)
-            ?: throw CfmsException("Task with ID ${task.taskId} not found")
+        val existingTask = getTasks.findTaskById(task.taskId)
 
         // Create an updated task with new values but retaining the createdAt timestamp
         val updatedTask = existingTask.copy(

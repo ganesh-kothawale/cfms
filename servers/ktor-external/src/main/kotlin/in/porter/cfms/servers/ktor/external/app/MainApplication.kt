@@ -15,7 +15,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import `in`.porter.cfms.servers.ktor.external.usecases.holidays.holidaysRoutes
 import `in`.porter.cfms.servers.ktor.external.usecases.franchises.franchiseRoutes
-import `in`.porter.cfms.servers.ktor.external.usecases.tasks.reconRoutes
+import `in`.porter.cfms.servers.ktor.external.usecases.recon.reconRoutes
 import `in`.porter.cfms.servers.ktor.external.usecases.tasks.tasksRoutes
 import io.ktor.server.application.*
 import io.ktor.http.*

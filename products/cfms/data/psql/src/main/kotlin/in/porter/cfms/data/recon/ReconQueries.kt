@@ -77,8 +77,8 @@ constructor(
     suspend fun findByReconId(reconId: String): ReconRecord? = transact {
         ReconTable
             .select { ReconTable.reconId eq reconId }
-            .mapNotNull { reconRowMapper.toRecord(it) }  // Mapping the result row to ReconRecord
-            .singleOrNull()
+            .map { reconRowMapper.toRecord(it) }  // Mapping the result row to ReconRecord
+            .firstOrNull()
     }
 
     suspend fun deleteReconById(reconId: String): Unit = transact {
