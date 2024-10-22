@@ -15,7 +15,7 @@ class RecordFranchiseDetailsRequestMapper
 constructor(
 ) {
     fun toDomain(req: RecordFranchiseDetailsRequest, franchiseId: String) =
-        `in`.porter.cfms.domain.usecases.entities.RecordFranchiseDetailsRequest(
+        `in`.porter.cfms.domain.franchise.entities.RecordFranchiseDetailsRequest(
             franchiseId = franchiseId,
             address = toFranchiseAddress(req.address),
             poc = toFranchisePOC(req.poc),
@@ -36,7 +36,7 @@ constructor(
         )
 
     private fun toFranchiseAddress(address: RecordFranchiseAddressRequest) =
-        `in`.porter.cfms.domain.usecases.entities.RecordFranchiseAddressRequest(
+        `in`.porter.cfms.domain.franchise.entities.RecordFranchiseAddressRequest(
             address = address.address,
             city = address.city,
             state = address.state,
@@ -46,7 +46,7 @@ constructor(
         )
 
     private fun toFranchisePOC(poc: RecordFranchisePOCRequest) =
-        `in`.porter.cfms.domain.usecases.entities.RecordFranchisePOCRequest(
+        `in`.porter.cfms.domain.franchise.entities.RecordFranchisePOCRequest(
             name = poc.name,
             primaryNumber = poc.primaryNumber,
             email = poc.email

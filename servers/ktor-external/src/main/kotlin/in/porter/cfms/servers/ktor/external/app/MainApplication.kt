@@ -17,6 +17,7 @@ import `in`.porter.cfms.servers.ktor.external.usecases.holidays.holidaysRoutes
 import `in`.porter.cfms.servers.ktor.external.usecases.franchises.franchiseRoutes
 import `in`.porter.cfms.servers.ktor.external.usecases.recon.reconRoutes
 import `in`.porter.cfms.servers.ktor.external.usecases.tasks.tasksRoutes
+import `in`.porter.cfms.servers.ktor.external.usecases.pickuptasks.pickupTasksRoutes
 import io.ktor.server.application.*
 import io.ktor.http.*
 import io.ktor.server.response.*
@@ -100,5 +101,6 @@ fun Application.main() {
         route("/cfms/public/franchises") { franchiseRoutes(httpComponent) }
         route("/cfms/public/tasks") { tasksRoutes(httpComponent) }
         route("/cfms/public/recon") { reconRoutes(httpComponent) }
+        route("/cfms/public/pickup_tasks") { pickupTasksRoutes(httpComponent) }
     }
 }

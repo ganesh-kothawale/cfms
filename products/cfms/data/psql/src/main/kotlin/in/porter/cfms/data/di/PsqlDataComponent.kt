@@ -11,47 +11,50 @@ import `in`.porter.cfms.domain.franchise.repos.FranchiseRepo
 import `in`.porter.cfms.domain.recon.repos.ReconRepo
 import `in`.porter.cfms.domain.cpConnections.repos.CPConnectionRepo
 import `in`.porter.cfms.domain.hlp.repos.HlpsRepo
+import `in`.porter.cfms.domain.pickuptasks.PickupTasksRepo
 import `in`.porter.cfms.domain.tasks.repos.TasksRepo
 import io.micrometer.core.instrument.MeterRegistry
 import org.jetbrains.exposed.sql.Database
 
 @PsqlDataScope
 @Component(
-  modules =
-  [
-    UtilsModule::class,
-    HolidayModule::class,
-    OrderDetailsRepoModule::class,
-    FranchiseReposModule::class,
-    CPConnectionRepoModule::class,
-    CourierPartnerRepoModule::class,
-    HlpReposModule::class,
-    TasksModule::class,
-    AuditLogsModule::class,
-    ReconModule::class
-  ]
+    modules =
+    [
+        UtilsModule::class,
+        HolidayModule::class,
+        OrderDetailsRepoModule::class,
+        FranchiseReposModule::class,
+        CPConnectionRepoModule::class,
+        CourierPartnerRepoModule::class,
+        HlpReposModule::class,
+        TasksModule::class,
+        AuditLogsModule::class,
+        ReconModule::class,
+        PickupTasksModule::class,
+    ]
 )
 interface PsqlDataComponent {
 
-  val holidayRepo : HolidayRepo
-  val orderDetailsRepo: OrderDetailsRepo
-  val cpConnectionRepo: CPConnectionRepo
-  val courierPartnersRepo: CourierPartnersRepo
-  val franchiseRepo: FranchiseRepo
-  val hlpRepo: HlpsRepo
-  val tasksRepo: TasksRepo
-  val auditLogsRepo: AuditLogRepo
-  val reconRepo: ReconRepo
+    val holidayRepo: HolidayRepo
+    val orderDetailsRepo: OrderDetailsRepo
+    val cpConnectionRepo: CPConnectionRepo
+    val courierPartnersRepo: CourierPartnersRepo
+    val franchiseRepo: FranchiseRepo
+    val hlpRepo: HlpsRepo
+    val tasksRepo: TasksRepo
+    val auditLogsRepo: AuditLogRepo
+    val reconRepo: ReconRepo
+    val pickupTasksRepo: PickupTasksRepo
 
-  @Component.Builder
-  interface Builder {
-    @BindsInstance
-    fun database(db: Database): Builder
+    @Component.Builder
+    interface Builder {
+        @BindsInstance
+        fun database(db: Database): Builder
 
-    @BindsInstance
-    fun meterRegistry(meterRegistry: MeterRegistry): Builder
+        @BindsInstance
+        fun meterRegistry(meterRegistry: MeterRegistry): Builder
 
-    fun build(): PsqlDataComponent
-  }
+        fun build(): PsqlDataComponent
+    }
 
 }

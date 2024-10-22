@@ -1,9 +1,8 @@
-package `in`.porter.cfms.domain.usecases.entities
+package `in`.porter.cfms.domain.franchise.entities
 
 
 import `in`.porter.cfms.domain.franchise.FranchiseStatus
 import java.math.BigDecimal
-import java.time.Instant
 
 
 public final data class RecordFranchiseDetailsRequest(
