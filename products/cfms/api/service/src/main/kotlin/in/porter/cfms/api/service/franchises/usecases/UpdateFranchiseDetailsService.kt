@@ -1,7 +1,9 @@
 package `in`.porter.cfms.api.service.franchises.usecases
 
+import `in`.porter.cfms.api.models.auditlogs.CreateAuditLogRequest
 import `in`.porter.cfms.api.models.exceptions.CfmsException
 import `in`.porter.cfms.api.models.franchises.UpdateFranchiseRequest
+import `in`.porter.cfms.api.service.auditlogs.usecases.CreateAuditLogService
 import `in`.porter.cfms.api.service.franchises.mappers.UpdateFranchiseDetailsRequestMapper
 import `in`.porter.cfms.domain.franchise.usecases.internal.UpdateFranchiseDetails
 import org.slf4j.LoggerFactory
@@ -11,7 +13,8 @@ class UpdateFranchiseDetailsService
 @Inject
 constructor(
     private val mapper: UpdateFranchiseDetailsRequestMapper,
-    private val updateFranchiseDetails: UpdateFranchiseDetails
+    private val updateFranchiseDetails: UpdateFranchiseDetails,
+    private val createAuditLogService: CreateAuditLogService
 ) {
     private val logger = LoggerFactory.getLogger(UpdateFranchiseDetailsService::class.java)
 
@@ -34,7 +37,21 @@ constructor(
 
         try {
             val franchiseDomain = mapper.toDomain(request)
-            return updateFranchiseDetails.invoke(franchiseDomain)
+            val updateResult = updateFranchiseDetails.invoke(franchiseDomain)
+
+            // After successful update, create audit log
+            createAuditLogService.createAuditLog(
+                CreateAuditLogRequest(
+                    entityId = request.franchiseId,
+                    entityType = "Franchise",
+                    status = "Updated",
+                    message = "Franchise updated successfully",
+                    // TODO: Replace hardcoded user ID with actual user ID when available
+                    updatedBy = 123  // Hardcoded for now
+                )
+            )
+
+            return updateResult
 
         } catch (e: CfmsException) {
             logger.error("Exception occurred while updating franchise: {}", e.message)

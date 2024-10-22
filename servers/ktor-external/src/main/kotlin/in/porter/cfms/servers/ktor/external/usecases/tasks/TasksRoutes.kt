@@ -9,7 +9,7 @@ import io.ktor.server.routing.*
 import org.slf4j.LoggerFactory
 
 fun Route.tasksRoutes(httpComponent: HttpComponent) {
-    val logger = LoggerFactory.getLogger(ListTasksHttpService::class.java)
+    val logger = LoggerFactory.getLogger("TasksRoutes")
 
     get("") {
         try {
@@ -18,8 +18,12 @@ fun Route.tasksRoutes(httpComponent: HttpComponent) {
             val size = call.request.queryParameters["size"]?.toIntOrNull() ?: 10
 
             httpComponent.listTasksHttpService.invoke(call, page, size)
+
         } catch (e: CfmsException) {
-            call.respond(HttpStatusCode.BadRequest, mapOf("error" to listOf(mapOf("message" to "Invalid request parameters", "details" to e.message))))
+            call.respond(
+                HttpStatusCode.BadRequest,
+                mapOf("error" to listOf(mapOf("message" to "Invalid request parameters", "details" to e.message)))
+            )
         }
     }
 

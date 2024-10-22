@@ -10,7 +10,7 @@ class UpdateTasksStatus @Inject constructor(
 
     private val logger = LoggerFactory.getLogger(UpdateTasksStatus::class.java)
 
-    suspend fun updateTasksStatus(taskIds: List<Int>, status: String): List<Int> {
+    suspend fun updateTasksStatus(taskIds: List<String>, status: String): List<String> {
         logger.info("Updating statuses for tasks: $taskIds")
 
         // Fetch tasks by their IDs
