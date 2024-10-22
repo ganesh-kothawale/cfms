@@ -3,9 +3,8 @@ package `in`.porter.cfms.data.pickuptasks.repos
 import `in`.porter.cfms.data.exceptions.CfmsException
 import `in`.porter.cfms.data.pickuptasks.PickupTasksQueries
 import `in`.porter.cfms.data.pickuptasks.mappers.PickupTasksMapper
-import `in`.porter.cfms.data.pickuptasks.mappers.PickupTasksRowMapper
 import `in`.porter.cfms.data.pickuptasks.records.HlpWithOrdersRecord
-import `in`.porter.cfms.domain.pickuptasks.PickupTasksRepo
+import `in`.porter.cfms.domain.pickuptasks.repos.PickupTasksRepo
 import `in`.porter.cfms.domain.pickuptasks.entities.PickupTask
 import `in`.porter.kotlinutils.instrumentation.opentracing.Traceable
 import org.slf4j.LoggerFactory
