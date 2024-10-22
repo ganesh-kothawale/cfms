@@ -20,6 +20,7 @@ import `in`.porter.cfms.servers.ktor.usecases.pickuptasks.pickupTasksRoutes
 import `in`.porter.cfms.servers.ktor.usecases.cpConnection.cpConnectionRoutes
 import `in`.porter.cfms.servers.ktor.usecases.franchises.franchiseRoutes
 import `in`.porter.cfms.servers.ktor.usecases.holidays.holidaysRoutes
+import `in`.porter.cfms.servers.ktor.usecases.packagingissues.packagingIssuesRoutes
 import `in`.porter.cfms.servers.ktor.usecases.recon.reconRoutes
 import `in`.porter.cfms.servers.ktor.usecases.tasks.tasksRoutes
 import io.ktor.server.application.*
@@ -110,5 +111,6 @@ fun Application.main() {
         route("/cfms/public/tasks") { tasksRoutes(httpComponent) }
         route("/cfms/public/recon") { reconRoutes(httpComponent) }
         route("/cfms/public/pickup_tasks") { pickupTasksRoutes(httpComponent) }
+        route("/cfms/public/packaging-issues") { packagingIssuesRoutes(httpComponent) }
     }
 }
