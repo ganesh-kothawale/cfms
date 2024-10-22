@@ -16,7 +16,12 @@ import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import `in`.porter.cfms.servers.ktor.usecases.hlp.hlpRoutes
 import `in`.porter.cfms.servers.ktor.usecases.orders.ordersRoutes
-import `in`.porter.cfms.servers.ktor.usecases.cpConnectionRoutes
+import `in`.porter.cfms.servers.ktor.usecases.cpConnection.cpConnectionRoutes
+import `in`.porter.cfms.servers.ktor.usecases.franchises.franchiseRoutes
+import `in`.porter.cfms.servers.ktor.usecases.holidays.holidaysRoutes
+import `in`.porter.cfms.servers.ktor.usecases.packagingissues.packagingIssuesRoutes
+import `in`.porter.cfms.servers.ktor.usecases.recon.reconRoutes
+import `in`.porter.cfms.servers.ktor.usecases.tasks.tasksRoutes
 import io.ktor.server.application.*
 import io.ktor.http.*
 import io.ktor.server.response.*
@@ -100,5 +105,10 @@ fun Application.main() {
         route("cfms/private/orders") { ordersRoutes(httpComponent) }
         route("cfms/private/cps") { cpConnectionRoutes(httpComponent) }
         route("cfms/public/hlps") { hlpRoutes(httpComponent) }
+        route ("/cfms/public/holidays"){ holidaysRoutes(httpComponent) }
+        route("/cfms/public/franchises") { franchiseRoutes(httpComponent) }
+        route("/cfms/public/tasks") { tasksRoutes(httpComponent) }
+        route("/cfms/public/recon") { reconRoutes(httpComponent) }
+        route("/cfms/public/packaging-issues") { packagingIssuesRoutes(httpComponent) }
     }
 }

@@ -18,12 +18,12 @@ class PsqlReconRepo
 
     private val logger = LoggerFactory.getLogger(PsqlReconRepo::class.java)
 
-    override suspend fun findAllRecons(page: Int, size: Int): List<Recon> =
+    override suspend fun findAllRecons(page: Int, size: Int, packagingRequired: Boolean?): List<Recon> =
         trace("findAllRecons") { _: io.opentracing.Span ->
             try {
                 logger.info("Retrieving recon records with page: $page, size: $size")
                 val offset = (page - 1) * size
-                val records = queries.findAll(size, offset)
+                val records = queries.findAll(size, offset, packagingRequired)
 
                 logger.info("Found ${records.size} recon records")
                 records.map { record: ReconRecord ->
@@ -36,11 +36,11 @@ class PsqlReconRepo
             }
         }
 
-    override suspend fun countAllRecons(): Int =
+    override suspend fun countAllRecons(packagingRequired: Boolean?): Int =
         trace("countAllRecons") {
             try {
                 logger.info("Counting recon records")
-                queries.countAll()
+                queries.countAll(packagingRequired)
             } catch (e: CfmsException) {
                 throw CfmsException("Failed to count recon records: ${e.message}")
             }
