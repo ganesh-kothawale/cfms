@@ -1,10 +1,10 @@
 package `in`.porter.cfms.domain.franchise.factories
-import `in`.porter.cfms.domain.usecases.entities.RecordFranchiseDetailsRequest
-import `in`.porter.cfms.domain.usecases.entities.RecordFranchisePOCRequest
+import `in`.porter.cfms.domain.franchise.entities.RecordFranchiseDetailsRequest
+import `in`.porter.cfms.domain.franchise.entities.RecordFranchisePOCRequest
 import `in`.porter.cfms.domain.franchise.FranchiseStatus
-import `in`.porter.cfms.domain.usecases.entities.RecordFranchiseAddressRequest
+import `in`.porter.cfms.domain.franchise.entities.RecordFranchiseAddressRequest
 import java.math.BigDecimal
-import java.time.Instant
+
 class RecordFranchiseDetailsRequestFactory {
     fun build(): RecordFranchiseDetailsRequest {
         return RecordFranchiseDetailsRequest(

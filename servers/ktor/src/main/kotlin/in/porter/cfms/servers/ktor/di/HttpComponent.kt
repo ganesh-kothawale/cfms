@@ -21,6 +21,7 @@ import `in`.porter.cfms.servers.ktor.usecases.hlp.UpdateHlpDetailsHttpService
 import `in`.porter.cfms.servers.ktor.usecases.orders.FetchOrdersHTTPService
 import `in`.porter.cfms.servers.ktor.usecases.orders.CreateOrderHTTPService
 import `in`.porter.cfms.servers.ktor.usecases.orders.UpdateOrderStatusHTTPService
+import `in`.porter.cfms.servers.ktor.usecases.pickuptasks.FetchPickupTasksHttpService
 import `in`.porter.cfms.servers.ktor.usecases.cpConnection.RecordCPConnectionHttpService
 import `in`.porter.cfms.servers.ktor.usecases.cpConnection.FetchCPConnectionHttpService
 import `in`.porter.cfms.servers.ktor.usecases.packagingissues.PackagingIssuesHttpService
@@ -34,8 +35,6 @@ import `in`.porter.cfms.servers.ktor.usecases.packagingissues.PackagingIssuesHtt
 )
 interface HttpComponent {
   val run: Run
-
-
   val recordCPConnectionHttpService: RecordCPConnectionHttpService
   val fetchCPConnectionsHttpService: FetchCPConnectionHttpService
   val createOrderHTTPService: CreateOrderHTTPService
@@ -44,6 +43,7 @@ interface HttpComponent {
   val recordHlpDetailsHttpService: RecordHlpDetailsHttpService
   val updateHlpDetailsHttpService: UpdateHlpDetailsHttpService
   val fetchHlpRecordsHttpService: FetchHlpRecordsHttpService
+  val fetchPickupTasksHttpService: FetchPickupTasksHttpService
   val createHolidaysHttpService: CreateHolidaysHttpService
   val updateHolidaysHttpService: UpdateHolidaysHttpService
   val deleteHolidaysHttpService: DeleteHolidaysHttpService
