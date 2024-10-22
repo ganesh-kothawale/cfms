@@ -1,4 +1,4 @@
-package `in`.porter.cfms.servers.ktor.usecases
+package `in`.porter.cfms.servers.ktor.usecases.cpConnection
 
 import `in`.porter.cfms.api.service.courierpartner.usecases.FetchCPConnectionsService
 import `in`.porter.cfms.api.models.cpConnections.FetchCPConnectionsApiRequest

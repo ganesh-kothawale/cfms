@@ -1,4 +1,4 @@
-package `in`.porter.cfms.servers.ktor.usecases
+package `in`.porter.cfms.servers.ktor.usecases.cpConnection
 
 import `in`.porter.cfms.servers.ktor.di.HttpComponent
 import io.ktor.server.application.*
