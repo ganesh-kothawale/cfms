@@ -6,7 +6,7 @@ import `in`.porter.cfms.domain.franchise.entities.Franchise
 import `in`.porter.cfms.domain.franchise.repos.FranchiseRepo
 import `in`.porter.cfms.domain.franchise.usecases.internal.CreateFranchise
 import `in`.porter.cfms.domain.franchise.factories.RecordFranchiseDetailsRequestFactory
-import `in`.porter.cfms.domain.usecases.external.RecordFranchiseDetails
+import `in`.porter.cfms.domain.franchise.usecases.internal.RecordFranchiseDetails
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
