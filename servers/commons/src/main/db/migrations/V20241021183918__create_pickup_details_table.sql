@@ -7,7 +7,7 @@ CREATE TABLE pickup_details (
     franchise_id VARCHAR(10) NOT NULL,
     status VARCHAR NOT NULL CHECK (status IN ('Pending', 'Picked Up', 'Delivered')),
     created_at TIMESTAMP DEFAULT NOW(),
-    updated_at TIMESTAMP DEFAULT NOW(),
+    updated_at TIMESTAMP DEFAULT NOW()
 );
 
 CREATE INDEX idx_pickup_details_task_id ON pickup_details (task_id);
