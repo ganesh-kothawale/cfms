@@ -2,13 +2,10 @@ package `in`.porter.cfms.data.pickuptasks
 
 import `in`.porter.cfms.data.pickuptasks.mappers.PickupDetailsRowMapper
 import `in`.porter.cfms.data.pickuptasks.records.PickupDetailsRecord
-import `in`.porter.cfms.data.tasks.records.TaskRecord
-import `in`.porter.cfms.domain.pickuptasks.entities.PickupDetails
 import `in`.porter.kotlinutils.exposed.ExposedRepo
 import kotlinx.coroutines.CoroutineDispatcher
 import org.jetbrains.exposed.sql.*
 import org.slf4j.LoggerFactory
-import java.time.Instant
 import javax.inject.Inject
 
 class PickupDetailsQueries

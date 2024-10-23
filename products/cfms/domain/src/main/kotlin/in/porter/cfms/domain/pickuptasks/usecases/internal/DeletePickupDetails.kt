@@ -1,10 +1,8 @@
 package `in`.porter.cfms.domain.pickuptasks.usecases.internal
 
 import `in`.porter.cfms.domain.pickuptasks.repos.PickupDetailsRepo
-import `in`.porter.cfms.domain.tasks.usecases.DeleteTask
 import `in`.porter.kotlinutils.instrumentation.opentracing.Traceable
 import org.slf4j.LoggerFactory
-
 import javax.inject.Inject
 
 class DeletePickupDetails @Inject constructor(

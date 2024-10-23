@@ -5,7 +5,6 @@ import `in`.porter.cfms.data.pickuptasks.PickupDetailsQueries
 import `in`.porter.cfms.data.pickuptasks.mappers.PickupDetailsMapper
 import `in`.porter.cfms.domain.pickuptasks.entities.PickupDetails
 import `in`.porter.cfms.domain.pickuptasks.repos.PickupDetailsRepo
-import `in`.porter.cfms.domain.tasks.entities.Tasks
 import `in`.porter.kotlinutils.instrumentation.opentracing.Traceable
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
