@@ -23,21 +23,18 @@ constructor(
         addLogger(StdOutSqlLogger)
         logger.info("Retrieving pickup-tasks with size: $size, offset: $offset")
 
-        // Initialize the row mapper
-
-        // Fetch and map all rows using the row mapper
+        // Step 1: Fetch all data without applying limit yet
         val results = PickupTasksTable
             .innerJoin(HlpsTable, { PickupTasksTable.hlpId }, { HlpsTable.hlpOrderId })
-            .innerJoin(OrdersTable, { PickupTasksTable.orderId }, { OrdersTable.orderNumber })
+            .innerJoin(OrdersTable, { PickupTasksTable.orderId }, { OrdersTable.orderId })
             .selectAll()
-            .limit(size, offset)
             .map { row ->
                 logger.info("Mapping row: $row")
-                pickupTasksRowMapper.toRecord(row) // Map the row to HlpWithOrdersRecord, containing one PickupOrderRecord
+                pickupTasksRowMapper.toRecord(row)
             }
 
-        // Now group the results by `hlpOrderId` and collect all `pickupOrders` for each group
-        results.groupBy { it.hlpOrderId }.map { (hlpOrderId, groupedOrders) ->
+        // Step 2: Group the results by `hlpOrderId`
+        val groupedResults = results.groupBy { it.hlpOrderId }.map { (hlpOrderId, groupedOrders) ->
             val firstRecord = groupedOrders.first()
             HlpWithOrdersRecord(
                 taskId = firstRecord.taskId,
@@ -45,11 +42,14 @@ constructor(
                 riderName = firstRecord.riderName,
                 riderNumber = firstRecord.riderNumber,
                 vehicleType = firstRecord.vehicleType,
-                // Collect all PickupOrderRecords from the grouped orders
                 pickupOrders = groupedOrders.flatMap { it.pickupOrders }
             )
         }
+
+        return@transact groupedResults.drop(offset).take(size)
     }
+
+
 
 
     suspend fun countAll(): Int = transact {
