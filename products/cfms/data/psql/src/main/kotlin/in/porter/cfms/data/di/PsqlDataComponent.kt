@@ -11,7 +11,8 @@ import `in`.porter.cfms.domain.franchise.repos.FranchiseRepo
 import `in`.porter.cfms.domain.recon.repos.ReconRepo
 import `in`.porter.cfms.domain.cpConnections.repos.CPConnectionRepo
 import `in`.porter.cfms.domain.hlp.repos.HlpsRepo
-import `in`.porter.cfms.domain.pickuptasks.PickupTasksRepo
+import `in`.porter.cfms.domain.pickuptasks.repos.PickupDetailsRepo
+import `in`.porter.cfms.domain.pickuptasks.repos.PickupTasksRepo
 import `in`.porter.cfms.domain.tasks.repos.TasksRepo
 import io.micrometer.core.instrument.MeterRegistry
 import org.jetbrains.exposed.sql.Database
@@ -31,6 +32,7 @@ import org.jetbrains.exposed.sql.Database
         AuditLogsModule::class,
         ReconModule::class,
         PickupTasksModule::class,
+        PickupDetailsModule::class
     ]
 )
 interface PsqlDataComponent {
@@ -45,6 +47,7 @@ interface PsqlDataComponent {
     val auditLogsRepo: AuditLogRepo
     val reconRepo: ReconRepo
     val pickupTasksRepo: PickupTasksRepo
+    val pickupDetailsRepo: PickupDetailsRepo
 
     @Component.Builder
     interface Builder {

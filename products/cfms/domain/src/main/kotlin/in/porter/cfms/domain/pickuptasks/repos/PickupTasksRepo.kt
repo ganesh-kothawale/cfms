@@ -1,4 +1,4 @@
-package `in`.porter.cfms.domain.pickuptasks
+package `in`.porter.cfms.domain.pickuptasks.repos
 
 import `in`.porter.cfms.domain.pickuptasks.entities.PickupTask
 interface PickupTasksRepo {

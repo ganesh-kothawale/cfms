@@ -25,26 +25,37 @@ constructor(
     private val logger = LoggerFactory.getLogger(ReconQueries::class.java)
 
     // Retrieve recon records with pagination
-    suspend fun findAll(size: Int, offset: Int): List<ReconRecord> = transact {
+    suspend fun findAll(size: Int, offset: Int, packagingRequired: Boolean?): List<ReconRecord> = transact {
         addLogger(StdOutSqlLogger)
         logger.info("Fetching recon records with size: $size and offset: $offset")
-        ReconTable
-            .selectAll()
-            .limit(size, offset)
-            .map { row ->
-                logger.info("Mapping row: $row")
-                reconRowMapper.toRecord(row)
-            }
+        val query = if (packagingRequired != null) {
+            ReconTable
+                .select { ReconTable.packagingRequired eq packagingRequired }
+                .limit(size, offset)
+        } else {
+            ReconTable
+                .selectAll()
+                .limit(size, offset)
+        }
+
+        query.map { row ->
+            logger.info("Mapping row: $row")
+            reconRowMapper.toRecord(row)
+        }
     }
 
     // Count total number of recon records in the database
-    suspend fun countAll(): Int = transact {
+    suspend fun countAll(packagingRequired: Boolean?): Int = transact {
         addLogger(StdOutSqlLogger)
         logger.info("Counting all recon records")
-        ReconTable
-            .selectAll()
-            .count()
-            .toInt()
+        val query = if (packagingRequired != null) {
+            ReconTable
+                .select { ReconTable.packagingRequired eq packagingRequired }
+        } else {
+            ReconTable.selectAll()
+        }
+
+        query.count().toInt()
     }
 
     suspend fun insert(reconRecord: ReconRecord): String = transact {
