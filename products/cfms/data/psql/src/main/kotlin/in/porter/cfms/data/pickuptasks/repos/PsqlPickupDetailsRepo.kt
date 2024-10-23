@@ -5,6 +5,7 @@ import `in`.porter.cfms.data.pickuptasks.PickupDetailsQueries
 import `in`.porter.cfms.data.pickuptasks.mappers.PickupDetailsMapper
 import `in`.porter.cfms.domain.pickuptasks.entities.PickupDetails
 import `in`.porter.cfms.domain.pickuptasks.repos.PickupDetailsRepo
+import `in`.porter.cfms.domain.tasks.entities.Tasks
 import `in`.porter.kotlinutils.instrumentation.opentracing.Traceable
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
@@ -21,14 +22,25 @@ class PsqlPickupDetailsRepo
         trace("createPickupDetails") {
             try {
                 logger.info("Creating a new pickup detail in the database")
-                // Map the domain PickupDetails to a record
                 val pickupDetailsRecord = pickupDetailsMapper.toRecord(pickupDetails)
-
-                // Insert the record and return the generated pickupDetailsId
                 queries.insert(pickupDetailsRecord)
             } catch (e: Exception) {
                 logger.error("Error occurred while creating pickup details: ${e.message}", e)
                 throw CfmsException("Failed to create pickup details: ${e.message}")
             }
+        }
+
+    override suspend fun findTaskById(taskId: String): PickupDetails? = trace("findTaskById") {
+        queries.findByTaskId(taskId)
+            ?.let { pickupDetailsMapper.toDomain(it) }
+    }
+
+    override suspend fun deleteTaskById(taskId: String) =
+        try {
+            logger.info("Deleting Pickup Details with ID: $taskId")
+            queries.deleteTaskById(taskId)
+        } catch (e: Exception) {
+            logger.error("Error deleting Pickup Details: ${e.message}", e)
+            throw CfmsException("Failed to delete Pickup Details with ID: $taskId")
         }
 }
