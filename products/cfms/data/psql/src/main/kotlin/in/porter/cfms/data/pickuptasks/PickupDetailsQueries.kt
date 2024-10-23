@@ -4,8 +4,7 @@ import `in`.porter.cfms.data.pickuptasks.mappers.PickupDetailsRowMapper
 import `in`.porter.cfms.data.pickuptasks.records.PickupDetailsRecord
 import `in`.porter.kotlinutils.exposed.ExposedRepo
 import kotlinx.coroutines.CoroutineDispatcher
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.*
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
@@ -36,5 +35,18 @@ constructor(
 
         // Return the generated pickupDetailsId
         pickupDetailsRecord.pickupDetailsId
+    }
+
+    suspend fun findByTaskId(taskId: String): PickupDetailsRecord? = transact {
+        PickupTasksTable
+            .select { PickupTasksTable.taskId eq taskId }
+            .map { pickupDetailsRowMapper.toRecord(it) }
+            .firstOrNull()
+    }
+
+    suspend fun deleteTaskById(taskId: String): Unit = transact {
+        addLogger(StdOutSqlLogger)
+        logger.info("Deleting Pickup Details with ID: $taskId")
+        PickupTasksTable.deleteWhere { PickupTasksTable.taskId eq taskId }
     }
 }
