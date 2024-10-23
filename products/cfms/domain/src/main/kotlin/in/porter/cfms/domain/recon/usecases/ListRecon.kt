@@ -14,13 +14,13 @@ constructor(
 
     private val logger = LoggerFactory.getLogger(Recon::class.java)
 
-    suspend fun listRecon(page: Int, size: Int): ReconResult {
+    suspend fun listRecon(page: Int, size: Int, packagingRequired: Boolean? = null): ReconResult {
         logger.info("Listing recons with page: $page, size: $size")
 
         // Fetch the total number of recon records
-        val totalRecords = reconRepo.countAllRecons()
+        val totalRecords = reconRepo.countAllRecons(packagingRequired)
 
-        val recons = reconRepo.findAllRecons(page, size)
+        val recons = reconRepo.findAllRecons(page, size, packagingRequired)
 
         // Log the result
         logger.info("Fetched ${recons.size} recons out of $totalRecords total records.")

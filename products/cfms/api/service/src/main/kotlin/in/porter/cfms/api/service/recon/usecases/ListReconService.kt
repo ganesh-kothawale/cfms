@@ -17,7 +17,7 @@ constructor(
 
     private val logger = LoggerFactory.getLogger(ListReconService::class.java)
 
-    suspend fun listRecon(page: Int, size: Int): ListReconResponse {
+    suspend fun listRecon(page: Int, size: Int, packagingRequired: Boolean? = null): ListReconResponse {
         logger.info("Received request to list recon: page = {}, size = {}", page, size)
 
         // Convert the request to the domain model using the request mapper
@@ -26,7 +26,8 @@ constructor(
         // Fetch recons from the domain service
         val reconResult = listRecon.listRecon(
             page = domainRequest.page,
-            size = domainRequest.size
+            size = domainRequest.size,
+            packagingRequired = packagingRequired
         )
 
         logger.info("Fetched recon records: {}", reconResult)

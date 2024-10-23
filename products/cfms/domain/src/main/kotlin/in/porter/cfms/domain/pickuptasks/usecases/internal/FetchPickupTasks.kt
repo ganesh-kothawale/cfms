@@ -2,7 +2,7 @@ package `in`.porter.cfms.domain.pickuptasks.usecases.internal
 
 import `in`.porter.cfms.domain.hlp.repos.HlpsRepo
 import `in`.porter.cfms.domain.orders.repos.OrderDetailsRepo
-import `in`.porter.cfms.domain.pickuptasks.PickupTasksRepo
+import `in`.porter.cfms.domain.pickuptasks.repos.PickupTasksRepo
 import `in`.porter.cfms.domain.pickuptasks.entities.PickupTaskResult
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
