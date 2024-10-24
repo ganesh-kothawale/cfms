@@ -111,6 +111,6 @@ fun Application.main() {
         route("/cfms/public/tasks") { tasksRoutes(httpComponent) }
         route("/cfms/public/recon") { reconRoutes(httpComponent) }
         route("/cfms/public/packaging-issues") { packagingIssuesRoutes(httpComponent) }
-        route("cfms/public/pickup_tasks") { pickupTasksRoutes(httpComponent) }
+        route("cfms/public/pickups") { pickupTasksRoutes(httpComponent) }
     }
 }

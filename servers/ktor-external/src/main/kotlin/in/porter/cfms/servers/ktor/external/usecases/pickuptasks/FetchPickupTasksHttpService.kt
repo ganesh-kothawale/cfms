@@ -1,4 +1,4 @@
-package `in`.porter.cfms.servers.ktor.usecases.pickuptasks
+package `in`.porter.cfms.servers.ktor.external.usecases.pickuptasks
 
 import `in`.porter.cfms.api.models.exceptions.CfmsException
 import `in`.porter.cfms.api.models.hlp.FetchHlpRecordsRequest

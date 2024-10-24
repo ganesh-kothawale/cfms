@@ -1,7 +1,7 @@
-package `in`.porter.cfms.servers.ktor.usecases.pickuptasks
+package `in`.porter.cfms.servers.ktor.external.usecases.pickuptasks
 
 import `in`.porter.cfms.api.models.exceptions.CfmsException
-import `in`.porter.cfms.servers.ktor.di.HttpComponent
+import `in`.porter.cfms.servers.ktor.external.di.HttpComponent
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.response.*
@@ -23,6 +23,4 @@ fun Route.pickupTasksRoutes(httpComponent: HttpComponent) {
             )
         }
     }
-
-    put("") { httpComponent.updatePickupTaskHttpService.invoke(call) }
 }
