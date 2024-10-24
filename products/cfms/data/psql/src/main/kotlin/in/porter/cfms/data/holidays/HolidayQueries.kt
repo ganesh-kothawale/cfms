@@ -57,7 +57,7 @@ constructor(
             it[endDate] = req.endDate
             it[holidayName] = req.holidayName
             it[leaveType] = req.leaveType.name
-            it[backupFranchiseIds] = req.backupFranchiseIds
+            it[backupFranchiseIds] = req.backupFranchiseIds.joinToString(",")
             it[createdAt] = Instant.now()
             it[updatedAt] = Instant.now()
         } get HolidayTable.holidayId
@@ -90,7 +90,7 @@ constructor(
             it[endDate] = record.endDate
             it[holidayName] = record.holidayName
             it[leaveType] = record.leaveType.toString()
-            it[backupFranchiseIds] = record.backupFranchiseIds
+            it[backupFranchiseIds] = record.backupFranchiseIds.joinToString(",")
             it[updatedAt] = Instant.now() // Assuming `updatedAt` is updated on each modification
         }.toString()
     }

@@ -9,6 +9,6 @@ data class UpdateHolidaysRequest(
     val endDate: LocalDate,
     val holidayName: String?,
     val leaveType: LeaveType,
-    val backupFranchiseIds: String?
+    val backupFranchiseIds: List<String>
 )
 
