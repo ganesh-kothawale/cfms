@@ -19,7 +19,7 @@ CREATE TABLE recon (
     return_requested BOOLEAN DEFAULT false,
     return_image_url VARCHAR(255),
     created_at TIMESTAMP DEFAULT now(),
-    updated_at TIMESTAMP DEFAULT now(),
+    updated_at TIMESTAMP DEFAULT now()
 );
 
 CREATE INDEX idx_recon_order_id ON recon (order_id);
