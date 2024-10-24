@@ -24,14 +24,10 @@ class PsqlFranchisesRepo
 
     private val logger = LoggerFactory.getLogger(PsqlFranchisesRepo::class.java)
 
-    override suspend fun create(franchiseRequest: Franchise): Unit =
+    override suspend fun create(franchiseRequest: Franchise): String =
         trace("create") {
-            try {
-                mapper.toRecord(franchiseRequest)
-                    .let { queries.save(it) }
-            } catch (e: CfmsException) {
-                throw CfmsException("Failed to create franchise: ${e.message}")
-            }
+            mapper.toRecord(franchiseRequest)
+                .let { queries.save(it) }
         }
 
     override suspend fun getByCode(franchiseCode: String): Franchise? =
