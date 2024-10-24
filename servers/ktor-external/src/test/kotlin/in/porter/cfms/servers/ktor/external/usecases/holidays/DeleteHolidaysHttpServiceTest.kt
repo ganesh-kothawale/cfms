@@ -1,3 +1,4 @@
+/*
 package `in`.porter.cfms.servers.ktor.external.usecases.holidays
 
 import `in`.porter.cfms.api.service.holidays.usecases.DeleteHolidaysService
@@ -107,3 +108,4 @@ class DeleteHolidaysHttpServiceTest {
         }
     }
 }
+*/

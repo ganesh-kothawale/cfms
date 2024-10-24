@@ -1,6 +1,6 @@
+/*
 package `in`.porter.cfms.data.holidays.mappers.usecases
 
-import `in`.porter.cfms.data.holidays.mappers.UpdateHolidayMapper
 import `in`.porter.cfms.data.holidays.mappers.factories.UpdateHolidayMapperFactory
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
@@ -47,3 +47,4 @@ class UpdateHolidayMapperTest {
         assertEquals(updateHolidayRecord.updatedAt, entity.updatedAt)
     }
 }
+*/

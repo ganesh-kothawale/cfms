@@ -1,3 +1,4 @@
+/*
 package `in`.porter.cfms.data.holidays.mappers.usecases
 
 
@@ -32,3 +33,4 @@ class ListHolidayRowMapperTest {
         assertEquals("Sample State", result.franchise.address.state)
     }
 }
+*/

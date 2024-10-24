@@ -28,6 +28,12 @@ constructor(
         endDate: LocalDate?
     ) {
         try {
+
+            if (page < 1 || size < 1 || size > 100) {
+                logger.error("Invalid page or size: page=$page, size=$size")
+                throw IllegalArgumentException("Page must be a positive integer, and size must be between 1 and 100.")
+            }
+
             logger.info("Received request to list all holidays")
 
             // Use the mapper to create the request model
@@ -42,17 +48,32 @@ constructor(
             logger.info("Received request to list all holidays with request: {}", request)
 
             // Call the service to list holidays
-            val holidaysResponse = listHolidaysService.listHolidays(request)
+            val holidaysResponse = listHolidaysService.invoke(request)
 
             // Respond with the formatted result
             call.respond(HttpStatusCode.OK, mapOf("data" to holidaysResponse))
             logger.info("Sent response to list all holidays")
         } catch (e: CfmsException) {
-            // Handle any validation or service-related exceptions
-            call.respond(HttpStatusCode.BadRequest, mapOf("error" to listOf(mapOf("message" to e.message))))
+            // Handle validation or service-related exceptions
+            call.respond(HttpStatusCode.BadRequest, mapOf(
+                "error" to listOf(
+                    mapOf(
+                        "message" to "Invalid request parameters",
+                        "details" to e.message
+                    )
+                )
+            ))
         } catch (e: Exception) {
-            // Handle any unexpected errors
-            call.respond(HttpStatusCode.InternalServerError, mapOf("error" to listOf(mapOf("message" to "Failed to retrieve holidays", "details" to e.message))))
+            // Handle unexpected errors
+            logger.error("Unexpected error: ${e.message}", e)
+            call.respond(HttpStatusCode.InternalServerError, mapOf(
+                "error" to listOf(
+                    mapOf(
+                        "message" to "Failed to retrieve holidays",
+                        "details" to e.message
+                    )
+                )
+            ))
         }
     }
 }

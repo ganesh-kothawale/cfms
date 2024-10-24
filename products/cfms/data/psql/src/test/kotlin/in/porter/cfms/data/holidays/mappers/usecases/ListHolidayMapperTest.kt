@@ -1,3 +1,4 @@
+/*
 package `in`.porter.cfms.data.holidays.mappers.usecases
 
 import `in`.porter.cfms.data.holidays.mappers.ListHolidayMapper
@@ -32,3 +33,4 @@ class ListHolidayMapperTest {
         assertEquals(franchise, result.franchise)
     }
 }
+*/

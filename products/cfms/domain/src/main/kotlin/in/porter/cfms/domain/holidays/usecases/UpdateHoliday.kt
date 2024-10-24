@@ -2,7 +2,7 @@ package `in`.porter.cfms.domain.holidays.usecases
 
 import `in`.porter.cfms.domain.holidays.repos.HolidayRepo
 import `in`.porter.cfms.domain.exceptions.CfmsException
-import `in`.porter.cfms.domain.holidays.entities.UpdateHoliday
+import `in`.porter.cfms.domain.holidays.entities.Holiday
 import `in`.porter.cfms.domain.holidays.usecases.CourierApplyLeaveCallingService.ApplyLeaveRequest
 import `in`.porter.cfms.domain.holidays.usecases.CourierApplyLeaveCallingService.ApplyLeaveResponse
 import org.slf4j.LoggerFactory
@@ -17,7 +17,7 @@ constructor(
 ) {
     private val logger = LoggerFactory.getLogger(UpdateHoliday::class.java)
 
-    suspend fun updateHoliday(holiday: UpdateHoliday): Int {
+    suspend fun invoke(holiday: Holiday): String {
         // Fetch the existing holiday by ID
 
         logger.info("Checking validations before updating holiday: ${holiday.holidayId}")
@@ -74,10 +74,14 @@ constructor(
         // Log the success message from the external API
         logger.info("Leave applied successfully at courier: ${applyLeaveResponse.message}")
 
-        // Insert the holiday into the database
-
-
-        return holidayRepo.update(holiday)
+        return try {
+            val updatedHolidayId = holidayRepo.update(holiday)
+            logger.info("Holiday updated successfully with ID: $updatedHolidayId")
+            updatedHolidayId
+        } catch (e: Exception) {
+            logger.error("Error updating holiday in the database: ${e.message}", e)
+            throw CfmsException("Failed to update holiday in the database.")
+        }
     }
 
     // Helper method to generate a list of dates between start and end date

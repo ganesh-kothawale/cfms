@@ -20,7 +20,7 @@ constructor(
 
     private val logger = LoggerFactory.getLogger(UpdateHolidaysService::class.java)
 
-    suspend fun invoke(request: UpdateHolidaysRequest): Int {
+    suspend fun invoke(request: UpdateHolidaysRequest): String {
         // Validate franchise ID cannot be changed
         logger.info("Invoke function called to send the data to domain for holiday ID: {}", request.holidayId)
         val today = LocalDate.now()
@@ -42,7 +42,7 @@ constructor(
             val holidayDomain = mapper.toDomain(request)
 
             // Invoke domain logic to update holiday
-            updateHoliday.updateHoliday(holidayDomain)
+            updateHoliday.invoke(holidayDomain)
 
             logger.info("Holiday updated successfully with ID: {}", request.holidayId)
 
@@ -61,13 +61,12 @@ constructor(
             return request.holidayId
 
         }catch (e: CfmsException){
-
             logger.error("Exception occurred while updating holiday: {}", e.message)
-            throw CfmsException("Exception occurred while updating holiday: ${e.message}")
+            throw e
         }
         catch (e: Exception){
-            logger.error("Error occurred while updating holiday: {}", e.message)
-            throw CfmsException("Error occurred while updating holiday: ${e.message}")
+            logger.error("Error occurred while updating holiday: {}", e.message, e)
+            throw CfmsException("Unexpected error occurred while updating holiday.")
         }
     }
 }

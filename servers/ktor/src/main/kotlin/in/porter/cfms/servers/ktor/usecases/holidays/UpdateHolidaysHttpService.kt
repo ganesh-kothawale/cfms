@@ -30,8 +30,12 @@ constructor(
                     logger.error("Failed to convert request body to CreateHolidaysRequest: ${e.message}")
                     call.respond(
                         HttpStatusCode.BadRequest, mapOf(
-                            "error" to "Invalid request format.",
-                            "details" to e.message
+                            "error" to listOf(
+                                mapOf(
+                                    "message" to "Invalid input data",
+                                    "details" to e.message
+                                )
+                            )
                         )
                     )
                     return@trace
@@ -41,20 +45,66 @@ constructor(
                 service.invoke(request)
 
                 logger.info("Holiday updated successfully")
-                call.respond(HttpStatusCode.OK, mapOf("message" to "Holiday updated successfully"))
+                call.respond(
+                    HttpStatusCode.OK, mapOf(
+                        "data" to mapOf(
+                            "message" to "Holidays updated successfully"
+                        ),
+                        "error" to emptyList<String>()
+                    )
+                )
 
             } catch (e: CfmsException) {
                 logger.error("Error occurred while updating holiday: ${e.message}")
-                call.respond(HttpStatusCode.BadRequest, mapOf("error" to e.message))
+                call.respond(
+                    HttpStatusCode.BadRequest, mapOf(
+                        "error" to listOf(
+                            mapOf(
+                                "message" to "Invalid input data",
+                                "details" to e.message
+                            )
+                        )
+                    )
+                )
+
             } catch (e: DateTimeParseException) {
                 logger.error("Invalid date format: ${e.message}")
-                call.respond(HttpStatusCode.BadRequest, mapOf("error" to "Invalid date format", "details" to e.message))
+                call.respond(
+                    HttpStatusCode.BadRequest, mapOf(
+                        "error" to listOf(
+                            mapOf(
+                                "message" to "Invalid input data",
+                                "details" to "Invalid date format: ${e.message}"
+                            )
+                        )
+                    )
+                )
+
             } catch (e: IllegalArgumentException) {
                 logger.error("Validation error: ${e.message}")
-                call.respond(HttpStatusCode.BadRequest, mapOf("error" to "Validation error", "details" to e.message))
+                call.respond(
+                    HttpStatusCode.BadRequest, mapOf(
+                        "error" to listOf(
+                            mapOf(
+                                "message" to "Validation error",
+                                "details" to e.message
+                            )
+                        )
+                    )
+                )
+
             } catch (e: Exception) {
                 logger.error("Internal server error: ${e.message}")
-                call.respond(HttpStatusCode.InternalServerError, mapOf("error" to "Failed to update holiday"))
+                call.respond(
+                    HttpStatusCode.InternalServerError, mapOf(
+                        "error" to listOf(
+                            mapOf(
+                                "message" to "Failed to update holiday",
+                                "details" to "Error applying leave: ${e.message}"
+                            )
+                        )
+                    )
+                )
             }
         }
     }

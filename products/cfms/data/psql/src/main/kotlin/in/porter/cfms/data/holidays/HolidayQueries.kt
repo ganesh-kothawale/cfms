@@ -4,9 +4,7 @@ import `in`.porter.cfms.data.franchise.FranchisesTable
 import `in`.porter.cfms.data.holidays.mappers.HolidayRowMapper
 import `in`.porter.cfms.data.holidays.mappers.ListHolidayMapper
 import `in`.porter.cfms.data.holidays.mappers.ListHolidaysFranchiseRowMapper
-import `in`.porter.cfms.data.holidays.mappers.UpdateHolidayRowMapper
 import `in`.porter.cfms.data.holidays.records.HolidayRecord
-import `in`.porter.cfms.data.holidays.records.UpdateHolidayRecord
 import `in`.porter.cfms.domain.holidays.entities.LeaveType
 import `in`.porter.kotlinutils.exposed.ExposedRepo
 import kotlinx.coroutines.CoroutineDispatcher
@@ -31,23 +29,20 @@ class HolidayQueries
 constructor(
     override val db: Database,
     override val dispatcher: CoroutineDispatcher,
-    private val mapper: HolidayRowMapper,
-    private val updateMapper: UpdateHolidayRowMapper,
-    private val listMapper: ListHolidayMapper,
-    private val franchiseMapper: ListHolidaysFranchiseRowMapper
+    private val mapper: HolidayRowMapper
 
 ) : ExposedRepo {
 
-    suspend fun getByIdAndDate(franchiseId: String, startDate: LocalDate, endDate: LocalDate): UpdateHolidayRecord? = transact {
+    suspend fun getByIdAndDate(franchiseId: String, startDate: LocalDate, endDate: LocalDate): HolidayRecord? = transact {
         HolidayTable.select {
             (HolidayTable.franchiseId eq franchiseId) and
                     (HolidayTable.startDate eq startDate) and
                     (HolidayTable.endDate eq endDate)
         }.firstOrNull()
-            ?.let { updateMapper.toRecord(it) }
+            ?.let { mapper.toRecord(it) }
     }
 
-    suspend fun record(req: HolidayRecord): Int = transact {
+    suspend fun record(req: HolidayRecord): String = transact {
         // Insert the holiday and return the generated ID
         if (req.franchiseId == "") {
             throw Exception("Franchise ID can not be null or empty.")
@@ -56,6 +51,7 @@ constructor(
             throw IllegalArgumentException("Start date cannot be after end date.")
         }
         val insertedId = HolidayTable.insert {
+            it[holidayId] = req.holidayId
             it[franchiseId] = req.franchiseId
             it[startDate] = req.startDate
             it[endDate] = req.endDate
@@ -69,10 +65,10 @@ constructor(
         insertedId
     }
 
-    suspend fun getHolidayById(id: Int): UpdateHolidayRecord? = transact {
+    suspend fun getHolidayById(id: String): HolidayRecord? = transact {
         HolidayTable.select {
             HolidayTable.holidayId eq id
-        }.firstOrNull()?.let { updateMapper.toRecord(it) }
+        }.firstOrNull()?.let { mapper.toRecord(it) }
     }
 
     suspend fun get(franchiseId: String): List<HolidayRecord> = transact {
@@ -88,7 +84,7 @@ constructor(
     }
 
     // Update holiday by ID
-    suspend fun updateHoliday(record: UpdateHolidayRecord):Int = transact {
+    suspend fun updateHoliday(record: HolidayRecord):String = transact {
         HolidayTable.update({ HolidayTable.holidayId eq record.holidayId }) {
             it[startDate] = record.startDate
             it[endDate] = record.endDate
@@ -96,10 +92,10 @@ constructor(
             it[leaveType] = record.leaveType.toString()
             it[backupFranchiseIds] = record.backupFranchiseIds
             it[updatedAt] = Instant.now() // Assuming `updatedAt` is updated on each modification
-        }
+        }.toString()
     }
 
-    suspend fun deleteHoliday(holidayId: Int): Int {
+    suspend fun deleteHoliday(holidayId: String): Int {
         return transact{
             HolidayTable.deleteWhere { HolidayTable.holidayId eq holidayId }
         }
