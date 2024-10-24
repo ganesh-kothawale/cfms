@@ -29,6 +29,7 @@ constructor(
 
     private val logger = LoggerFactory.getLogger(FranchiseQueries::class.java)
     suspend fun save(req: FranchiseRecordData): String = transact {
+        val now = Instant.now()
         val franchiseId = FranchisesTable.insert {
             it[franchiseId] = req.franchiseId
             it[address] = req.address
@@ -47,8 +48,8 @@ constructor(
             it[hlpEnabled] = req.hlpEnabled
             it[kamUser] = req.kamUser
             it[showCrNumber] = req.showCrNumber
-            it[createdAt] = Instant.now()
-            it[updatedAt] = Instant.now()
+            it[createdAt] = now
+            it[updatedAt] = now
             it[cutOffTime] = req.cutOffTime
             it[startTime] = req.startTime
             it[endTime] = req.endTime
