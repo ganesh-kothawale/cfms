@@ -17,7 +17,7 @@ constructor() {
         endDate = resultRow[HolidayTable.endDate],
         holidayName = resultRow[HolidayTable.holidayName],
         leaveType = LeaveType.valueOf(resultRow[HolidayTable.leaveType]),
-        backupFranchiseIds = resultRow[HolidayTable.backupFranchiseIds],
+        backupFranchiseIds = resultRow[HolidayTable.backupFranchiseIds].split(","),
         createdAt = resultRow[HolidayTable.createdAt],
         updatedAt = resultRow[HolidayTable.updatedAt]
     )

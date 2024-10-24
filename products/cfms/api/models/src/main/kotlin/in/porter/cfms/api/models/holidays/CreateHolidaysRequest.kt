@@ -8,5 +8,5 @@ data class CreateHolidaysRequest(
     val endDate: LocalDate,  // End date of the holiday
     val holidayName: String?,  //  name of the holiday
     val leaveType: LeaveType,  // Leave type must be "Normal" or "Emergency"
-    val backupFranchiseIds: String?  // comma-separated list of backup franchise IDs
+    val backupFranchiseIds: List<String>  // comma-separated list of backup franchise IDs
 )

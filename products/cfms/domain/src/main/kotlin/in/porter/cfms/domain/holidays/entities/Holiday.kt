@@ -9,7 +9,7 @@ data class Holiday (
     val startDate: LocalDate,  // Start date of the holiday
     val endDate: LocalDate,  // End date of the holiday
     val leaveType: LeaveType,  // Type of leave (Normal or Emergency)
-    val backupFranchiseIds: String? = null,  // List of backup franchise IDs (optional)
+    val backupFranchiseIds: List<String>,  // List of backup franchise IDs (optional)
     val holidayName: String? = null,
     val createdAt: Instant?,
     val updatedAt: Instant?

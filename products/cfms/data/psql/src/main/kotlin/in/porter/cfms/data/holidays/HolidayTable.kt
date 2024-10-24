@@ -13,7 +13,7 @@ object HolidayTable : Table("holidays") {
     val endDate = date("end_date")
     val holidayName = varchar("holiday_name", 128).nullable()
     val leaveType = varchar("leave_type", 16)
-    val backupFranchiseIds = varchar("backup_franchise_ids", 128).nullable()
+    val backupFranchiseIds = varchar("backup_franchise_ids", 64)
     val createdAt = timestampWithoutTZAsInstant("created_at")
     val updatedAt = timestampWithoutTZAsInstant("updated_at")
 

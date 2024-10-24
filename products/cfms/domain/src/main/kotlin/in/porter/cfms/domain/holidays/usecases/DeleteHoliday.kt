@@ -39,7 +39,7 @@ class DeleteHoliday
                     holiday.endDate
                 ), // Generate dates between start and end
                 type = holiday.leaveType.name,
-                backup_franchises = holiday.backupFranchiseIds?.split(",") ?: emptyList(),
+                backup_franchises = holiday.backupFranchiseIds,
                 status = "Cancelled"
             )
 

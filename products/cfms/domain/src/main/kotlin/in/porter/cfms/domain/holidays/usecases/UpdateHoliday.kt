@@ -58,7 +58,7 @@ constructor(
             identification_code = holiday.franchiseId.toString(),
             holidays = generateHolidayDates(holiday.startDate, holiday.endDate), // Generate dates between start and end
             type = holiday.leaveType.name,
-            backup_franchises = holiday.backupFranchiseIds?.split(",") ?: emptyList(),
+            backup_franchises = holiday.backupFranchiseIds,
             status = "Approved"
         )
 
