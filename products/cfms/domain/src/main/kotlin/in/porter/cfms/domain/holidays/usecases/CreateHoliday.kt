@@ -18,7 +18,7 @@ constructor(
 
     private val logger = LoggerFactory.getLogger(CreateHoliday::class.java)
 
-    suspend fun createHoliday(holiday: Holiday): Int {
+    suspend fun invoke(holiday: Holiday): String {
         // Check if a holiday already exists for the given franchiseId and dates
         val existingHoliday = holidayRepo.getByIdAndDate(holiday.franchiseId, holiday.startDate, holiday.endDate)
         if (existingHoliday != null) {
@@ -39,15 +39,23 @@ constructor(
         try {
             applyLeaveResponse = courierApplyLeaveCallingService.applyLeave(applyLeaveRequest)
         } catch (e: CfmsException) {
-            logger.error("Error applying leave: ${e.message}")
-            throw CfmsException("Failed to apply leave: ${e.message}")
+            logger.error("Error applying leave through external API for franchiseId: ${holiday.franchiseId}. Error: ${e.message}")
+            throw CfmsException("Failed to apply leave through external API: ${e.message}")
+        } catch (e: Exception) {
+            logger.error("Unexpected error during external API call for franchiseId: ${holiday.franchiseId}. Error: ${e.message}", e)
+            throw CfmsException("An unexpected error occurred during leave application.")
         }
 
         // Log the success message from the external API
         logger.info("Leave applied successfully: ${applyLeaveResponse.message}")
 
         // Insert the holiday into the database
-        return holidayRepo.record(holiday)
+        try {
+            return holidayRepo.record(holiday)
+        } catch (e: Exception) {
+            logger.error("Error inserting holiday into the database for franchiseId: ${holiday.franchiseId}. Error: ${e.message}", e)
+            throw CfmsException("Failed to store holiday in the database: ${e.message}")
+        }
     }
 
     // Helper method to generate a list of dates between start and end date

@@ -5,6 +5,7 @@ import java.time.LocalDate
 import java.time.Instant
 
 data class HolidayRecord(
+    val holidayId: String,
     val franchiseId: String,
     val startDate: LocalDate,
     val endDate: LocalDate,

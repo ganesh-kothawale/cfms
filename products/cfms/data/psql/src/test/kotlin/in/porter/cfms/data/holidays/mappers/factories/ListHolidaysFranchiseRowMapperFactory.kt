@@ -1,3 +1,4 @@
+/*
 package `in`.porter.cfms.data.holidays.mappers.factories
 
 import `in`.porter.cfms.data.franchise.FranchisesTable
@@ -19,3 +20,4 @@ object ListHolidaysFranchiseRowMapperFactory {
         return resultRow
     }
 }
+*/

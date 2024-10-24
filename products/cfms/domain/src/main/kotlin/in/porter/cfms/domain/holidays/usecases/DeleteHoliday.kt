@@ -16,13 +16,14 @@ class DeleteHoliday
 
     private val logger = LoggerFactory.getLogger(DeleteHoliday::class.java)
 
-    suspend fun deleteHoliday(holidayId: Int) {
+    suspend fun invoke(holidayId: String) {
         try {
+            logger.info("Attempting to delete holiday with ID: $holidayId")
             // Step 1: Fetch the holiday by ID
             val holiday = holidayRepo.getById(holidayId)
-            if(holiday == null){
-                throw CfmsException("Holiday not found with ID $holidayId")
-            }
+                ?: throw CfmsException("Holiday not found with ID $holidayId")
+
+            logger.info("Holiday found: $holiday")
 
             // Step 2: Validate that current date is after the start date
             if (LocalDate.now().isAfter(holiday.startDate)) {
@@ -44,10 +45,11 @@ class DeleteHoliday
 
             val applyLeaveResponse: ApplyLeaveResponse
             try {
+                logger.info("Sending cancellation request to courier service")
                 applyLeaveResponse = courierService.applyLeave(applyLeaveRequest)
             } catch (e: CfmsException) {
-                logger.error("Error applying leave: ${e.message}")
-                throw CfmsException("Failed to apply leave: ${e.message}")
+                logger.error("Error applying leave cancellation: ${e.message}")
+                throw CfmsException("Failed to apply leave cancellation: ${e.message}")
             }
 
             // Log the success message from the external API
@@ -55,13 +57,15 @@ class DeleteHoliday
 
             // Step 5: Delete the holiday from the database
             holidayRepo.deleteById(holidayId)
+            logger.info("Holiday with ID $holidayId deleted successfully")
 
         } catch (e: CfmsException) {
-            logger.error("Error deleting holiday: ${e.message}")
-            throw CfmsException(e.message)
+            logger.error("Exception occurred: ${e.message}")
+            throw e // Re-throw original CfmsException without changing it
+
         } catch (e: Exception) {
-            logger.error("Unexpected error deleting holiday: ${e.message}")
-            throw Exception("Unexpected error occurred while deleting the holiday.")
+            logger.error("Unexpected error occurred: ${e.message}", e)
+            throw CfmsException("Unexpected error occurred while deleting the holiday.")
         }
     }
 

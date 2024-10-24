@@ -4,6 +4,7 @@ import java.time.LocalDate
 import java.time.Instant
 
 data class Holiday (
+    val holidayId: String,
     val franchiseId: String,  // Franchise ID for which the holiday is being created
     val startDate: LocalDate,  // Start date of the holiday
     val endDate: LocalDate,  // End date of the holiday

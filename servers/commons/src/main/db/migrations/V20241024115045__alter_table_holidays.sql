@@ -1,0 +1,2 @@
+ALTER TABLE "holidays"
+ADD COLUMN "holiday_id" VARCHAR(10) UNIQUE;
