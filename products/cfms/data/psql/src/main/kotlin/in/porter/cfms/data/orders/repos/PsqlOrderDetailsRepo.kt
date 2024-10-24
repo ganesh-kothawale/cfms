@@ -15,26 +15,33 @@ class PsqlOrderDetailsRepo
     val statusMapper: OrderStatusMapper
 ) : OrderDetailsRepo {
 
-    override suspend fun createOrder(request: CreateOrderRequest):Int {
-       return  queries.createOrder(request)
+    override suspend fun createOrder(request: CreateOrderRequest): Int {
+        return queries.createOrder(request)
     }
 
     override suspend fun fetchOrderByCourierId(orderId: String): Order? {
-        return  queries.fetchOrderDetailsByOrderNumber(orderId)
+        return queries.fetchOrderDetailsByOrderNumber(orderId)
             .let { it?.let { mapper.toDomain(it) } }
 
     }
 
     override suspend fun fetchOrders(request: FetchOrdersRequest): List<Order> {
-       return queries.fetchOrders(request.size, request.size * (request.page - 1),request.franchiseId)
-            .let  {it.map { mapper.toDomain(it) }}
+        return queries.fetchOrders(request.size, request.size * (request.page - 1), request.franchiseId)
+            .let { it.map { mapper.toDomain(it) } }
     }
 
     override suspend fun getOrderCount(request: FetchOrdersRequest): Int {
-       return  queries.getOrderCount()
+        return queries.getOrderCount()
     }
-    override  suspend fun  updateStatus(orderId: Int, status: OrderStatus): Int =
-    statusMapper.toString(status)
-        ?.let { queries.updateStatus(orderId, it) }
-    ?: throw IllegalArgumentException("Invalid order status: $status")
+
+    override suspend fun updateStatus(orderId: Int, status: OrderStatus): Int =
+        statusMapper.toString(status)
+            ?.let { queries.updateStatus(orderId, it) }
+            ?: throw IllegalArgumentException("Invalid order status: $status")
+
+    override suspend fun fetchOrderByOrderId(orderId: String): Order? {
+        return  queries.fetchOrderDetailsByOrderId(orderId)
+            .let { it?.let { mapper.toDomain(it) } }
+
+    }
 }

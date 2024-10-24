@@ -90,4 +90,12 @@ constructor(
         }
         orderId
     }
+
+    suspend fun fetchOrderDetailsByOrderId(orderId: String): `in`.porter.cfms.data.orders.entities.Order? {
+        return transaction {
+            OrdersTable.select { OrdersTable.orderId eq orderId }
+                .mapNotNull { row: ResultRow -> mapper.fromResultRow(row) }
+                .singleOrNull()
+        }
+    }
 }
