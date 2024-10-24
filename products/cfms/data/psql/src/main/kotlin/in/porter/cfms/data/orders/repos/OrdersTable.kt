@@ -35,7 +35,7 @@ object OrdersTable : IntIdTable("orders_test") {
     val shippingLabelLink = varchar("shipping_label_link", 512).nullable()
     val pickupDate = varchar("pickup_datetime", 128)
     val orderStatus = varchar("order_status", 255)
-    val hlpOrderId = integer("hlp_order_id").nullable()
+    val hlpOrderId = varchar("hlp_order_id", 64)
     val hlpOrderStatus = varchar("hlp_order_status", 255)
     val vehicleType = varchar("vehicle_type", 255).nullable()
     val franchiseId = varchar("franchise_id", 128)
