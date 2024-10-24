@@ -5,7 +5,7 @@ import org.jetbrains.exposed.dao.id.IntIdTable
 import org.jetbrains.exposed.sql.Column
 import org.jetbrains.exposed.sql.`java-time`.timestamp
 
-object OrdersTable : IntIdTable("orders_test") {
+object OrdersTable : IntIdTable("orders") {
     val orderId = varchar("order_id", 10)
     val orderNumber = varchar("order_number", 128)
     val awbNumber = varchar("awb_number", 128).nullable()
@@ -35,7 +35,7 @@ object OrdersTable : IntIdTable("orders_test") {
     val shippingLabelLink = varchar("shipping_label_link", 512).nullable()
     val pickupDate = varchar("pickup_datetime", 128)
     val orderStatus = varchar("order_status", 255)
-    val hlpOrderId = integer("hlp_order_id").nullable()
+    val hlpOrderId = varchar("hlp_order_id", 64)
     val hlpOrderStatus = varchar("hlp_order_status", 255)
     val vehicleType = varchar("vehicle_type", 255).nullable()
     val franchiseId = varchar("franchise_id", 128)
