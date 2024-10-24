@@ -4,7 +4,9 @@ import `in`.porter.cfms.domain.exceptions.CfmsException
 import `in`.porter.cfms.domain.franchise.entities.Franchise
 import `in`.porter.cfms.domain.franchise.repos.FranchiseRepo
 import `in`.porter.cfms.domain.franchise.entities.RecordFranchiseDetailsRequest
+import `in`.porter.cfms.domain.holidays.usecases.CreateHoliday
 import `in`.porter.kotlinutils.instrumentation.opentracing.Traceable
+import org.slf4j.LoggerFactory
 import java.time.Instant
 import javax.inject.Inject
 
@@ -12,8 +14,7 @@ class CreateFranchise
 @Inject constructor(
     private val repo: FranchiseRepo,
 ) : Traceable {
-
-    suspend fun invoke(req: RecordFranchiseDetailsRequest): Unit {
+    suspend fun invoke(req: RecordFranchiseDetailsRequest): String {
         if (req.poc.name.isBlank()) {
             throw CfmsException("POC name cannot be empty.")
         }
@@ -25,7 +26,7 @@ class CreateFranchise
         }
 
         try {
-            Franchise(
+            val franchise = Franchise(
                 franchiseId = req.franchiseId,
                 pocName = req.poc.name,
                 primaryNumber = req.poc.primaryNumber,
@@ -52,7 +53,8 @@ class CreateFranchise
                 showCrNumber = req.showCrNumber,
                 createdAt = Instant.now(),
                 updatedAt = Instant.now()
-            ).let { repo.create(it) }
+            )
+            return repo.create(franchise)
         } catch (e: Exception) {
             throw CfmsException("Failed to create franchise: ${e.message}")
         }
