@@ -1,16 +1,15 @@
 package `in`.porter.cfms.data.recon
 
+import `in`.porter.cfms.data.orders.repos.OrdersTable
+import `in`.porter.cfms.data.pickuptasks.PickupTasksTable
+import `in`.porter.cfms.data.recon.ReconTable.innerJoin
 import `in`.porter.cfms.data.recon.mappers.ReconRowMapper
+import `in`.porter.cfms.data.recon.mappers.ReconTaskRowMapper
 import `in`.porter.cfms.data.recon.records.ReconRecord
+import `in`.porter.cfms.data.recon.records.ReconTaskRecord
 import `in`.porter.kotlinutils.exposed.ExposedRepo
 import kotlinx.coroutines.CoroutineDispatcher
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.StdOutSqlLogger
-import org.jetbrains.exposed.sql.addLogger
-import org.jetbrains.exposed.sql.deleteWhere
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.select
-import org.jetbrains.exposed.sql.selectAll
+import org.jetbrains.exposed.sql.*
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
@@ -19,7 +18,8 @@ class ReconQueries
 constructor(
     override val db: Database,
     override val dispatcher: CoroutineDispatcher,
-    private val reconRowMapper: ReconRowMapper
+    private val reconRowMapper: ReconRowMapper,
+    private val reconTaskRowMapper: ReconTaskRowMapper
 ) : ExposedRepo {
 
     private val logger = LoggerFactory.getLogger(ReconQueries::class.java)
@@ -97,5 +97,29 @@ constructor(
         logger.info("Deleting recon with ID: $reconId")
         ReconTable.deleteWhere { ReconTable.reconId eq reconId }
     }
+
+    suspend fun fetchReconTasks(size: Int, offset: Int): List<ReconTaskRecord> = transact {
+        addLogger(StdOutSqlLogger)
+        logger.info("Fetching recon tasks with size: $size and offset: $offset")
+
+        val query = ReconTable
+            .innerJoin(OrdersTable, { ReconTable.orderId }, { OrdersTable.orderId })
+            .innerJoin(PickupTasksTable, { ReconTable.taskId }, { PickupTasksTable.taskId })
+            .slice(
+                ReconTable.taskId,
+                OrdersTable.orderNumber,
+                OrdersTable.courierPartner,
+                PickupTasksTable.orderImages,
+                OrdersTable.awbNumber,
+                ReconTable.reconStatus
+            )
+            .selectAll()
+            .limit(size, offset)
+
+        query.map { row ->
+            reconTaskRowMapper.toRecord(row)
+        }
+    }
+
 
 }
