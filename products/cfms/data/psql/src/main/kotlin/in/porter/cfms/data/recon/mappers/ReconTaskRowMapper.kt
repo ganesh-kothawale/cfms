@@ -8,7 +8,7 @@ import org.jetbrains.exposed.sql.ResultRow
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
-class ReconTaskRowMapper @Inject constructor()  {
+class ReconTaskRowMapper @Inject constructor() {
     private val logger = LoggerFactory.getLogger(ReconTaskRowMapper::class.java)
 
     fun toRecord(resultRow: ResultRow): ReconTaskRecord {
@@ -18,7 +18,7 @@ class ReconTaskRowMapper @Inject constructor()  {
             crId = resultRow[OrdersTable.orderNumber],
             cpName = resultRow[OrdersTable.courierPartner],
             cpImageUrl = null,
-            shipmentImageUrl = resultRow[PickupTasksTable.orderImages]?.split(",")?.firstOrNull(),
+            shipmentImageUrl = null,
             awb = resultRow[OrdersTable.awbNumber]?.toString() ?: "UNKNOWN",
             status = resultRow[ReconTable.reconStatus]?.toString() ?: "UNKNOWN"
         )
