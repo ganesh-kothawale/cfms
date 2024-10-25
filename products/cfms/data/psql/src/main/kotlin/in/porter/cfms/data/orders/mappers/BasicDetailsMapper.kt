@@ -19,7 +19,8 @@ class BasicDetailsMapper @Inject constructor(
             associationDetails = associationDetailsMapper.fromResultRow(row),
             accountId = row[OrdersTable.accountId],
             accountCode = row[OrdersTable.accountCode],
-            orderNumber = row[OrdersTable.orderNumber]
+            orderNumber = row[OrdersTable.orderNumber],
+            orderId = row[OrdersTable.orderId]
         )
     }
 
@@ -31,7 +32,8 @@ class BasicDetailsMapper @Inject constructor(
             associationDetails = associationDetailsMapper.toDomain(entity.associationDetails),
             accountId = entity.accountId,
             accountCode = entity.accountCode,
-            orderNumber = entity.orderNumber
+            orderNumber = entity.orderNumber,
+            orderId = entity.orderId
         )
     }
 }
