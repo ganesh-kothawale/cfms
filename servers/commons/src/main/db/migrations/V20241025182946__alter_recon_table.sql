@@ -1,0 +1,2 @@
+ALTER TABLE recon
+ADD COLUMN action VARCHAR(64);

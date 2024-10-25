@@ -2,10 +2,14 @@ package `in`.porter.cfms.data.recon.repos
 
 import `in`.porter.cfms.data.exceptions.CfmsException
 import `in`.porter.cfms.data.recon.ReconQueries
+import `in`.porter.cfms.data.packageIssue.mappers.PackageIssueRecordMapper
 import `in`.porter.cfms.data.recon.mappers.ReconRecordMapper
 import `in`.porter.cfms.data.recon.mappers.ReconTaskRecordMapper
+import `in`.porter.cfms.data.packageIssue.records.PackageIssueRecord
 import `in`.porter.cfms.data.recon.records.ReconRecord
 import `in`.porter.cfms.data.recon.records.ReconTaskRecord
+import `in`.porter.cfms.domain.packageIssue.entities.PackageIssue
+import `in`.porter.cfms.domain.packageIssue.repos.PackageIssueRepo
 import `in`.porter.cfms.domain.recon.entities.Recon
 import `in`.porter.cfms.domain.recon.entities.ReconTask
 import `in`.porter.cfms.domain.recon.repos.ReconRepo
@@ -17,17 +21,18 @@ class PsqlReconRepo
 @Inject constructor(
     private val queries: ReconQueries,
     private val reconRecordMapper: ReconRecordMapper,
-    private val reconTaskRecordMapper: ReconTaskRecordMapper
-) : Traceable, ReconRepo {
+    private val reconTaskRecordMapper: ReconTaskRecordMapper,
+    private val packageIssueRecordMapper: PackageIssueRecordMapper
+) : Traceable, ReconRepo, PackageIssueRepo {
 
     private val logger = LoggerFactory.getLogger(PsqlReconRepo::class.java)
 
-    override suspend fun findAllRecons(page: Int, size: Int, packagingRequired: Boolean?): List<Recon> =
+    override suspend fun findAllRecons(page: Int, size: Int): List<Recon> =
         trace("findAllRecons") { _: io.opentracing.Span ->
             try {
                 logger.info("Retrieving recon records with page: $page, size: $size")
                 val offset = (page - 1) * size
-                val records = queries.findAll(size, offset, packagingRequired)
+                val records = queries.findAll(size, offset)
 
                 logger.info("Found ${records.size} recon records")
                 records.map { record: ReconRecord ->
@@ -40,11 +45,11 @@ class PsqlReconRepo
             }
         }
 
-    override suspend fun countAllRecons(packagingRequired: Boolean?): Int =
+    override suspend fun countAllRecons(): Int =
         trace("countAllRecons") {
             try {
                 logger.info("Counting recon records")
-                queries.countAll(packagingRequired)
+                queries.countAll()
             } catch (e: CfmsException) {
                 throw CfmsException("Failed to count recon records: ${e.message}")
             }
@@ -96,4 +101,34 @@ class PsqlReconRepo
             }
         }
 
+    override suspend fun countAllPackageIssue(returnRequested: Boolean?): Int =
+        trace("countAllPackageIssue") {
+            try {
+                logger.info("Counting package issue records")
+                queries.countAllPackageIssue(returnRequested)
+            } catch (e: CfmsException) {
+                throw CfmsException("Failed to count package issue records: ${e.message}")
+            }
+        }
+
+
+    override suspend fun findAllPackageIssue(
+        page: Int,
+        size: Int,
+        returnRequested: Boolean?
+    ): List<PackageIssue> = trace("findAllPackageIssue") { _: io.opentracing.Span ->
+        try {
+            logger.info("Retrieving package issues with page: $page, size: $size")
+            val offset = (page - 1) * size
+            val records = queries.findAllPackageIssue(size, offset, returnRequested)
+            records.map { record: PackageIssueRecord ->
+                logger.info("Mapping package issue record: $record")
+                packageIssueRecordMapper.toDomain(record)
+            }
+
+        } catch (e: Exception) {
+            logger.error("Error occurred while retrieving package issues: ${e.message}", e)
+            throw CfmsException("Failed to retrieve package issues: ${e.message}")
+        }
+    }
 }
