@@ -9,6 +9,7 @@ import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
+import io.ktor.server.util.*
 import org.apache.logging.log4j.kotlin.Logging
 import javax.inject.Inject
 
@@ -24,7 +25,9 @@ constructor(
         trace {
             try {
                 val request = try {
-                    call.receive<FetchHlpRecordsRequest>()
+                    val page = call.request.queryParameters.getOrFail<Int>("page").toInt()
+                    val size = call.request.queryParameters.getOrFail<Int>("size").toInt()
+                    FetchHlpRecordsRequest(page, size)
                 } catch (e: Exception) {
                     logger.error("Failed to convert request body to FetchHlpRecordsRequest: ${e.message}")
                     call.respond(
