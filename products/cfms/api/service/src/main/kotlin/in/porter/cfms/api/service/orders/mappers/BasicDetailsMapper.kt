@@ -19,7 +19,7 @@ class BasicDetailsMapper
             accountCode = basicDetails.accountCode,
             courierTransportDetails = courierTransportDetailsMapper.map(basicDetails.courierTransportDetails),
             orderStatus = basicDetails.orderStatus,
-            orderId = CommonUtils.generateRandomAlphaNumeric(10)
+            orderId = basicDetails.orderId
         )
     }
 

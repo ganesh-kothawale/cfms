@@ -45,7 +45,8 @@ object BasicOrderDetailsFactory {
             accountId = 1,
             accountCode = "accountCode123",
             courierTransportDetails = buildApiCourierTransportDetails(),
-            orderStatus = "Delivered"
+            orderStatus = "Delivered",
+            orderId = "abc"
         )
     }
 
@@ -57,7 +58,8 @@ object BasicOrderDetailsFactory {
             accountId = 1,
             accountCode = "accountCode123",
             courierTransportDetails = buildDomainCourierTransportDetails(),
-            orderStatus = "Delivered"
+            orderStatus = "Delivered",
+            orderId = "abc"
         )
     }
 }
