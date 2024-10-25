@@ -1,6 +1,7 @@
 package `in`.porter.cfms.api.service.orders.mappers
 
 import `in`.porter.cfms.api.models.orders.BasicDetails
+import `in`.porter.cfms.api.service.utils.CommonUtils
 import `in`.porter.cfms.domain.orders.entities.BasicDetails as DomainBasicDetails
 import javax.inject.Inject
 
@@ -17,7 +18,8 @@ class BasicDetailsMapper
             accountId = basicDetails.accountId,
             accountCode = basicDetails.accountCode,
             courierTransportDetails = courierTransportDetailsMapper.map(basicDetails.courierTransportDetails),
-            orderStatus = basicDetails.orderStatus
+            orderStatus = basicDetails.orderStatus,
+            orderId = CommonUtils.generateRandomAlphaNumeric(10)
         )
     }
 
@@ -29,7 +31,8 @@ class BasicDetailsMapper
             accountId = domainBasicDetails.accountId,
             accountCode = domainBasicDetails.accountCode,
             courierTransportDetails = courierTransportDetailsMapper.fromDomain(domainBasicDetails.courierTransportDetails),
-            orderStatus = domainBasicDetails.orderStatus
+            orderStatus = domainBasicDetails.orderStatus,
+            orderId = domainBasicDetails.orderId
         )
     }
 
