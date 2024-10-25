@@ -14,12 +14,15 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.MapperFeature
 import com.fasterxml.jackson.module.kotlin.KotlinModule
-import `in`.porter.cfms.servers.ktor.usecases.hlp.hlpRoutes
-import `in`.porter.cfms.servers.ktor.usecases.orders.ordersRoutes
+import `in`.porter.cfms.servers.ktor.usecases.cpConnection.appCpConnectionRoutes
 import `in`.porter.cfms.servers.ktor.usecases.pickuptasks.pickupTasksRoutes
-import `in`.porter.cfms.servers.ktor.usecases.cpConnection.cpConnectionRoutes
+import `in`.porter.cfms.servers.ktor.usecases.cpConnection.dashboardCpConnectionRoutes
 import `in`.porter.cfms.servers.ktor.usecases.franchises.franchiseRoutes
+import `in`.porter.cfms.servers.ktor.usecases.hlp.privateHlpRoutes
+import `in`.porter.cfms.servers.ktor.usecases.hlp.publicHlpRoutes
 import `in`.porter.cfms.servers.ktor.usecases.holidays.holidaysRoutes
+import `in`.porter.cfms.servers.ktor.usecases.orders.privateOrdersRoutes
+import `in`.porter.cfms.servers.ktor.usecases.orders.publicOrdersRoutes
 import `in`.porter.cfms.servers.ktor.usecases.packagingissues.packagingIssuesRoutes
 import `in`.porter.cfms.servers.ktor.usecases.recon.reconRoutes
 import `in`.porter.cfms.servers.ktor.usecases.tasks.tasksRoutes
@@ -103,14 +106,17 @@ fun Application.main() {
 
     routing {
         get("/") { call.respond(HttpStatusCode.OK, Unit) }
-        route("cfms/private/orders") { ordersRoutes(httpComponent) }
-        route("cfms/private/cps") { cpConnectionRoutes(httpComponent) }
-        route("cfms/public/hlps") { hlpRoutes(httpComponent) }
-        route ("/cfms/public/holidays"){ holidaysRoutes(httpComponent) }
-        route("/cfms/public/franchises") { franchiseRoutes(httpComponent) }
-        route("/cfms/public/tasks") { tasksRoutes(httpComponent) }
-        route("/cfms/public/recon") { reconRoutes(httpComponent) }
-        route("/cfms/public/pickup_tasks") { pickupTasksRoutes(httpComponent) }
-        route("/cfms/public/packaging-issues") { packagingIssuesRoutes(httpComponent) }
+        route("/cfms/private/orders") { privateOrdersRoutes(httpComponent) }
+        route("/cfms/private/hlp") { privateHlpRoutes(httpComponent) }
+        route("/cfms/public/dashboard/orders") { publicOrdersRoutes(httpComponent) }
+        route("/cfms/public/dashboard/hlps") { publicHlpRoutes(httpComponent) }
+        route("/cfms/public/dashboard/cpconnections") { dashboardCpConnectionRoutes(httpComponent) }
+        route("/cfms/public/dashboard/holidays") { holidaysRoutes(httpComponent) }
+        route("/cfms/public/dashboard/franchises") { franchiseRoutes(httpComponent) }
+        route("/cfms/public/dashboard/tasks") { tasksRoutes(httpComponent) }
+        route("/cfms/public/dashboard/package-issues") { packagingIssuesRoutes(httpComponent) }
+        route("/cfms/public/app/recon") { reconRoutes(httpComponent) }
+        route("/cfms/public/app/pickups") { pickupTasksRoutes(httpComponent) }
+        route("/cfms/public/app/cpconnections") { appCpConnectionRoutes(httpComponent) }
     }
 }
