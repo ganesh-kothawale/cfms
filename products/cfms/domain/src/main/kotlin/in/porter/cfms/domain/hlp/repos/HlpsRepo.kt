@@ -10,7 +10,9 @@ interface HlpsRepo {
 
     suspend fun create(draft: HlpDetailsDraft): Unit
 
-    suspend fun update(req: UpdateHlpDetailsRequest): Unit
+    suspend fun update(req: UpdateHlpDetailsRequest): Int
+
+    suspend fun getByHlpOrderId(hlpOrderId: String): HlpDetails?
 
     suspend fun countAll(): Int
 

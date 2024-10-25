@@ -7,16 +7,13 @@ import javax.inject.Inject
 class RecordCPConnectionRequestMapper
 @Inject
 constructor() {
-    companion object {
-        const val MANIFEST_LINK = ""
-    }
 
     fun toDomain(req: RecordCPConnectionApiRequest): RecordCPConnectionRequest {
         validateRequest(req)
         return RecordCPConnectionRequest(
             cpId = req.cpId,
-            franchiseId =   req.franchiseId,
-            manifestImageLink =  req.manifestImageLink?: MANIFEST_LINK
+            franchiseId = req.franchiseId,
+            manifestImageLink = req.manifestImageLink
         )
     }
 

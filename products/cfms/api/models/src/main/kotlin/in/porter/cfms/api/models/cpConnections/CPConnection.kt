@@ -8,5 +8,5 @@ data class CPConnection(
     val franchiseId: String,
     val manifestImageUrl: String?,
     val courierPartnerName: String,
-    val createdAt: Instant,
+    val createdAt: String,
 )

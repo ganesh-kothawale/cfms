@@ -34,7 +34,7 @@ constructor(
         }
     }
 
-    suspend fun update(req: UpdateHlpRecord): Unit = transact {
+    suspend fun update(req: UpdateHlpRecord): Int = transact {
         HlpsTable.update({ HlpsTable.hlpOrderId eq req.hlpOrderId }) {
             it[hlpOrderStatus] = req?.hlpOrderStatus
             it[otp] = req?.otp
@@ -43,6 +43,13 @@ constructor(
             it[vehicleType] = req?.vehicleType
             it[updatedAt] = Instant.now()
         }
+    }
+
+    suspend fun getByHlpOrderId(hlpOrderId: String): HlpRecord? = transact {
+        HlpsTable
+            .select { HlpsTable.hlpOrderId eq hlpOrderId }
+            .map { rowMapper.toRecord(it) }
+            .firstOrNull()
     }
 
     suspend fun findAll(size: Int, offset: Int): List<HlpRecord> = transact {
