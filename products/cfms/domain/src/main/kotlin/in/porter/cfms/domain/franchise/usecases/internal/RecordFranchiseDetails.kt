@@ -4,7 +4,9 @@ import `in`.porter.cfms.domain.exceptions.CfmsException
 import `in`.porter.cfms.domain.exceptions.FranchiseAlreadyExistsException
 import `in`.porter.cfms.domain.franchise.repos.FranchiseRepo
 import `in`.porter.cfms.domain.franchise.entities.RecordFranchiseDetailsRequest
+import `in`.porter.cfms.domain.holidays.usecases.CreateHoliday
 import `in`.porter.kotlinutils.instrumentation.opentracing.Traceable
+import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
 class RecordFranchiseDetails
@@ -13,16 +15,16 @@ constructor(
     private val repo: FranchiseRepo,
     private val createFranchise: CreateFranchise
 ) : Traceable {
-
-    suspend fun invoke(req: RecordFranchiseDetailsRequest) {
-        // Check if the franchise already exists
+    private val logger = LoggerFactory.getLogger(CreateHoliday::class.java)
+    suspend fun invoke(req: RecordFranchiseDetailsRequest): String {
         repo.getByEmail(req.poc.email)?.let {
             throw FranchiseAlreadyExistsException(req.poc.email)
         }
         try {
-            createFranchise.invoke(req)
+            return createFranchise.invoke(req)
         } catch (e: CfmsException) {
-            throw e // Rethrow the exception to propagate it up
+            logger.error("Error creating franchise: ${e.message}")
+            throw CfmsException("Failed to create franchise: ${e.message}")
         }
     }
 }
