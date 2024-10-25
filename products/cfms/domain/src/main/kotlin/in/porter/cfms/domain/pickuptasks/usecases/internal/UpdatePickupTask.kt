@@ -18,7 +18,7 @@ class UpdatePickupTask @Inject constructor(
     private val logger = LoggerFactory.getLogger(UpdatePickupTask::class.java)
 
     // 1. Create Pickup Image Mapping
-    suspend fun createPickupImageMapping(pickupTask: UpdatePickupTask) {
+    suspend fun updatePickupDetailsOrderImage(pickupTask: UpdatePickupTask) {
 
 
         taskRepo.findTaskById(pickupTask.taskId)
@@ -34,14 +34,10 @@ class UpdatePickupTask @Inject constructor(
         }
 
         logger.info("Creating pickup image mapping for task ID: ${pickupTask.taskId}")
-        // Fetch pickup details ID from pickup_details table
-        val pickupDetailsId = pickupTasksRepo.getPickupDetailsIdByTaskId(pickupTask.taskId)
-            ?: throw NoSuchElementException("Pickup details not found for task ID: ${pickupTask.taskId}")
 
-        // Now create the pickup image mapping
-        pickupTasksRepo.createPickupImageMapping(
-            taskID = pickupTask.taskId,
-            pickupDetailsId = pickupDetailsId,
+        // insert order image against task id
+        pickupTasksRepo.updateOrderImageByTaskId(
+            taskId = pickupTask.taskId,
             orderImage = pickupTask.orderImage
         )
     }

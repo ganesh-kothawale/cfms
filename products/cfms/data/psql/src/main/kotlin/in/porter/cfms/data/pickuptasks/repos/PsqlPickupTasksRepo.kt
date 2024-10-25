@@ -4,13 +4,11 @@ import `in`.porter.cfms.data.exceptions.CfmsException
 import `in`.porter.cfms.data.pickuptasks.PickupTasksQueries
 import `in`.porter.cfms.data.pickuptasks.mappers.PickupTasksMapper
 import `in`.porter.cfms.data.pickuptasks.records.HlpWithOrdersRecord
-import `in`.porter.cfms.data.pickuptasks.records.PickupImageMappingRecord
-import `in`.porter.cfms.domain.orders.entities.Order
 import `in`.porter.cfms.domain.pickuptasks.entities.PickupTask
 import `in`.porter.cfms.domain.pickuptasks.repos.PickupTasksRepo
 import `in`.porter.kotlinutils.instrumentation.opentracing.Traceable
 import org.slf4j.LoggerFactory
-import java.time.Instant
+import java.util.UUID
 import javax.inject.Inject
 
 class PsqlPickupTasksRepo @Inject constructor(
@@ -66,20 +64,13 @@ class PsqlPickupTasksRepo @Inject constructor(
     }
 
     // Create pickup image mapping in the pickup_image_mapping table
-    override suspend fun createPickupImageMapping(taskID: String, pickupDetailsId: String, orderImage: String) {
-        trace("createPickupImageMapping") {
+    override suspend fun updateOrderImageByTaskId(taskId: String, orderImage: List<UUID>) {
+        trace("updateOrderImageByTaskId") {
             try {
-                val record = PickupImageMappingRecord(
-                    taskId = taskID,
-                    pickupDetailsId = pickupDetailsId,
-                    orderImage = orderImage,
-                    createdAt = Instant.now(),
-                    updatedAt = Instant.now()
-                )
-                queries.insertPickupImageMapping(record)
+                queries.updateOrderImageByTaskId(taskId, orderImage)
             } catch (e: Exception) {
-                logger.error("Error creating pickup image mapping for taskId $taskID: ${e.message}", e)
-                throw CfmsException("Error creating pickup image mapping for taskId $taskID: ${e.message}")
+                logger.error("Error creating pickup image mapping for taskId $taskId: ${e.message}", e)
+                throw CfmsException("Error creating pickup image mapping for taskId $taskId: ${e.message}")
             }
         }
     }

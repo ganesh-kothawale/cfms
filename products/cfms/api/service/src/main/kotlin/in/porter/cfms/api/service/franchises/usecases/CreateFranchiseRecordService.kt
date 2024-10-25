@@ -20,13 +20,16 @@ constructor(
     private val recordFranchiseDetails: RecordFranchiseDetails,
     private val createAuditLogService: CreateAuditLogService
 ) : Traceable {
-    suspend fun invoke(request: RecordFranchiseDetailsRequest): FranchiseResponse = trace {
-        try {
-            val generatedFranchiseId = CommonUtils.generateRandomAlphaNumeric(10)
-            mapper.toDomain(request, generatedFranchiseId)
-                .let { recordFranchiseDetails.invoke(it) }
 
-            // Create audit log after successful franchise creation
+    suspend fun invoke(request: RecordFranchiseDetailsRequest) = trace {
+        val generatedFranchiseId = CommonUtils.generateRandomAlphaNumeric(10)
+        val franchise = mapper.toDomain(request, generatedFranchiseId)
+        try {
+            val franchiseId = recordFranchiseDetails.invoke(franchise)
+            val data = Data(
+                message = " Franchise created successfully",
+                franchise_id = franchiseId
+            )
             createAuditLogService.createAuditLog(
                 CreateAuditLogRequest(
                     entityId = generatedFranchiseId,
@@ -37,34 +40,28 @@ constructor(
                     updatedBy = 123  // Hardcoded for now
                 )
             )
-
-            val data = Data(
-                message = "Franchise created successfully",
-                franchise_id = generatedFranchiseId
-            )
-
             FranchiseResponse(data = data)
-        } catch (e: CfmsException) {
+        } catch (e: Exception) {
             val errorResponse = when (e) {
                 is CfmsException -> {
                     listOf(
                         ErrorResponse(
                             message = "Invalid input data",
-                            details = e.message ?: "No additional details"
+                            details = e.message
                         )
                     )
                 }
-
                 else -> {
                     listOf(
                         ErrorResponse(
-                            message = "Franchise creation failed",
-                            details = e.message ?: "Failed to store franchise in DB, rolling back Porter creation"
+                            message = "Failed to create Franchise",
+                            details = e.message ?: "An unexpected error occurred on the server."
                         )
                     )
                 }
             }
             FranchiseResponse(error = errorResponse)
         }
+
     }
 }
