@@ -2,12 +2,14 @@ package `in`.porter.cfms.servers.ktor.usecases.hlp
 
 import `in`.porter.cfms.api.models.exceptions.CfmsException
 import `in`.porter.cfms.api.models.hlp.FetchHlpRecordsRequest
+import `in`.porter.cfms.api.models.hlp.FetchHlpRecordsResponse
 import `in`.porter.cfms.api.service.hlp.usecases.FetchHlpRecordsService
 import `in`.porter.kotlinutils.instrumentation.opentracing.Traceable
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
+import io.ktor.server.util.*
 import org.apache.logging.log4j.kotlin.Logging
 import javax.inject.Inject
 
@@ -23,7 +25,9 @@ constructor(
         trace {
             try {
                 val request = try {
-                    call.receive<FetchHlpRecordsRequest>()
+                    val page = call.request.queryParameters.getOrFail<Int>("page").toInt()
+                    val size = call.request.queryParameters.getOrFail<Int>("size").toInt()
+                    FetchHlpRecordsRequest(page, size)
                 } catch (e: Exception) {
                     logger.error("Failed to convert request body to FetchHlpRecordsRequest: ${e.message}")
                     call.respond(
@@ -40,7 +44,13 @@ constructor(
                     return@trace
                 }
                 service.invoke(request)
-                    .let { call.respond(HttpStatusCode.OK, it) }
+                    .let {
+                        if (it is FetchHlpRecordsResponse.Error) {
+                            call.respond(HttpStatusCode.BadRequest, mapOf("error" to it.error))
+                        } else {
+                            call.respond(HttpStatusCode.OK, mapOf("data" to it))
+                        }
+                    }
             } catch (e: CfmsException) {
                 call.respond(HttpStatusCode.UnprocessableEntity, e)
             }

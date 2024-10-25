@@ -3,8 +3,11 @@ package `in`.porter.cfms.data.recon.repos
 import `in`.porter.cfms.data.exceptions.CfmsException
 import `in`.porter.cfms.data.recon.ReconQueries
 import `in`.porter.cfms.data.recon.mappers.ReconRecordMapper
+import `in`.porter.cfms.data.recon.mappers.ReconTaskRecordMapper
 import `in`.porter.cfms.data.recon.records.ReconRecord
+import `in`.porter.cfms.data.recon.records.ReconTaskRecord
 import `in`.porter.cfms.domain.recon.entities.Recon
+import `in`.porter.cfms.domain.recon.entities.ReconTask
 import `in`.porter.cfms.domain.recon.repos.ReconRepo
 import `in`.porter.kotlinutils.instrumentation.opentracing.Traceable
 import org.slf4j.LoggerFactory
@@ -13,7 +16,8 @@ import javax.inject.Inject
 class PsqlReconRepo
 @Inject constructor(
     private val queries: ReconQueries,
-    private val reconRecordMapper: ReconRecordMapper
+    private val reconRecordMapper: ReconRecordMapper,
+    private val reconTaskRecordMapper: ReconTaskRecordMapper
 ) : Traceable, ReconRepo {
 
     private val logger = LoggerFactory.getLogger(PsqlReconRepo::class.java)
@@ -51,7 +55,7 @@ class PsqlReconRepo
             try {
                 logger.info("Creating a new recon in the database")
                 reconRecordMapper.toRecord(recon)
-                    .let {queries.insert(it)}
+                    .let { queries.insert(it) }
                 logger.info("Recon created successfully with ID: ${recon.reconId}")
                 recon.reconId
             } catch (e: Exception) {
@@ -62,7 +66,7 @@ class PsqlReconRepo
 
     override suspend fun findReconById(reconId: String): Recon? = trace("findReconById") {
         queries.findByReconId(reconId)
-        ?.let { reconRecordMapper.toDomain(it) }  // Use the mapper to convert ReconRecord to domain Recon
+            ?.let { reconRecordMapper.toDomain(it) }  // Use the mapper to convert ReconRecord to domain Recon
     }
 
     override suspend fun deleteReconById(reconId: String) =
@@ -73,4 +77,23 @@ class PsqlReconRepo
             logger.error("Error deleting recon: ${e.message}", e)
             throw CfmsException("Failed to delete recon with ID: $reconId")
         }
+
+    override suspend fun findAllReconTasks(page: Int, size: Int): List<ReconTask> =
+        trace("findAllReconTasks") { _: io.opentracing.Span ->
+            try {
+                logger.info("Retrieving recon records with page: $page, size: $size")
+                val offset = (page - 1) * size
+                val records = queries.fetchReconTasks(size, offset)
+
+                logger.info("Found ${records.size} recon records")
+                records.map { record: ReconTaskRecord ->
+                    logger.info("Mapping recon record: $record")
+                    reconTaskRecordMapper.toDomain(record)
+                }
+            } catch (e: Exception) {
+                logger.error("Error occurred while retrieving recon records: ${e.message}", e)
+                throw CfmsException("Failed to retrieve recon records: ${e.message}")
+            }
+        }
+
 }
