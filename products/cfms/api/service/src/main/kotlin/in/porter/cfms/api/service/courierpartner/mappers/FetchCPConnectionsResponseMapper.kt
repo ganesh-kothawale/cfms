@@ -3,6 +3,7 @@ package `in`.porter.cfms.api.service.courierpartner.mappers
 import `in`.porter.cfms.api.models.cpConnections.CPConnection as CPConnectionApi
 import `in`.porter.cfms.api.models.cpConnections.FetchCPConnectionsApiResponse
 import `in`.porter.cfms.domain.cpConnections.entities.FetchCPConnectionsResponse
+import `in`.porter.cfms.domain.exceptions.CfmsException
 import javax.inject.Inject
 
 class FetchCPConnectionsResponseMapper
@@ -20,8 +21,12 @@ constructor(
     )
 
     private fun mapCPConnections(res: FetchCPConnectionsResponse): List<CPConnectionApi> {
-        val cps = res.cps
-        return res.cpConnections
-            .map { mapper.fromDomain(it, cps.find { cp -> cp.id == it.cpId }!!) }
+        try {
+            val cps = res.cps
+            return res.cpConnections
+                .map { mapper.fromDomain(it, cps.find { cp -> cp.id == it.cpId }!!) }
+        } catch (e: NullPointerException) {
+            throw Exception("Mapping Cp connections failed due to missing courier partner")
+        }
     }
 }

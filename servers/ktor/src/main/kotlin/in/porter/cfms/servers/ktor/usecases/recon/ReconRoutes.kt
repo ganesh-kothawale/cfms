@@ -9,11 +9,25 @@ import io.ktor.server.routing.*
 
 fun Route.reconRoutes(httpComponent: HttpComponent) {
 
-    get("") {
+    get("/list") {
         try {
             val page = call.request.queryParameters["page"]?.toIntOrNull() ?: 1
             val size = call.request.queryParameters["size"]?.toIntOrNull() ?: 10
             httpComponent.listReconHttpService.invoke(call, page, size)
+
+        } catch (e: CfmsException) {
+            call.respond(
+                HttpStatusCode.BadRequest,
+                mapOf("error" to listOf(mapOf("message" to "Invalid request parameters", "details" to e.message)))
+            )
+        }
+    }
+
+    get("") {
+        try {
+            val page = call.request.queryParameters["page"]?.toIntOrNull() ?: 1
+            val size = call.request.queryParameters["size"]?.toIntOrNull() ?: 10
+            httpComponent.fetchReconTasksHttpService.invoke(call, page, size)
 
         } catch (e: CfmsException) {
             call.respond(

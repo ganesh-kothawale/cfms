@@ -28,9 +28,9 @@ constructor(
 ) : ExposedRepo {
 
     private val logger = LoggerFactory.getLogger(FranchiseQueries::class.java)
-    suspend fun save(req: FranchiseRecordData): Int = transact {
+    suspend fun save(req: FranchiseRecordData): String = transact {
         val now = Instant.now()
-        FranchisesTable.insertAndGetId {
+        val franchiseId = FranchisesTable.insert {
             it[franchiseId] = req.franchiseId
             it[address] = req.address
             it[city] = req.city
@@ -57,7 +57,9 @@ constructor(
             it[latitude] = req.latitude
             it[radiusCoverage] = req.radiusCoverage
             it[teamId] = req.teamId ?: 0
-        }.value
+        } get FranchisesTable.franchiseId
+
+        franchiseId
     }
 
     suspend fun getByCode(code: String) = transact {
@@ -93,6 +95,7 @@ constructor(
             .count()
             .toInt()
     }
+
     suspend fun updateFranchise(record: UpdateFranchiseRecord): Int = transact {
         FranchisesTable.update({ FranchisesTable.franchiseId eq record.franchiseId }) { statement ->
             record.data.pocName?.let { statement[FranchisesTable.pocName] = it }

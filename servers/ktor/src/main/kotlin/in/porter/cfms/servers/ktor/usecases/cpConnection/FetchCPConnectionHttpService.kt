@@ -2,11 +2,12 @@ package `in`.porter.cfms.servers.ktor.usecases.cpConnection
 
 import `in`.porter.cfms.api.service.courierpartner.usecases.FetchCPConnectionsService
 import `in`.porter.cfms.api.models.cpConnections.FetchCPConnectionsApiRequest
+import `in`.porter.cfms.api.models.cpConnections.FetchCPConnectionsApiResponse
 import `in`.porter.kotlinutils.instrumentation.opentracing.Traceable
 import io.ktor.http.*
 import io.ktor.server.application.*
-import io.ktor.server.request.*
 import io.ktor.server.response.*
+import io.ktor.server.util.*
 import org.apache.logging.log4j.kotlin.Logging
 import javax.inject.Inject
 
@@ -22,7 +23,10 @@ constructor(
         trace {
             try {
                 val request = try {
-                    call.receive<FetchCPConnectionsApiRequest>()
+                    val page = call.request.queryParameters.getOrFail<Int>("page")
+                    val size = call.request.queryParameters.getOrFail<Int>("size")
+                    val franchiseId = call.request.queryParameters["franchiseId"]
+                    FetchCPConnectionsApiRequest(page, size, franchiseId)
                 } catch (e: Exception) {
                     logger.error("Failed to convert request body to FetchCPConnectionHttpService: ${e.message}")
 
@@ -40,8 +44,11 @@ constructor(
                 }
 
                 val response = service.invoke(request)
-                call.respond(HttpStatusCode.OK, mapOf("data" to response))
-
+                if (response is FetchCPConnectionsApiResponse.Error) {
+                    call.respond(HttpStatusCode.BadRequest, mapOf("error" to response.error))
+                } else {
+                    call.respond(HttpStatusCode.OK, mapOf("data" to response))
+                }
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.UnprocessableEntity, e)
             }

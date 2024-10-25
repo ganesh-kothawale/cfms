@@ -18,14 +18,23 @@ constructor(
     private val mapper: HlpRecordMapper
 ) : Traceable, HlpsRepo {
     override suspend fun create(draft: HlpDetailsDraft) {
-        mapper.toData(draft)
-            .let { queries.save(it) }
+        trace("create") {
+            mapper.toData(draft)
+                .let { queries.save(it) }
+        }
     }
 
-    override suspend fun update(req: UpdateHlpDetailsRequest) {
-        mapper.toUpdateHlpRecord(req)
-            .let { queries.update(it) }
-    }
+    override suspend fun update(req: UpdateHlpDetailsRequest): Int =
+        trace("update") {
+            mapper.toUpdateHlpRecord(req)
+                .let { queries.update(it) }
+        }
+
+    override suspend fun getByHlpOrderId(hlpOrderId: String): HlpDetails? =
+        trace("getByHlpOrderId") {
+            queries.getByHlpOrderId(hlpOrderId)
+                ?.let { mapper.fromRecord(it) }
+        }
 
     override suspend fun countAll(): Int =
         trace("countAll") {

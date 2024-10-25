@@ -53,6 +53,7 @@ constructor(
                 it[accountId] = request.basicDetails.accountId
                 it[accountCode] = request.basicDetails.accountCode
                 it[teamId] = request.basicDetails.associationDetails.teamId
+                it[orderId] = request.basicDetails.orderId
                 it[createdAt] = Instant.now()
                 it[updatedAt] = Instant.now()
             }.value

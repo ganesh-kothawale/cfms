@@ -26,18 +26,23 @@ constructor(
                 val request = try {
                     call.receive<UpdateHlpDetailsRequest>()
                 } catch (e: Exception) {
-                    logger.error("Failed to convert request body to UpdateHlpDetailsRequest: ${e.message}")
+                    logger.error("Failed to convert request body to RecordHlpDetailsRequest: ${e.message}")
                     call.respond(
                         HttpStatusCode.BadRequest, mapOf(
-                            "error" to "Invalid request parameters.",
-                            "details" to e.message
+                            "error" to "Invalid request parameters",
+                            "details" to mapOf(
+                                "hlp_order_id" to "HLP order ID is required."
+                            )
                         )
                     )
                     return@trace
                 }
                 logger.info { "[UpdateHlpDetailsHttpService] request: $request" }
                 service.invoke(request)
-                    .let { call.respond(HttpStatusCode.OK, it) }
+                    .let {
+                        if (it.error.isNotEmpty()) call.respond(HttpStatusCode.BadRequest, it)
+                        else call.respond(HttpStatusCode.OK, it)
+                    }
             } catch (e: CfmsException) {
                 call.respond(HttpStatusCode.UnprocessableEntity, e)
             }

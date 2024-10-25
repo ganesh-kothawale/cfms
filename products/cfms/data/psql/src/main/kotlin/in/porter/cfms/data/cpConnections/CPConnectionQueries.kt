@@ -30,21 +30,27 @@ constructor(
         }
     }
 
-    suspend fun getByPagination(size: Int, offset: Int, franchiseId: String?): List<CpConnectionRecord> = transact {
-        if (franchiseId != null) {
-            CpConnectionTable.select { CpConnectionTable.franchiseId eq franchiseId }
-                .orderBy(CpConnectionTable.createdAt, SortOrder.DESC)
-                .limit(size, offset)
-        } else {
-            CpConnectionTable.selectAll()
-                .orderBy(CpConnectionTable.createdAt, SortOrder.DESC)
-                .limit(size, offset)
-        }
+    suspend fun getByPagination(size: Int, offset: Int): List<CpConnectionRecord> = transact {
+        CpConnectionTable.selectAll()
+            .orderBy(CpConnectionTable.createdAt, SortOrder.DESC)
+            .limit(size, offset)
             .map { rowMapper.toRecord(it) }
     }
 
+    suspend fun getByPaginationByFranchiseId(size: Int, offset: Int, franchiseId: String): List<CpConnectionRecord> =
+        transact {
+            CpConnectionTable.select { CpConnectionTable.franchiseId eq franchiseId }
+                .orderBy(CpConnectionTable.createdAt, SortOrder.DESC)
+                .limit(size, offset)
+                .map { rowMapper.toRecord(it) }
+        }
+
     suspend fun getCpCount(): Int = transact {
         CpConnectionTable.selectAll().count()
+    }
+
+    suspend fun getCpCountByFranchiseId(franchiseId: String): Int = transact {
+        CpConnectionTable.select { CpConnectionTable.franchiseId eq franchiseId }.count()
     }
 
 }
