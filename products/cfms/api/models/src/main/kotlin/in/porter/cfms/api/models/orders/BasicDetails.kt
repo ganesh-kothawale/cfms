@@ -3,6 +3,7 @@ package `in`.porter.cfms.api.models.orders
 
 data class BasicDetails(
     val associationDetails: AssociationDetails,
+    val orderId: String,
     val orderNumber: String,
     val awbNumber: String?,  // nullable
     val accountId: Int?,  // nullable
