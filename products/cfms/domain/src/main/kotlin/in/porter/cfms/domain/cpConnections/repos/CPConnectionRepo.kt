@@ -10,6 +10,10 @@ interface CPConnectionRepo {
 
     suspend fun getByPagination(request: FetchCPConnectionsRequest): List<CPConnection>
 
+    suspend fun getByPaginationByFranchiseId(request: FetchCPConnectionsRequest): List<CPConnection>
+
     suspend fun getAllCount(): Int
+
+    suspend fun getAllCountByFranchiseId(franchiseId: String): Int
 
 }

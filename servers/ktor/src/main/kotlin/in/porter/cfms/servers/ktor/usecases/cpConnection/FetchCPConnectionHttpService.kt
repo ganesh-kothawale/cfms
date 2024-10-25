@@ -2,6 +2,8 @@ package `in`.porter.cfms.servers.ktor.usecases.cpConnection
 
 import `in`.porter.cfms.api.service.courierpartner.usecases.FetchCPConnectionsService
 import `in`.porter.cfms.api.models.cpConnections.FetchCPConnectionsApiRequest
+import `in`.porter.cfms.api.models.cpConnections.FetchCPConnectionsApiResponse
+import `in`.porter.cfms.api.models.hlp.FetchHlpRecordsResponse
 import `in`.porter.kotlinutils.instrumentation.opentracing.Traceable
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -40,8 +42,11 @@ constructor(
                 }
 
                 val response = service.invoke(request)
-                call.respond(HttpStatusCode.OK, mapOf("data" to response))
-
+                if (response is FetchCPConnectionsApiResponse.Error) {
+                    call.respond(HttpStatusCode.BadRequest, mapOf("error" to response.error))
+                } else {
+                    call.respond(HttpStatusCode.OK, mapOf("data" to response))
+                }
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.UnprocessableEntity, e)
             }
