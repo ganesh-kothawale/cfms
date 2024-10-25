@@ -2,9 +2,10 @@ package `in`.porter.cfms.data.recon
 
 import `in`.porter.cfms.data.orders.repos.OrdersTable
 import `in`.porter.cfms.data.pickuptasks.PickupTasksTable
-import `in`.porter.cfms.data.recon.ReconTable.innerJoin
+import `in`.porter.cfms.data.packageIssue.mappers.PackageIssueRowMapper
 import `in`.porter.cfms.data.recon.mappers.ReconRowMapper
 import `in`.porter.cfms.data.recon.mappers.ReconTaskRowMapper
+import `in`.porter.cfms.data.packageIssue.records.PackageIssueRecord
 import `in`.porter.cfms.data.recon.records.ReconRecord
 import `in`.porter.cfms.data.recon.records.ReconTaskRecord
 import `in`.porter.kotlinutils.exposed.ExposedRepo
@@ -19,25 +20,19 @@ constructor(
     override val db: Database,
     override val dispatcher: CoroutineDispatcher,
     private val reconRowMapper: ReconRowMapper,
-    private val reconTaskRowMapper: ReconTaskRowMapper
+    private val reconTaskRowMapper: ReconTaskRowMapper,
+    private val packageIssueRowMapper: PackageIssueRowMapper
 ) : ExposedRepo {
 
     private val logger = LoggerFactory.getLogger(ReconQueries::class.java)
 
     // Retrieve recon records with pagination
-    suspend fun findAll(size: Int, offset: Int, packagingRequired: Boolean?): List<ReconRecord> = transact {
+    suspend fun findAll(size: Int, offset: Int): List<ReconRecord> = transact {
         addLogger(StdOutSqlLogger)
         logger.info("Fetching recon records with size: $size and offset: $offset")
-        val query = if (packagingRequired != null) {
-            ReconTable
-                .select { ReconTable.packagingRequired eq packagingRequired }
-                .limit(size, offset)
-        } else {
-            ReconTable
+        val query = ReconTable
                 .selectAll()
                 .limit(size, offset)
-        }
-
         query.map { row ->
             logger.info("Mapping row: $row")
             reconRowMapper.toRecord(row)
@@ -45,16 +40,10 @@ constructor(
     }
 
     // Count total number of recon records in the database
-    suspend fun countAll(packagingRequired: Boolean?): Int = transact {
+    suspend fun countAll(): Int = transact {
         addLogger(StdOutSqlLogger)
         logger.info("Counting all recon records")
-        val query = if (packagingRequired != null) {
-            ReconTable
-                .select { ReconTable.packagingRequired eq packagingRequired }
-        } else {
-            ReconTable.selectAll()
-        }
-
+        val query = ReconTable.selectAll()
         query.count().toInt()
     }
 
@@ -121,5 +110,51 @@ constructor(
         }
     }
 
+    suspend fun countAllPackageIssue(returnRequested: Boolean?): Int = transact {
+        addLogger(StdOutSqlLogger)
+        logger.info("Counting all recon package issues")
+        val query = if (returnRequested != null) {
+            ReconTable
+                .select { ReconTable.returnRequested eq returnRequested }
+        } else {
+            ReconTable.selectAll()
+        }
 
+        query.count().toInt()
+    }
+
+    suspend fun findAllPackageIssue(size: Int, offset: Int, returnRequested: Boolean?): List<PackageIssueRecord> = transact {
+        addLogger(StdOutSqlLogger)
+        logger.info("Fetching package issues with size: $size and offset: $offset")
+
+        val query = ReconTable
+            .innerJoin(OrdersTable, { ReconTable.orderId }, { OrdersTable.orderId })
+            .slice(
+                ReconTable.reconId,
+                ReconTable.orderId,
+                ReconTable.taskId,
+                ReconTable.teamId,
+                ReconTable.reconStatus,
+                ReconTable.returnRequested,
+                ReconTable.returnImageUrl,
+                ReconTable.action,
+                ReconTable.createdAt,
+                ReconTable.updatedAt,
+                OrdersTable.senderMobile,
+                OrdersTable.senderName,
+                OrdersTable.franchiseId,
+                OrdersTable.awbNumber
+            )
+            .selectAll()
+            .apply {
+                if (returnRequested != null) {
+                    andWhere { ReconTable.returnRequested eq returnRequested }
+                }
+            }
+            .limit(size, offset)
+
+        query.map { row ->
+            packageIssueRowMapper.toRecord(row)
+        }
+    }
 }

@@ -1,9 +1,8 @@
 package `in`.porter.cfms.servers.ktor.usecases.packagingissues
 
 import `in`.porter.cfms.api.models.exceptions.CfmsException
-import `in`.porter.cfms.api.models.recon.ListReconResponse
-import `in`.porter.cfms.api.service.recon.mappers.ListReconRequestMapper
-import `in`.porter.cfms.api.service.recon.usecases.ListReconService
+import `in`.porter.cfms.api.models.packageIssue.ListPackageIssueResponse
+import `in`.porter.cfms.api.service.packageIssue.usecases.ListPackageIssueService
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.ApplicationCall
 import io.ktor.server.response.respond
@@ -13,8 +12,7 @@ import javax.inject.Inject
 class PackagingIssuesHttpService
 @Inject
 constructor(
-    private val listReconService: ListReconService,
-    private val listReconRequestMapper: ListReconRequestMapper
+    private val listPackagingIssueService: ListPackageIssueService
 ) {
 
     private val logger = LoggerFactory.getLogger(PackagingIssuesHttpService::class.java)
@@ -33,11 +31,11 @@ constructor(
 
             logger.info("Received request to list all packaging issues with page: $page and size: $size")
 
-            // Use the recon service but filter for packaging_required = true
-            val reconResponse: ListReconResponse = listReconService.listRecon(page, size, packagingRequired = true)
+            // Use the recon service but filter for return_requested = true
+            val packageIssueResponse: ListPackageIssueResponse = listPackagingIssueService.invoke(page, size, returnRequested = true)
 
             // Respond with the filtered result
-            call.respond(HttpStatusCode.OK, mapOf("data" to reconResponse))
+            call.respond(HttpStatusCode.OK, mapOf("data" to packageIssueResponse))
             logger.info("Sent response with listed packaging issues")
 
         } catch (e: IllegalArgumentException) {
