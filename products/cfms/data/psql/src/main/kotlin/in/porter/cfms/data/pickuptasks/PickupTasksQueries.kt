@@ -77,7 +77,7 @@ constructor(
         addLogger(StdOutSqlLogger)
         logger.info("Inserting order image against taskId: $taskId")
         PickupTasksTable.update({PickupTasksTable.taskId eq taskId}) {
-            it[PickupTasksTable.orderImage] = orderImage.joinToString(",")
+            it[orderImages] = orderImage.joinToString(",")
             it[updatedAt] = Instant.now()
         }
     }

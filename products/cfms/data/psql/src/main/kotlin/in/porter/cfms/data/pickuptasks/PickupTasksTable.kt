@@ -14,7 +14,6 @@ object PickupTasksTable : Table("pickup_details") {
     val orderId = varchar("order_id", 10).references(OrdersTable.orderId)
     val hlpId = varchar("hlp_id", 10).references(HlpsTable.hlpOrderId)
     val franchiseId = varchar("franchise_id", 10).references(FranchisesTable.franchiseId)
-    val orderImage = varchar("order_images", 255)
     val status = varchar("status", 50)
     val orderImages = varchar("order_images", 1000).nullable()
     val createdAt = timestampWithoutTZAsInstant("created_at")
