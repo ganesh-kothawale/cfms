@@ -25,13 +25,14 @@ object CreateOrderRequestFactory {
                 ),
                 orderNumber = "orderNumber",
                 awbNumber = "awbNumber",
+                orderId ="abc",
                 accountId = 123,
                 accountCode = "accountCode",
                 courierTransportDetails = CourierTransportDetails(
                     courierPartnerName = "courierPartnerName",
                     modeOfTransport = "modeOfTransport"
                 ),
-                orderStatus = "orderStatus"
+                orderStatus = "orderStatus",
             ),
             addressDetails = AddressDetails(
                 senderDetails = SenderDetails(

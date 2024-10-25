@@ -1,6 +1,7 @@
 package `in`.porter.cfms.api.service.orders.mappers
 
 import `in`.porter.cfms.api.models.orders.*
+import `in`.porter.cfms.api.service.utils.CommonUtils
 import javax.inject.Inject
 
 class CreateOrderApiRequestMapper
@@ -20,7 +21,8 @@ class CreateOrderApiRequestMapper
                 courierPartnerName = request.data.courierPartnerName,
                 modeOfTransport = request.data.modeOfTransport
             ),
-            orderStatus = request.data.orderStatus.first()
+            orderStatus = request.data.orderStatus.first(),
+            orderId = CommonUtils.generateRandomAlphaNumeric(10),
         )
 
         val addressDetails = AddressDetails(
@@ -40,8 +42,6 @@ class CreateOrderApiRequestMapper
                     latitude = request.data.senderLat,
                     longitude = request.data.senderLong
                 )
-
-
             ),
             receiverDetails = ReceiverDetails(
                 personalInfo = PersonalInfo(
