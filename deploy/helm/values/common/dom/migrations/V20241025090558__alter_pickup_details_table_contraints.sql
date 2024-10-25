@@ -16,3 +16,6 @@ ADD CONSTRAINT fk_order_id
 ALTER TABLE pickup_details
 ADD CONSTRAINT fk_hlp_id
     FOREIGN KEY (hlp_id) REFERENCES hlps(hlp_order_id);
+
+ALTER TABLE pickup_details
+ADD COLUMN order_images VARCHAR(512);
