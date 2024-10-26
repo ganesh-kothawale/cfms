@@ -23,8 +23,8 @@ constructor(
         trace {
             try {
                 val request = try {
-                    val page = call.request.queryParameters.getOrFail<Int>("page")
-                    val size = call.request.queryParameters.getOrFail<Int>("size")
+                    val page = call.request.queryParameters["page"]?.toInt() ?: 1
+                    val size = call.request.queryParameters["size"]?.toInt() ?: 10
                     val franchiseId = call.request.queryParameters["franchiseId"]
                     FetchCPConnectionsApiRequest(page, size, franchiseId)
                 } catch (e: Exception) {
