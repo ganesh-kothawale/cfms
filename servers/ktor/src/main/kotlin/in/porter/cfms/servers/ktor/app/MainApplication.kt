@@ -23,7 +23,7 @@ import `in`.porter.cfms.servers.ktor.usecases.hlp.publicHlpRoutes
 import `in`.porter.cfms.servers.ktor.usecases.holidays.holidaysRoutes
 import `in`.porter.cfms.servers.ktor.usecases.orders.privateOrdersRoutes
 import `in`.porter.cfms.servers.ktor.usecases.orders.publicOrdersRoutes
-import `in`.porter.cfms.servers.ktor.usecases.packagingissues.packagingIssuesRoutes
+import `in`.porter.cfms.servers.ktor.usecases.packagingissues.packageIssuesRoutes
 import `in`.porter.cfms.servers.ktor.usecases.recon.reconRoutes
 import `in`.porter.cfms.servers.ktor.usecases.tasks.tasksRoutes
 import io.ktor.server.application.*
@@ -114,7 +114,7 @@ fun Application.main() {
         route("/cfms/public/dashboard/holidays") { holidaysRoutes(httpComponent) }
         route("/cfms/public/dashboard/franchises") { franchiseRoutes(httpComponent) }
         route("/cfms/public/dashboard/tasks") { tasksRoutes(httpComponent) }
-        route("/cfms/public/dashboard/package-issues") { packagingIssuesRoutes(httpComponent) }
+        route("/cfms/public/dashboard/package-issues") { packageIssuesRoutes(httpComponent) }
         route("/cfms/public/app/recon") { reconRoutes(httpComponent) }
         route("/cfms/public/app/pickups") { pickupTasksRoutes(httpComponent) }
         route("/cfms/public/app/cpconnections") { appCpConnectionRoutes(httpComponent) }

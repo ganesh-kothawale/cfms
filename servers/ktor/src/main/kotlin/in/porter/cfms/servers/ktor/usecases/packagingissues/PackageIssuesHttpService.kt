@@ -9,13 +9,13 @@ import io.ktor.server.response.respond
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
-class PackagingIssuesHttpService
+class PackageIssuesHttpService
 @Inject
 constructor(
     private val listPackagingIssueService: ListPackageIssueService
 ) {
 
-    private val logger = LoggerFactory.getLogger(PackagingIssuesHttpService::class.java)
+    private val logger = LoggerFactory.getLogger(PackageIssuesHttpService::class.java)
 
     suspend fun invoke(
         call: ApplicationCall,
