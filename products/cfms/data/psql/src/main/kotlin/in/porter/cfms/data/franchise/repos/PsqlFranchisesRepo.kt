@@ -8,6 +8,7 @@ import `in`.porter.cfms.data.franchise.records.ListFranchisesRecord
 import `in`.porter.cfms.domain.franchise.entities.Franchise
 import `in`.porter.cfms.domain.franchise.entities.ListFranchise
 import `in`.porter.cfms.data.franchise.mappers.UpdateFranchiseRecordMapper
+import `in`.porter.cfms.domain.franchise.entities.DomainListFranchisesRequest
 import `in`.porter.cfms.domain.franchise.entities.UpdateFranchise
 import `in`.porter.cfms.domain.franchise.repos.FranchiseRepo
 import `in`.porter.kotlinutils.instrumentation.opentracing.Traceable
@@ -42,14 +43,14 @@ class PsqlFranchisesRepo
                 ?.let { mapper.fromRecord(it) }
         }
 
-    override suspend fun findAll(page: Int, size: Int): List<ListFranchise> =
+    override suspend fun findAll(request: DomainListFranchisesRequest): List<ListFranchise> =
         trace("findAll") { _: io.opentracing.Span ->
             try {
-                logger.info("Retrieving franchises with page: $page, size: $size")
+                logger.info("Retrieving franchises with request: $request")
                 // Calculate the offset based on the page and size
-                val offset = (page - 1) * size
+                val offset = (request.page - 1) * request.size
                 // Perform the query to get the list of records
-                val records = queries.findAll(size, offset)
+                val records = queries.findAll(request, offset)
 
                 logger.info("Retrieved ${records.size} franchises")
                 logger.info("Mapping records to domain objects")
@@ -66,11 +67,11 @@ class PsqlFranchisesRepo
             }
         }
 
-    override suspend fun countAll(): Int =
+    override suspend fun countAll(request: DomainListFranchisesRequest): Int =
         trace("countAll") {
             try {
                 logger.info("Counting all franchises")
-                queries.countAll()
+                queries.countAll(request)
             } catch (e: CfmsException) {
                 throw CfmsException("Failed to count franchises: ${e.message}")
             }
