@@ -1,0 +1,1 @@
+CREATE INDEX IF NOT EXISTS idx_hlps_on_hlp_order_id ON hlps(hlp_order_id);
