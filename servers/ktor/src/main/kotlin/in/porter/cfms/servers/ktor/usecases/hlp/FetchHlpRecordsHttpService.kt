@@ -25,8 +25,8 @@ constructor(
         trace {
             try {
                 val request = try {
-                    val page = call.request.queryParameters.getOrFail<Int>("page").toInt()
-                    val size = call.request.queryParameters.getOrFail<Int>("size").toInt()
+                    val page = call.request.queryParameters["page"]?.toInt() ?: 1
+                    val size = call.request.queryParameters["size"]?.toInt() ?: 10
                     FetchHlpRecordsRequest(page, size)
                 } catch (e: Exception) {
                     logger.error("Failed to convert request body to FetchHlpRecordsRequest: ${e.message}")

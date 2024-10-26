@@ -24,7 +24,7 @@ import `in`.porter.cfms.servers.ktor.usecases.orders.UpdateOrderStatusHTTPServic
 import `in`.porter.cfms.servers.ktor.usecases.pickuptasks.FetchPickupTasksHttpService
 import `in`.porter.cfms.servers.ktor.usecases.cpConnection.RecordCPConnectionHttpService
 import `in`.porter.cfms.servers.ktor.usecases.cpConnection.FetchCPConnectionHttpService
-import `in`.porter.cfms.servers.ktor.usecases.packagingissues.PackagingIssuesHttpService
+import `in`.porter.cfms.servers.ktor.usecases.packagingissues.PackageIssuesHttpService
 import `in`.porter.cfms.servers.ktor.usecases.recon.FetchReconTasksHttpService
 
 @HttpScope
@@ -55,6 +55,6 @@ interface HttpComponent {
   val updateTasksStatusHttpService : UpdateTasksStatusHttpService
   val updateFranchiseRecordHttpService : UpdateFranchiseRecordHttpService
   val listReconHttpService : ListReconHttpService
-  val packagingIssuesHttpService : PackagingIssuesHttpService
+  val packageIssuesHttpService : PackageIssuesHttpService
   val fetchReconTasksHttpService : FetchReconTasksHttpService
 }

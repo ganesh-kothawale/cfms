@@ -11,6 +11,7 @@ import `in`.porter.cfms.domain.franchise.repos.FranchiseRepo
 import `in`.porter.cfms.domain.recon.repos.ReconRepo
 import `in`.porter.cfms.domain.cpConnections.repos.CPConnectionRepo
 import `in`.porter.cfms.domain.hlp.repos.HlpsRepo
+import `in`.porter.cfms.domain.packageIssue.repos.PackageIssueRepo
 import `in`.porter.cfms.domain.pickuptasks.repos.PickupDetailsRepo
 import `in`.porter.cfms.domain.pickuptasks.repos.PickupTasksRepo
 import `in`.porter.cfms.domain.tasks.repos.TasksRepo
@@ -32,7 +33,8 @@ import org.jetbrains.exposed.sql.Database
         AuditLogsModule::class,
         ReconModule::class,
         PickupTasksModule::class,
-        PickupDetailsModule::class
+        PickupDetailsModule::class,
+        PackageIssueModule::class
     ]
 )
 interface PsqlDataComponent {
@@ -48,6 +50,7 @@ interface PsqlDataComponent {
     val reconRepo: ReconRepo
     val pickupTasksRepo: PickupTasksRepo
     val pickupDetailsRepo: PickupDetailsRepo
+    val packageIssueRepo: PackageIssueRepo
 
     @Component.Builder
     interface Builder {
