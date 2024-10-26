@@ -14,9 +14,15 @@ import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
 import org.slf4j.LoggerFactory
 import `in`.porter.cfms.data.franchise.records.UpdateFranchiseRecord
+import `in`.porter.cfms.domain.franchise.entities.DomainListFranchisesRequest
 import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.`java-time`.JavaInstantColumnType
+import org.jetbrains.exposed.sql.`java-time`.JavaLocalDateColumnType
+import java.math.BigDecimal
 import java.time.Instant
+import java.time.LocalDate
 import javax.inject.Inject
+import kotlin.reflect.full.memberProperties
 
 class FranchiseQueries
 @Inject
@@ -74,12 +80,13 @@ constructor(
             ?.let { mapper.toRecord(it) }
     }
 
-    suspend fun findAll(size: Int, offset: Int): List<ListFranchisesRecord> = transact {
+    suspend fun findAll(request: DomainListFranchisesRequest, offset: Int): List<ListFranchisesRecord> = transact {
         addLogger(StdOutSqlLogger)
-        logger.info("Fetching franchises with size: $size and offset: $offset")
+        logger.info("Fetching franchises with request: $request, offset: $offset")
         FranchisesTable
             .selectAll()
-            .limit(size, offset)
+            .applyDynamicFilters(request)
+            .limit(request.size, offset)
             .map { row ->
                 logger.info("Mapping row: $row")
                 listMapper.toRecord(row)
@@ -87,13 +94,11 @@ constructor(
             }
     }
 
-    suspend fun countAll(): Int = transact {
+    suspend fun countAll(request: DomainListFranchisesRequest): Int = transact {
         addLogger(StdOutSqlLogger)
-        logger.info("Counting all franchises")
-        FranchisesTable
-            .selectAll()
-            .count()
-            .toInt()
+        FranchisesTable.selectAll().apply {
+            request.franchiseId?.let { andWhere { FranchisesTable.franchiseId eq it } }
+        }.count().toInt()
     }
 
     suspend fun updateFranchise(record: UpdateFranchiseRecord): Int = transact {
@@ -127,4 +132,46 @@ constructor(
             statement[FranchisesTable.updatedAt] = Instant.now()
         }
     }
+
+    private fun Query.applyDynamicFilters(request: DomainListFranchisesRequest): Query {
+        request::class.memberProperties.forEach { prop ->
+            val value = prop.getter.call(request)
+            if (value != null) {
+                val column = FranchisesTable.columns.find { it.name == prop.name }
+                if (column != null) {
+                    when (column.columnType) {
+                        is org.jetbrains.exposed.sql.StringColumnType -> {
+                            andWhere { (column as Column<String>) eq (value as String) }
+                        }
+                        is org.jetbrains.exposed.sql.IntegerColumnType -> {
+                            andWhere { (column as Column<Int>) eq (value as Int) }
+                        }
+                        is org.jetbrains.exposed.sql.LongColumnType -> {
+                            andWhere { (column as Column<Long>) eq (value as Long) }
+                        }
+                        is org.jetbrains.exposed.sql.BooleanColumnType -> {
+                            andWhere { (column as Column<Boolean>) eq (value as Boolean) }
+                        }
+                        is org.jetbrains.exposed.sql.DecimalColumnType -> {
+                            andWhere { (column as Column<BigDecimal>) eq (value as BigDecimal) }
+                        }
+                        is JavaLocalDateColumnType -> { // Updated for LocalDate
+                            andWhere { (column as Column<LocalDate>) eq (value as LocalDate) }
+                        }
+                        is JavaInstantColumnType -> { // Updated for Instant
+                            andWhere { (column as Column<Instant>) eq (value as Instant) }
+                        }
+                        else -> {
+                            logger.warn("Unsupported column type for property '${prop.name}' with value '$value'")
+                            throw IllegalArgumentException("Unsupported column type for property '${prop.name}'")
+                        }
+                    }
+                } else {
+                    logger.warn("No matching column found for property '${prop.name}' in FranchisesTable")
+                }
+            }
+        }
+        return this
+    }
+
 }

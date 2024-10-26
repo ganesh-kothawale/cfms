@@ -1,8 +1,8 @@
-package `in`.porter.cfms.api.models.franchises
+package `in`.porter.cfms.domain.franchise.entities
 
 import java.time.LocalDate
 
-data class ListFranchisesRequest(
+data class DomainListFranchisesRequest(
     val page: Int,
     val size: Int,
     val createdDate: LocalDate? = null,
