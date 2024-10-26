@@ -27,8 +27,11 @@ constructor(
                 logger.error("Failed to convert request body to RecordCPConnectionHttpService: ${e.message}")
                 call.respond(
                     HttpStatusCode.BadRequest, mapOf(
-                        "error" to "Invalid request format.",
-                        "details" to e.message
+                        "error" to "Invalid request parameters",
+                        "details" to mapOf(
+                            "cp_id" to "CP Id is required.",
+                            "franchise_id" to "Franchise Id is required."
+                        )
                     )
                 )
                 return@trace

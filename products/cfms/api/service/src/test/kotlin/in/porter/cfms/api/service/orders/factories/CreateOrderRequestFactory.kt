@@ -31,7 +31,8 @@ object CreateOrderRequestFactory {
                     courierPartnerName = "courierPartnerName",
                     modeOfTransport = "modeOfTransport"
                 ),
-                orderStatus = "orderStatus"
+                orderStatus = "orderStatus",
+                orderId = "abc"
             ),
             addressDetails = AddressDetails(
                 senderDetails = SenderDetails(

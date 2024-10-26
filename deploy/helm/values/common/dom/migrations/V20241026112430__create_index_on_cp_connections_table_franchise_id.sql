@@ -1,0 +1,1 @@
+CREATE INDEX IF NOT EXISTS idx_cp_connection_record_on_franchise_id ON cp_connection_record(franchise_id);

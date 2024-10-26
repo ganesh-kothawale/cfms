@@ -38,7 +38,7 @@ constructor(
             logger.info("Mapped request for listing recon entries: {}", request)
 
             // Call the service to list recon entries
-            val reconResponse: ListReconResponse = listReconService.listRecon(page, size)
+            val reconResponse: ListReconResponse = listReconService.invoke(page, size)
 
             // Respond with the formatted result
             call.respond(HttpStatusCode.OK, mapOf("data" to reconResponse))

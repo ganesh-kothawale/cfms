@@ -9,13 +9,13 @@ import io.ktor.server.routing.Route
 import io.ktor.server.routing.get
 import kotlin.text.toIntOrNull
 
-fun Route.packagingIssuesRoutes(httpComponent: HttpComponent) {
+fun Route.packageIssuesRoutes(httpComponent: HttpComponent) {
 
     get("") {
         try {
             val page = call.request.queryParameters["page"]?.toIntOrNull() ?: 1
             val size = call.request.queryParameters["size"]?.toIntOrNull() ?: 10
-            httpComponent.packagingIssuesHttpService.invoke(call, page, size)
+            httpComponent.packageIssuesHttpService.invoke(call, page, size)
 
         } catch (e: CfmsException) {
             call.respond(

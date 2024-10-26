@@ -31,6 +31,7 @@ object ReconTable : Table("recon") {
     val returnImageUrl = varchar("return_image_url", 255).nullable()
     val createdAt = timestampWithoutTZAsInstant("created_at")
     val updatedAt = timestampWithoutTZAsInstant("updated_at")
+    val action = varchar("action", 10).nullable()
 
     override val primaryKey = PrimaryKey(id, name = "PK_Recon_ID")
 
