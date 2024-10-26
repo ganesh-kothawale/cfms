@@ -15,7 +15,7 @@ constructor(
 
     private val logger = LoggerFactory.getLogger(ListHolidays::class.java)
 
-    suspend fun listHolidays(
+    suspend fun invoke(
         franchiseId: String?,
         leaveType: String?,
         startDate: LocalDate?,
@@ -26,30 +26,30 @@ constructor(
         logger.info("Starting listHolidays method for franchiseId: {}, leaveType: {}, startDate: {}, endDate: {}, page: {}, size: {}",
             franchiseId, leaveType, startDate, endDate, page, size)
 
-        // Validate page and size
-        if (page < 1) {
-            logger.error("Page number must be greater than zero.")
-            throw CfmsException("Page number must be greater than zero.")
-        }
-
-        if (size < 1) {
-            logger.error("Page size must be greater than zero.")
-            throw CfmsException("Page size must be greater than zero.")
-        }
-
         val leaveTypeEnum = validateAndProcessLeaveType(leaveType)
 
-        // Fetch holidays and count from the repository
-        logger.info("Fetching holidays from repository for franchiseId: {}, leaveTypeEnum: {}", franchiseId, leaveTypeEnum)
-        val holidays = holidayRepo.findHolidays(franchiseId, leaveTypeEnum, startDate, endDate, page, size)
-        val totalRecords = holidayRepo.countHolidays(franchiseId, leaveTypeEnum, startDate, endDate)
+        if (startDate != null && endDate != null && startDate.isAfter(endDate)) {
+            logger.error("Start date cannot be after end date: startDate={}, endDate={}", startDate, endDate)
+            throw CfmsException("Start date cannot be after end date.")
+        }
 
-        logger.info("Fetched {} holidays with totalRecords: {}", holidays.size, totalRecords)
+        return try {
+            // Fetch holidays and count from the repository
+            logger.info("Fetching holidays from repository for franchiseId: {}, leaveTypeEnum: {}", franchiseId, leaveTypeEnum)
+            val holidays = holidayRepo.findHolidays(franchiseId, leaveTypeEnum, startDate, endDate, page, size)
+            val totalRecords = holidayRepo.countHolidays(franchiseId, leaveTypeEnum, startDate, endDate)
 
-        return HolidaySearchResult(
-            totalRecords = totalRecords,
-            data = holidays
-        )
+            logger.info("Fetched {} holidays with totalRecords: {}", holidays.size, totalRecords)
+
+            // Return result
+            HolidaySearchResult(
+                totalRecords = totalRecords,
+                data = holidays
+            )
+        } catch (e: Exception) {
+            logger.error("Error fetching holidays from repository: {}", e.message, e)
+            throw CfmsException("Failed to retrieve holidays from the database.")
+        }
     }
 
     private fun validateAndProcessLeaveType(leaveType: String?): LeaveType? {
@@ -60,10 +60,10 @@ constructor(
             null
         } else {
             try {
-                LeaveType.valueOf(leaveType.trim())  // Trim the input to handle any extraneous spaces
+                LeaveType.valueOf(leaveType.trim())  // Convert input to LeaveType enum
             } catch (e: IllegalArgumentException) {
                 logger.error("Invalid leaveType value: {}", leaveType)
-                throw CfmsException("Invalid leaveType value: $leaveType")  // Throw exception for invalid leaveType
+                throw CfmsException("Invalid leaveType value: $leaveType")  // Clear message for invalid leaveType
             }
         }
     }

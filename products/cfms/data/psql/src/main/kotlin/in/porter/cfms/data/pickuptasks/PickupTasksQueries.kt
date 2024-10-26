@@ -6,18 +6,16 @@ import `in`.porter.cfms.data.orders.mappers.OrderDetailsMapper
 import `in`.porter.cfms.data.orders.repos.OrdersTable
 import `in`.porter.cfms.data.pickuptasks.mappers.PickupTasksRowMapper
 import `in`.porter.cfms.data.pickuptasks.records.HlpWithOrdersRecord
-import `in`.porter.cfms.data.pickuptasks.records.PickupImageMappingRecord
+
 import `in`.porter.cfms.data.tasks.TasksTable
 import `in`.porter.cfms.data.tasks.mappers.TaskRowMapper
-import `in`.porter.cfms.data.tasks.records.TaskRecord
-import `in`.porter.cfms.domain.orders.entities.Order
-import `in`.porter.cfms.domain.tasks.entities.Tasks
 import `in`.porter.kotlinutils.exposed.ExposedRepo
 import kotlinx.coroutines.CoroutineDispatcher
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.`java-time`.CurrentTimestamp
 import org.slf4j.LoggerFactory
 import java.time.Instant
+import java.util.UUID
 import javax.inject.Inject
 
 class PickupTasksQueries
@@ -78,14 +76,12 @@ constructor(
             .singleOrNull()?.get(PickupTasksTable.pickupTaskId)
     }
 
-    suspend fun insertPickupImageMapping(record: PickupImageMappingRecord) = transact {
+
+    suspend fun updateOrderImageByTaskId(taskId: String, orderImage: List<UUID>) = transact {
         addLogger(StdOutSqlLogger)
-        logger.info("Inserting pickup image mapping for taskID: ${record.taskId}, pickupDetailsId: ${record.pickupDetailsId}")
-        PickupImageMappingTable.insert {
-            it[taskId] = record.taskId
-            it[pickupDetailsId] = record.pickupDetailsId
-            it[orderImage] = record.orderImage
-            it[createdAt] = Instant.now()
+        logger.info("Inserting order image against taskId: $taskId")
+        PickupTasksTable.update({PickupTasksTable.taskId eq taskId}) {
+            it[orderImages] = orderImage.joinToString(",")
             it[updatedAt] = Instant.now()
         }
     }

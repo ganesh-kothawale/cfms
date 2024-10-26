@@ -11,9 +11,9 @@ import javax.inject.Inject
 class DeleteHolidaysHttpService @Inject constructor(
     private val deleteHolidaysService: DeleteHolidaysService
 ) {
-    suspend fun invoke(call: ApplicationCall, holidayId: Int) {
+    suspend fun invoke(call: ApplicationCall, holidayId: String) {
         try {
-            deleteHolidaysService.deleteHoliday(holidayId)
+            deleteHolidaysService.invoke(holidayId)
             call.respond(HttpStatusCode.OK, mapOf("message" to "Holiday successfully deleted"))
         } catch (e: CfmsException) {
             call.respond(HttpStatusCode.BadRequest, mapOf("error" to e.message))

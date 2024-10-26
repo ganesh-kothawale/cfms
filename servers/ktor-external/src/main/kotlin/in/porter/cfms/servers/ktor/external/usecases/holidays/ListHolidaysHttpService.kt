@@ -49,7 +49,7 @@ constructor(
             logger.info("Received request to list all holidays with request: {}", request)
 
             // Call the service to list holidays
-            val holidaysResponse = listHolidaysService.listHolidays(request)
+            val holidaysResponse = listHolidaysService.invoke(request)
 
             // Respond with the formatted result
             call.respond(HttpStatusCode.OK, mapOf("data" to holidaysResponse))

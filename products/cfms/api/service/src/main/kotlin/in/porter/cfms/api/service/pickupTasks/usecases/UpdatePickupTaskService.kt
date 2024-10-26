@@ -24,8 +24,7 @@ class UpdatePickupTaskService @Inject constructor(
             // Map the request to the domain entity
             val domainPickupTask = updatePickupTaskRequestMapper.toDomain(request)
 
-            // 1. Create pickup image mapping
-            updatePickupTask.createPickupImageMapping(domainPickupTask)
+            updatePickupTask.updatePickupDetailsOrderImage(domainPickupTask)
 
             // 2. Update task status and log the audit
             updatePickupTask.updateTaskStatus(domainPickupTask)
@@ -61,6 +60,10 @@ class UpdatePickupTaskService @Inject constructor(
         } catch (ne: NoSuchElementException) {
             logger.error("Not Found: ${ne.message}")
             throw ne
+
+        } catch (e: Exception) {
+            logger.error("Unexpected error: ${e.message}", e)
+            throw CfmsException("An unexpected error occurred while updating the pickup task.")
         }
     }
 }

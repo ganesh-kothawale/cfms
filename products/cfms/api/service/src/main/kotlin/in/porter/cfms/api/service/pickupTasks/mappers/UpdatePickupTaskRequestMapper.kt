@@ -13,8 +13,8 @@ class UpdatePickupTaskRequestMapper @Inject constructor() {
             taskId = request.taskId,
             noOfPackagesReceived = request.noOfPackagesReceived,
             taskStatus = request.taskStatus,
-            orders = request.orders.map { toDomainOrder(it) }, // Map the list of orders
-            orderImage = (request.orderImage).toString() // Handle nullable order images
+            orders = request.orders.map { toDomainOrder(it) },
+            orderImage = request.orderImage
         )
     }
 

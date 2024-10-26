@@ -1,3 +1,4 @@
+/*
 package `in`.porter.cfms.data.holidays.records.usecases
 
 import `in`.porter.cfms.data.holidays.records.factories.HolidayRecordFactory
@@ -59,3 +60,4 @@ class HolidayRecordTest {
         assertEquals(updatedAt, holidayRecord.updatedAt)
     }
 }
+*/

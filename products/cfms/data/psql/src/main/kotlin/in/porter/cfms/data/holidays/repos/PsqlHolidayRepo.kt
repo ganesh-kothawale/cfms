@@ -5,12 +5,10 @@ import `in`.porter.cfms.data.holidays.HolidayTable
 import `in`.porter.cfms.data.holidays.mappers.HolidayMapper
 import `in`.porter.cfms.data.holidays.mappers.ListHolidayMapper
 import `in`.porter.cfms.data.holidays.mappers.ListHolidaysFranchiseRowMapper
-import `in`.porter.cfms.data.holidays.mappers.UpdateHolidayMapper
 import `in`.porter.cfms.domain.holidays.entities.Holiday
 import `in`.porter.cfms.domain.holidays.entities.LeaveType
 import `in`.porter.cfms.domain.holidays.entities.ListHoliday
 import `in`.porter.cfms.domain.holidays.entities.ListHolidaysFranchise
-import `in`.porter.cfms.domain.holidays.entities.UpdateHoliday
 import `in`.porter.cfms.domain.holidays.repos.HolidayRepo
 import `in`.porter.kotlinutils.instrumentation.opentracing.Traceable
 import org.slf4j.LoggerFactory
@@ -22,20 +20,19 @@ class PsqlHolidayRepo
 constructor(
     private val queries: HolidayQueries,
     private val mapper: HolidayMapper,
-    private val updateMapper : UpdateHolidayMapper,
     private val listMapper : ListHolidayMapper,
     private val franchiseMapper: ListHolidaysFranchiseRowMapper
 ) : Traceable, HolidayRepo {
 
     private val logger = LoggerFactory.getLogger(PsqlHolidayRepo::class.java)
 
-    override suspend fun getByIdAndDate(franchiseId: String, startDate: LocalDate, endDate: LocalDate): UpdateHoliday? =
+    override suspend fun getByIdAndDate(franchiseId: String, startDate: LocalDate, endDate: LocalDate): Holiday? =
         trace("getByIdAndDate") {
             queries.getByIdAndDate(franchiseId, startDate, endDate)
-                ?.let { updateMapper.toDomain(it) }
+                ?.let { mapper.toDomain(it) }
         }
 
-    override suspend fun record(request: Holiday): Int {
+    override suspend fun record(request: Holiday): String {
         return trace("record") {
             mapper.toRecord(request)
                 .let { queries.record(it) }  // Update the `queries.record` to return the ID
@@ -54,24 +51,24 @@ constructor(
                 .map { mapper.toDomain(it) }
         }
 
-    override suspend fun getById(holidayId: Int): UpdateHoliday? {
+    override suspend fun getById(holidayId: String): Holiday? {
         // Fetch the holiday by ID from the database and map it to the domain entity
         return trace("getById") {
             queries.getHolidayById(holidayId)
-                ?.let { updateMapper.toDomain(it) }
+                ?.let { mapper.toDomain(it) }
         }
     }
 
-    override suspend fun deleteById(holidayId: Int) {
+    override suspend fun deleteById(holidayId: String) {
         trace("deleteById") {
             queries.deleteHoliday(holidayId)
         }
     }
 
-    override suspend fun update(holiday: UpdateHoliday): Int {
+    override suspend fun update(holiday: Holiday): String {
         // Map the UpdateHolidayEntity to the database model and update the holiday
         return trace("update") {
-            updateMapper.toRecord(holiday)
+            mapper.toRecord(holiday)
                 .let { queries.updateHoliday(it) }  // Ensure queries.updateHoliday returns the updated holiday ID
         }
     }

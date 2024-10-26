@@ -11,7 +11,7 @@ data class ListHolidaysResponse(
 )
 
 data class HolidayResponse(
-    val holidayId: Int,
+    val holidayId: String,
     val franchiseId: String,
     val holidayPeriod: HolidayPeriod,
     val holidayDetails: HolidayDetails,

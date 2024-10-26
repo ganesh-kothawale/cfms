@@ -4,24 +4,23 @@ import `in`.porter.cfms.domain.holidays.entities.Holiday
 import `in`.porter.cfms.domain.holidays.entities.LeaveType
 import `in`.porter.cfms.domain.holidays.entities.ListHoliday
 import `in`.porter.cfms.domain.holidays.entities.ListHolidaysFranchise
-import `in`.porter.cfms.domain.holidays.entities.UpdateHoliday
 import java.time.LocalDate
 
 interface HolidayRepo {
 
-    suspend fun getByIdAndDate(franchiseId: String, startDate: LocalDate, endDate: LocalDate): UpdateHoliday?
+    suspend fun getByIdAndDate(franchiseId: String, startDate: LocalDate, endDate: LocalDate): Holiday?
 
-    suspend fun record(request: Holiday) : Int
+    suspend fun record(request: Holiday) : String
 
     suspend fun get(franchiseId: String): List<Holiday>
 
     suspend fun getAllByDate(date: LocalDate): List<Holiday>
 
-    suspend fun update(request: UpdateHoliday) : Int
+    suspend fun update(request: Holiday) : String
 
-    suspend fun getById(holidayId: Int): UpdateHoliday?
+    suspend fun getById(holidayId: String): Holiday?
 
-    suspend fun deleteById(holidayId: Int)
+    suspend fun deleteById(holidayId: String)
 
     suspend fun findHolidays(
         franchiseId: String?,
