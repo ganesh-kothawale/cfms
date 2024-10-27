@@ -1,9 +1,8 @@
-package `in`.porter.cfms.api.models.packageIssue
+package `in`.porter.cfms.domain.packageIssue.entities
 
-import `in`.porter.cfms.api.models.FranchiseStatus
 import java.time.LocalDate
 
-data class ListPackageIssueRequest(
+data class DomainListAllPackageIssueRequest(
     val page: Int,
     val size: Int,
     val createdDate: LocalDate? = null,

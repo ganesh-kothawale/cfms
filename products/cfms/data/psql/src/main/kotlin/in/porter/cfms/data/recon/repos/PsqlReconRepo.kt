@@ -8,6 +8,7 @@ import `in`.porter.cfms.data.recon.mappers.ReconTaskRecordMapper
 import `in`.porter.cfms.data.packageIssue.records.PackageIssueRecord
 import `in`.porter.cfms.data.recon.records.ReconRecord
 import `in`.porter.cfms.data.recon.records.ReconTaskRecord
+import `in`.porter.cfms.domain.packageIssue.entities.DomainListAllPackageIssueRequest
 import `in`.porter.cfms.domain.packageIssue.entities.PackageIssue
 import `in`.porter.cfms.domain.packageIssue.repos.PackageIssueRepo
 import `in`.porter.cfms.domain.recon.entities.Recon
@@ -101,26 +102,22 @@ class PsqlReconRepo
             }
         }
 
-    override suspend fun countAllPackageIssue(returnRequested: Boolean?): Int =
+    override suspend fun countAllPackageIssue(request: DomainListAllPackageIssueRequest): Int =
         trace("countAllPackageIssue") {
             try {
                 logger.info("Counting package issue records")
-                queries.countAllPackageIssue(returnRequested)
+                queries.countAllPackageIssue(request)
             } catch (e: CfmsException) {
                 throw CfmsException("Failed to count package issue records: ${e.message}")
             }
         }
 
 
-    override suspend fun findAllPackageIssue(
-        page: Int,
-        size: Int,
-        returnRequested: Boolean?
-    ): List<PackageIssue> = trace("findAllPackageIssue") { _: io.opentracing.Span ->
+    override suspend fun findAllPackageIssue(request: DomainListAllPackageIssueRequest): List<PackageIssue> = trace("findAllPackageIssue") { _: io.opentracing.Span ->
         try {
-            logger.info("Retrieving package issues with page: $page, size: $size")
-            val offset = (page - 1) * size
-            val records = queries.findAllPackageIssue(size, offset, returnRequested)
+            logger.info("Retrieving package issues with page: $request.page, size: $request.size")
+            val offset = (request.page - 1) * request.size
+            val records = queries.findAllPackageIssue(request, offset)
             records.map { record: PackageIssueRecord ->
                 logger.info("Mapping package issue record: $record")
                 packageIssueRecordMapper.toDomain(record)

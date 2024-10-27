@@ -1,5 +1,6 @@
 package `in`.porter.cfms.domain.packageIssue.usecases
 
+import `in`.porter.cfms.domain.packageIssue.entities.DomainListAllPackageIssueRequest
 import `in`.porter.cfms.domain.packageIssue.entities.PackageIssue
 import `in`.porter.cfms.domain.packageIssue.entities.PackageIssueResult
 import `in`.porter.cfms.domain.packageIssue.repos.PackageIssueRepo
@@ -15,19 +16,11 @@ constructor(
 
     private val logger = LoggerFactory.getLogger(PackageIssue::class.java)
 
-    suspend fun invoke(page: Int, size: Int, returnRequested: Boolean? = null): PackageIssueResult {
-        logger.info("Listing package issues with page: $page, size: $size")
-
-        // Fetch the total number of package issue records, using returnRequested if applicable
-        val totalRecords = packageIssueRepo.countAllPackageIssue(returnRequested)
-
-        // Fetch package issues using renamed function
-        val packageIssues = packageIssueRepo.findAllPackageIssue(page, size, returnRequested)
-
-        // Log the result
+    suspend fun invoke(request:DomainListAllPackageIssueRequest): PackageIssueResult {
+        logger.info("Listing package issues with page: ${request.page}, size: ${request.size}")
+        val totalRecords = packageIssueRepo.countAllPackageIssue(request)
+        val packageIssues = packageIssueRepo.findAllPackageIssue(request)
         logger.info("Fetched ${packageIssues.size} package issues out of $totalRecords total records.")
-
-        // Return the result with the fetched data and total record count
         return PackageIssueResult(
             data = packageIssues,
             totalRecords = totalRecords

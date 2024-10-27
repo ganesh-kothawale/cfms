@@ -1,6 +1,7 @@
 package `in`.porter.cfms.servers.ktor.usecases.packagingissues
 
 import `in`.porter.cfms.api.models.exceptions.CfmsException
+import `in`.porter.cfms.api.models.packageIssue.ListPackageIssueRequest
 import `in`.porter.cfms.api.models.packageIssue.ListPackageIssueResponse
 import `in`.porter.cfms.api.service.packageIssue.usecases.ListPackageIssueService
 import io.ktor.http.HttpStatusCode
@@ -19,20 +20,19 @@ constructor(
 
     suspend fun invoke(
         call: ApplicationCall,
-        page: Int,
-        size: Int
+        request : ListPackageIssueRequest
     ) {
         try {
             // Validate page and size parameters
-            if (page < 1 || size < 1 || size > 100) {
-                logger.error("Invalid page or size: page=$page, size=$size")
+            if (request.page < 1 || request.size < 1 || request.size > 100) {
+                logger.error("Invalid page or size: page=$request.page, size=$request.size")
                 throw IllegalArgumentException("Page must be a positive integer, and size must be between 1 and 100.")
             }
 
-            logger.info("Received request to list all packaging issues with page: $page and size: $size")
+            logger.info("Received request to list all packaging issues with page: $request.page and size: $request.size")
 
             // Use the recon service but filter for return_requested = true
-            val packageIssueResponse: ListPackageIssueResponse = listPackagingIssueService.invoke(page, size, returnRequested = true)
+            val packageIssueResponse: ListPackageIssueResponse = listPackagingIssueService.invoke(request)
 
             // Respond with the filtered result
             call.respond(HttpStatusCode.OK, mapOf("data" to packageIssueResponse))
