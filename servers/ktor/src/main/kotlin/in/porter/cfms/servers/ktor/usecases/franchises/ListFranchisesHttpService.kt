@@ -16,7 +16,6 @@ class ListFranchisesHttpService
 @Inject
 constructor(
     private val franchisesService: ListFranchisesService,
-    private val listFranchisesRequestMapper: ListFranchisesRequestMapper
 ) : Traceable {
 
     private val logger = LoggerFactory.getLogger(ListFranchisesHttpService::class.java)
