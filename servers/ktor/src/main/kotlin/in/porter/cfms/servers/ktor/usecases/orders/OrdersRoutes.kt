@@ -7,19 +7,20 @@ import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 
 fun Route.publicOrdersRoutes(httpComponent: HttpComponent) {
-    get("/orders") {
+    get("") {
         try {
             val request = FetchOrdersRequest(
                 page = call.request.queryParameters["page"]?.toIntOrNull() ?: 1,
                 size = call.request.queryParameters["size"]?.toIntOrNull() ?: 10,
                 franchiseId = call.request.queryParameters["franchise_id"]?.split(",")
                     ?.map { it.trim() },
-                createdDate = call.request.queryParameters["created_date"]?.let { LocalDateTime.parse(it) },
-                updatedDate = call.request.queryParameters["updated_date"]?.let { LocalDateTime.parse(it) },
+                createdDate = call.request.queryParameters["created_date"]?.let { LocalDate.parse(it) },
+                updatedDate = call.request.queryParameters["updated_date"]?.let { LocalDate.parse(it) },
                 orderStatus = call.request.queryParameters["order_status"],
                 orderId = call.request.queryParameters["order_id"]?.split(",")?.map { it.trim() },
                 awbNumber = call.request.queryParameters["awb_number"]?.split(",")
@@ -32,8 +33,8 @@ fun Route.publicOrdersRoutes(httpComponent: HttpComponent) {
                     ?.map { it.trim() },
                 senderCityName = call.request.queryParameters["sender_city_name"]?.split(",")
                     ?.map { it.trim() },
-                senderPinCode = call.request.queryParameters["sender_pin_code"],
-                pickupDate = call.request.queryParameters["pickup_date"]?.let { LocalDateTime.parse(it) },
+                senderPinCode = call.request.queryParameters["sender_pin_code"]?.toInt(),
+                pickupDate = call.request.queryParameters["pickup_date"],
                 isFranchiseUpdated = call.request.queryParameters["is_franchise_updated"]?.toBoolean(),
                 receiverName = call.request.queryParameters["receiver_name"]?.split(",")
                     ?.map { it.trim() },
@@ -41,7 +42,7 @@ fun Route.publicOrdersRoutes(httpComponent: HttpComponent) {
                     ?.map { it.trim() },
                 receiverCityName = call.request.queryParameters["receiver_city_name"]?.split(",")
                     ?.map { it.trim() },
-                receiverPinCode = call.request.queryParameters["receiver_pin_code"],
+                receiverPinCode = call.request.queryParameters["receiver_pin_code"]?.toInt(),
                 hlpOrderId = call.request.queryParameters["hlp_order_id"]?.split(",")
                     ?.map { it.trim() },
                 hlpOrderStatus = call.request.queryParameters["hlp_order_status"],
