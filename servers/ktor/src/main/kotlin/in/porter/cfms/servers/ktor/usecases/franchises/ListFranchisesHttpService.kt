@@ -33,14 +33,9 @@ constructor(
 
             logger.info("Received request to list all franchises: {}", request)
 
-            //val request = listFranchisesRequestMapper.toDomain(request)
-
-            // Fetch the paginated list of holidays from the service layer
             val response = franchisesService.invoke(request)
 
             logger.info("Successfully retrieved franchises from the service layer")
-
-            // Check if the response is successful
 
             // Return the successful response with data
             call.respond(HttpStatusCode.OK, mapOf("data" to response))
