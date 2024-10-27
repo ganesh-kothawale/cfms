@@ -224,6 +224,7 @@ constructor(
                     }
                 }
                 .limit(request.size, offset)
+                .orderBy(ReconTable.createdAt, SortOrder.DESC)
                 .map { row ->
                     packageIssueRowMapper.toRecord(row)
                 }
