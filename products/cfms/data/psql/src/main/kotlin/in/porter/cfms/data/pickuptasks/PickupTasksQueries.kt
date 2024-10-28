@@ -51,9 +51,6 @@ constructor(
         return@transact groupedResults.drop(offset).take(size)
     }
 
-
-
-
     suspend fun countAll(): Int = transact {
         addLogger(StdOutSqlLogger)
         logger.info("Counting all pickup-tasks")
