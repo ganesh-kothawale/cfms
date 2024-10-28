@@ -11,8 +11,6 @@ class FetchPickupTasks
 @Inject
 constructor(
     private val pickupTasksRepo: PickupTasksRepo,
-    private val orderRepo: OrderDetailsRepo,
-    private val hlpRepo: HlpsRepo
 ) {
     private val logger = LoggerFactory.getLogger(FetchPickupTasks::class.java)
     suspend fun invoke(page: Int, size: Int): PickupTaskResult {

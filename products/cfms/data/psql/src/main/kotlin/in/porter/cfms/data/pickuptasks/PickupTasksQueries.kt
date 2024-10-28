@@ -1,10 +1,11 @@
-package `in`.porter.cfms.data.pickuptasks
+ package `in`.porter.cfms.data.pickuptasks
 
 import `in`.porter.cfms.data.exceptions.CfmsException
 import `in`.porter.cfms.data.hlp.HlpsTable
 import `in`.porter.cfms.data.orders.mappers.OrderDetailsMapper
 import `in`.porter.cfms.data.orders.repos.OrdersTable
 import `in`.porter.cfms.data.pickuptasks.mappers.PickupTasksRowMapper
+import `in`.porter.cfms.data.pickuptasks.pickupimagemappings.PickupOrderMappingsTable
 import `in`.porter.cfms.data.pickuptasks.records.HlpWithOrdersRecord
 
 import `in`.porter.cfms.data.tasks.TasksTable
@@ -36,6 +37,8 @@ constructor(
         // Step 1: Fetch all data without applying limit yet
         val results = PickupTasksTable
             .innerJoin(HlpsTable, { PickupTasksTable.hlpId }, { HlpsTable.hlpOrderId })
+            .innerJoin(PickupOrderMappingsTable, { PickupTasksTable.pickupTaskId }, { PickupOrderMappingsTable.pickupTaskId })
+            .innerJoin(OrdersTable, { PickupOrderMappingsTable.orderId }, { OrdersTable.orderId })
             .selectAll()
             .map { row ->
                 logger.info("Mapping row: $row")
@@ -62,6 +65,9 @@ constructor(
         addLogger(StdOutSqlLogger)
         logger.info("Counting all pickup-tasks")
         PickupTasksTable
+            .innerJoin(HlpsTable, { PickupTasksTable.hlpId }, { HlpsTable.hlpOrderId })
+            .innerJoin(PickupOrderMappingsTable, { PickupTasksTable.pickupTaskId }, { PickupOrderMappingsTable.pickupTaskId })
+            .innerJoin(OrdersTable, { PickupOrderMappingsTable.orderId }, { OrdersTable.orderId })
             .selectAll()
             .count()
             .toInt()

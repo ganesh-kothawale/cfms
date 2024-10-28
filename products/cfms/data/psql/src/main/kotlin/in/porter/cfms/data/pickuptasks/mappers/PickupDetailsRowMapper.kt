@@ -1,6 +1,7 @@
 package `in`.porter.cfms.data.pickuptasks.mappers
 
 import `in`.porter.cfms.data.pickuptasks.PickupTasksTable
+import `in`.porter.cfms.data.pickuptasks.pickupimagemappings.PickupOrderMappingsTable
 import `in`.porter.cfms.data.pickuptasks.records.PickupDetailsRecord
 import org.jetbrains.exposed.sql.ResultRow
 import org.slf4j.LoggerFactory
