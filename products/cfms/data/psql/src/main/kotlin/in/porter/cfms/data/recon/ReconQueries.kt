@@ -96,14 +96,6 @@ constructor(
         val query = ReconTable
             .innerJoin(OrdersTable, { ReconTable.orderId }, { OrdersTable.orderId })
             .innerJoin(PickupTasksTable, { ReconTable.taskId }, { PickupTasksTable.taskId })
-            .slice(
-                ReconTable.taskId,
-                OrdersTable.orderNumber,
-                OrdersTable.courierPartner,
-                PickupTasksTable.orderImages,
-                OrdersTable.awbNumber,
-                ReconTable.reconStatus
-            )
             .selectAll()
             .limit(size, offset)
 
