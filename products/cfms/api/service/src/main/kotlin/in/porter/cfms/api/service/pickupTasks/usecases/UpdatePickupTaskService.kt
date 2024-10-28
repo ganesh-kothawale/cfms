@@ -16,7 +16,6 @@ class UpdatePickupTaskService @Inject constructor(
 ) {
 
     private val logger = LoggerFactory.getLogger(UpdatePickupTaskService::class.java)
-
     suspend fun invoke(request: UpdatePickupTaskRequest) {
         try {
             logger.info("Received request to update pickup task: ${request.taskId}")

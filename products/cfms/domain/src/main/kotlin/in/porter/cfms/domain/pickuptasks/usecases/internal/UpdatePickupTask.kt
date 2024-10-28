@@ -33,7 +33,7 @@ class UpdatePickupTask @Inject constructor(
 
         pickupTasksRepo.updateByTaskId(
             taskId = pickupTask.taskId,
-            orderImage = pickupTask.orderImages,
+            orderImages = pickupTask.orderImages,
             packageReceived = pickupTask.noOfPackagesReceived
         )
     }
