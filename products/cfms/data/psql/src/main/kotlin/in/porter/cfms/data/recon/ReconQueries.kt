@@ -8,10 +8,12 @@ import `in`.porter.cfms.data.recon.mappers.ReconTaskRowMapper
 import `in`.porter.cfms.data.packageIssue.records.PackageIssueRecord
 import `in`.porter.cfms.data.recon.records.ReconRecord
 import `in`.porter.cfms.data.recon.records.ReconTaskRecord
+import `in`.porter.cfms.domain.packageIssue.entities.DomainListAllPackageIssueRequest
 import `in`.porter.kotlinutils.exposed.ExposedRepo
 import kotlinx.coroutines.CoroutineDispatcher
 import org.jetbrains.exposed.sql.*
 import org.slf4j.LoggerFactory
+import java.time.ZoneOffset
 import javax.inject.Inject
 
 class ReconQueries
@@ -31,8 +33,8 @@ constructor(
         addLogger(StdOutSqlLogger)
         logger.info("Fetching recon records with size: $size and offset: $offset")
         val query = ReconTable
-                .selectAll()
-                .limit(size, offset)
+            .selectAll()
+            .limit(size, offset)
         query.map { row ->
             logger.info("Mapping row: $row")
             reconRowMapper.toRecord(row)
@@ -110,24 +112,9 @@ constructor(
         }
     }
 
-    suspend fun countAllPackageIssue(returnRequested: Boolean?): Int = transact {
+    suspend fun countAllPackageIssue(request: DomainListAllPackageIssueRequest): Int = transact {
         addLogger(StdOutSqlLogger)
-        logger.info("Counting all recon package issues")
-        val query = if (returnRequested != null) {
-            ReconTable
-                .select { ReconTable.returnRequested eq returnRequested }
-        } else {
-            ReconTable.selectAll()
-        }
-
-        query.count().toInt()
-    }
-
-    suspend fun findAllPackageIssue(size: Int, offset: Int, returnRequested: Boolean?): List<PackageIssueRecord> = transact {
-        addLogger(StdOutSqlLogger)
-        logger.info("Fetching package issues with size: $size and offset: $offset")
-
-        val query = ReconTable
+        ReconTable
             .innerJoin(OrdersTable, { ReconTable.orderId }, { OrdersTable.orderId })
             .slice(
                 ReconTable.reconId,
@@ -147,14 +134,99 @@ constructor(
             )
             .selectAll()
             .apply {
-                if (returnRequested != null) {
-                    andWhere { ReconTable.returnRequested eq returnRequested }
+                request.createdDate?.let {
+                    andWhere { ReconTable.createdAt greaterEq it.atStartOfDay(ZoneOffset.UTC).toInstant() }
                 }
-            }
-            .limit(size, offset)
-
-        query.map { row ->
-            packageIssueRowMapper.toRecord(row)
-        }
+                request.updatedDate?.let {
+                    andWhere { ReconTable.updatedAt lessEq it.atStartOfDay(ZoneOffset.UTC).toInstant() }
+                }
+                request.franchiseId?.let { ids ->
+                    andWhere {
+                        ids.map { id -> OrdersTable.franchiseId like "%$id%" }
+                            .reduce { acc, condition -> acc or condition }
+                    }
+                }
+                request.orderId?.let { ids ->
+                    andWhere {
+                        ids.map { id -> OrdersTable.orderId like "%$id%" }
+                            .reduce { acc, condition -> acc or condition }
+                    }
+                }
+                request.awbNo?.let { ids ->
+                    andWhere {
+                        ids.map { id -> OrdersTable.awbNumber like "%$id%" }
+                            .reduce { acc, condition -> acc or condition }
+                    }
+                }
+                request.action?.let {
+                    andWhere { ReconTable.action eq it }
+                }
+                request.returnRequested?.let {
+                    andWhere { ReconTable.returnRequested eq it }
+                }
+            }.count()
     }
+
+    suspend fun findAllPackageIssue(request: DomainListAllPackageIssueRequest, offset: Int): List<PackageIssueRecord> =
+        transact {
+            addLogger(StdOutSqlLogger)
+            logger.info("Fetching package issues with size: ${request.size} and offset: $offset")
+
+            ReconTable
+                .innerJoin(OrdersTable, { ReconTable.orderId }, { OrdersTable.orderId })
+                .slice(
+                    ReconTable.reconId,
+                    ReconTable.orderId,
+                    ReconTable.taskId,
+                    ReconTable.teamId,
+                    ReconTable.reconStatus,
+                    ReconTable.returnRequested,
+                    ReconTable.returnImageUrl,
+                    ReconTable.action,
+                    ReconTable.createdAt,
+                    ReconTable.updatedAt,
+                    OrdersTable.senderMobile,
+                    OrdersTable.senderName,
+                    OrdersTable.franchiseId,
+                    OrdersTable.awbNumber
+                )
+                .selectAll()
+                .apply {
+                    request.createdDate?.let {
+                        andWhere { ReconTable.createdAt greaterEq it.atStartOfDay(ZoneOffset.UTC).toInstant() }
+                    }
+                    request.updatedDate?.let {
+                        andWhere { ReconTable.updatedAt lessEq it.atStartOfDay(ZoneOffset.UTC).toInstant() }
+                    }
+                    request.franchiseId?.let { ids ->
+                        andWhere {
+                            ids.map { id -> OrdersTable.franchiseId like "%$id%" }
+                                .reduce { acc, condition -> acc or condition }
+                        }
+                    }
+                    request.orderId?.let { ids ->
+                        andWhere {
+                            ids.map { id -> OrdersTable.orderId like "%$id%" }
+                                .reduce { acc, condition -> acc or condition }
+                        }
+                    }
+                    request.awbNo?.let { ids ->
+                        andWhere {
+                            ids.map { id -> OrdersTable.awbNumber like "%$id%" }
+                                .reduce { acc, condition -> acc or condition }
+                        }
+                    }
+                    request.action?.let {
+                        andWhere { ReconTable.action eq it }
+                    }
+                    request.returnRequested?.let {
+                        andWhere { ReconTable.returnRequested eq it }
+                    }
+                }
+                .limit(request.size, offset)
+                .orderBy(ReconTable.createdAt, SortOrder.DESC)
+                .map { row ->
+                    packageIssueRowMapper.toRecord(row)
+                }
+        }
 }

@@ -26,12 +26,12 @@ class PsqlOrderDetailsRepo
     }
 
     override suspend fun fetchOrders(request: FetchOrdersRequest): List<Order> {
-        return queries.fetchOrders(request.size, request.size * (request.page - 1), request.franchiseId)
+        return queries.fetchOrders(request, request.size * (request.page - 1))
             .let { it.map { mapper.toDomain(it) } }
     }
 
     override suspend fun getOrderCount(request: FetchOrdersRequest): Int {
-        return queries.getOrderCount()
+        return queries.getOrderCount(request)
     }
 
     override suspend fun updateStatus(orderId: Int, status: OrderStatus): Int =
@@ -40,8 +40,7 @@ class PsqlOrderDetailsRepo
             ?: throw IllegalArgumentException("Invalid order status: $status")
 
     override suspend fun fetchOrderByOrderId(orderId: String): Order? {
-        return  queries.fetchOrderDetailsByOrderId(orderId)
+        return queries.fetchOrderDetailsByOrderId(orderId)
             .let { it?.let { mapper.toDomain(it) } }
-
     }
 }

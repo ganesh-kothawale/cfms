@@ -7,7 +7,13 @@ import `in`.porter.kotlinutils.exposed.ExposedRepo
 import kotlinx.coroutines.CoroutineDispatcher
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.sql.Database
+import org.jetbrains.exposed.sql.StdOutSqlLogger
+import org.jetbrains.exposed.sql.addLogger
+import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.selectAll
 import java.time.Instant
+import java.time.ZoneOffset
 import javax.inject.Inject
 
 class OrderDetailsQueries
@@ -67,22 +73,222 @@ constructor(
         }
     }
 
-    suspend fun fetchOrders(size: Int, offset: Int, franchiseId: String?): List<Order> = transact {
-        if (franchiseId != null) {
-            OrdersTable.selectAll()
-                .andWhere { OrdersTable.franchiseId eq franchiseId }
-                .orderBy(OrdersTable.createdAt, SortOrder.DESC)
-                .limit(size, offset)
-        } else {
-            OrdersTable.selectAll()
-                .orderBy(OrdersTable.createdAt, SortOrder.DESC)
-                .limit(size, offset)
-        }
-            .let { mapper.mapOrders(it) }
+    suspend fun fetchOrders(request: FetchOrdersRequest, offset: Int): List<Order> = transact {
+        addLogger(StdOutSqlLogger)
+
+        OrdersTable.selectAll().apply {
+
+            request.franchiseId?.let { ids ->
+                andWhere {
+                    ids.map { id -> OrdersTable.franchiseId like "%$id%" }
+                        .reduce { acc, condition -> acc or condition }
+                }
+            }
+
+            request.createdDate?.let {
+                andWhere { OrdersTable.createdAt greaterEq it.atStartOfDay(ZoneOffset.UTC).toInstant() }
+            }
+            request.updatedDate?.let {
+                andWhere { OrdersTable.updatedAt lessEq it.atStartOfDay(ZoneOffset.UTC).toInstant() }
+            }
+
+            request.orderStatus?.let { andWhere { OrdersTable.orderStatus eq it } }
+
+            // Filter by order IDs with `or` condition for partial matching
+            request.orderId?.let { ids ->
+                andWhere {
+                    ids.map { id -> OrdersTable.orderId like "%$id%" }
+                        .reduce { acc, condition -> acc or condition }
+                }
+            }
+
+            // Filter by AWB numbers with `or` condition for partial matching
+            request.awbNumber?.let { numbers ->
+                andWhere {
+                    numbers.map { number -> OrdersTable.awbNumber like "%$number%" }
+                        .reduce { acc, condition -> acc or condition }
+                }
+            }
+
+            // Filter by courier partner names with `or` condition for partial matching
+            request.courierPartnerName?.let { partners ->
+                andWhere {
+                    partners.map { partner -> OrdersTable.courierPartner like "%$partner%" }
+                        .reduce { acc, condition -> acc or condition }
+                }
+            }
+
+            // Filter by sender details
+            request.senderName?.let { names ->
+                andWhere {
+                    names.map { name -> OrdersTable.senderName like "%$name%" }
+                        .reduce { acc, condition -> acc or condition }
+                }
+            }
+            request.senderPhoneNo?.let { phones ->
+                andWhere {
+                    phones.map { phone -> OrdersTable.senderMobile like "%$phone%" }
+                        .reduce { acc, condition -> acc or condition }
+                }
+            }
+            request.senderCityName?.let { cities ->
+                andWhere {
+                    cities.map { city -> OrdersTable.senderCity like "%$city%" }
+                        .reduce { acc, condition -> acc or condition }
+                }
+            }
+            request.senderPinCode?.let { andWhere { OrdersTable.senderPincode eq it } }
+
+            // Filter by pickup date
+            request.pickupDate?.let {
+                andWhere { OrdersTable.pickupDate eq it }
+            }
+
+            request.isFranchiseUpdated?.let { andWhere { OrdersTable.isFranchiseUpdated eq it } }
+
+            // Filter by receiver details
+            request.receiverName?.let { names ->
+                andWhere {
+                    names.map { name -> OrdersTable.receiverName like "%$name%" }
+                        .reduce { acc, condition -> acc or condition }
+                }
+            }
+            request.receiverPhoneNo?.let { phones ->
+                andWhere {
+                    phones.map { phone -> OrdersTable.receiverMobile like "%$phone%" }
+                        .reduce { acc, condition -> acc or condition }
+                }
+            }
+            request.receiverCityName?.let { cities ->
+                andWhere {
+                    cities.map { city -> OrdersTable.receiverCity like "%$city%" }
+                        .reduce { acc, condition -> acc or condition }
+                }
+            }
+            request.receiverPinCode?.let { andWhere { OrdersTable.receiverPincode eq it } }
+
+            // Filter by HLP order details
+            request.hlpOrderId?.let { ids ->
+                andWhere {
+                    ids.map { id -> OrdersTable.hlpOrderId like "%$id%" }
+                        .reduce { acc, condition -> acc or condition }
+                }
+            }
+            request.hlpOrderStatus?.let { andWhere { OrdersTable.hlpOrderStatus eq it } }
+            request.vehicleType?.let { andWhere { OrdersTable.vehicleType eq it } }
+
+        }.orderBy(OrdersTable.createdAt, SortOrder.DESC)
+            .limit(request.size, offset)
+            .let {
+                mapper.mapOrders(it)
+            }
     }
 
-    suspend fun getOrderCount(): Int = transact {
-        OrdersTable.selectAll().count()
+    // Example count method
+    suspend fun getOrderCount(request: FetchOrdersRequest): Int = transact {
+        addLogger(StdOutSqlLogger)
+        OrdersTable.selectAll().apply {
+
+            request.franchiseId?.let { ids ->
+                andWhere {
+                    ids.map { id -> OrdersTable.franchiseId like "%$id%" }
+                        .reduce { acc, condition -> acc or condition }
+                }
+            }
+
+            request.createdDate?.let {
+                andWhere { OrdersTable.createdAt greaterEq it.atStartOfDay(ZoneOffset.UTC).toInstant() }
+            }
+            request.updatedDate?.let {
+                andWhere { OrdersTable.updatedAt lessEq it.atStartOfDay(ZoneOffset.UTC).toInstant() }
+            }
+
+            request.orderStatus?.let { andWhere { OrdersTable.orderStatus eq it } }
+
+            // Filter by order IDs with `or` condition for partial matching
+            request.orderId?.let { ids ->
+                andWhere {
+                    ids.map { id -> OrdersTable.orderId like "%$id%" }
+                        .reduce { acc, condition -> acc or condition }
+                }
+            }
+
+            // Filter by AWB numbers with `or` condition for partial matching
+            request.awbNumber?.let { numbers ->
+                andWhere {
+                    numbers.map { number -> OrdersTable.awbNumber like "%$number%" }
+                        .reduce { acc, condition -> acc or condition }
+                }
+            }
+
+            // Filter by courier partner names with `or` condition for partial matching
+            request.courierPartnerName?.let { partners ->
+                andWhere {
+                    partners.map { partner -> OrdersTable.courierPartner like "%$partner%" }
+                        .reduce { acc, condition -> acc or condition }
+                }
+            }
+
+            // Filter by sender details
+            request.senderName?.let { names ->
+                andWhere {
+                    names.map { name -> OrdersTable.senderName like "%$name%" }
+                        .reduce { acc, condition -> acc or condition }
+                }
+            }
+            request.senderPhoneNo?.let { phones ->
+                andWhere {
+                    phones.map { phone -> OrdersTable.senderMobile like "%$phone%" }
+                        .reduce { acc, condition -> acc or condition }
+                }
+            }
+            request.senderCityName?.let { cities ->
+                andWhere {
+                    cities.map { city -> OrdersTable.senderCity like "%$city%" }
+                        .reduce { acc, condition -> acc or condition }
+                }
+            }
+            request.senderPinCode?.let { andWhere { OrdersTable.senderPincode eq it } }
+
+            // Filter by pickup date
+            request.pickupDate?.let {
+                andWhere { OrdersTable.pickupDate eq it }
+            }
+
+            request.isFranchiseUpdated?.let { andWhere { OrdersTable.isFranchiseUpdated eq it } }
+
+            // Filter by receiver details
+            request.receiverName?.let { names ->
+                andWhere {
+                    names.map { name -> OrdersTable.receiverName like "%$name%" }
+                        .reduce { acc, condition -> acc or condition }
+                }
+            }
+            request.receiverPhoneNo?.let { phones ->
+                andWhere {
+                    phones.map { phone -> OrdersTable.receiverMobile like "%$phone%" }
+                        .reduce { acc, condition -> acc or condition }
+                }
+            }
+            request.receiverCityName?.let { cities ->
+                andWhere {
+                    cities.map { city -> OrdersTable.receiverCity like "%$city%" }
+                        .reduce { acc, condition -> acc or condition }
+                }
+            }
+            request.receiverPinCode?.let { andWhere { OrdersTable.receiverPincode eq it } }
+
+            // Filter by HLP order details
+            request.hlpOrderId?.let { ids ->
+                andWhere {
+                    ids.map { id -> OrdersTable.hlpOrderId like "%$id%" }
+                        .reduce { acc, condition -> acc or condition }
+                }
+            }
+            request.hlpOrderStatus?.let { andWhere { OrdersTable.hlpOrderStatus eq it } }
+            request.vehicleType?.let { andWhere { OrdersTable.vehicleType eq it } }
+
+        }.count()
     }
 
     suspend fun updateStatus(orderId: Int, status: String): Int = transaction {

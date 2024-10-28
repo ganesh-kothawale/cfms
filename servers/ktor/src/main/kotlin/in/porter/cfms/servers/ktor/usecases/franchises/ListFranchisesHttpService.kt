@@ -1,6 +1,7 @@
 package `in`.porter.cfms.servers.ktor.usecases.franchises
 
 
+import `in`.porter.cfms.api.models.franchises.ListFranchisesRequest
 import `in`.porter.cfms.api.service.franchises.mappers.ListFranchisesRequestMapper
 import `in`.porter.cfms.api.service.franchises.usecases.ListFranchisesService
 import `in`.porter.kotlinutils.instrumentation.opentracing.Traceable
@@ -15,35 +16,25 @@ class ListFranchisesHttpService
 @Inject
 constructor(
     private val franchisesService: ListFranchisesService,
-    private val listFranchisesRequestMapper: ListFranchisesRequestMapper
 ) : Traceable {
 
     private val logger = LoggerFactory.getLogger(ListFranchisesHttpService::class.java)
-    suspend fun listAllHolidays(
+    suspend fun invoke(
         call: ApplicationCall,
-        page: Int,
-        size: Int
+        request: ListFranchisesRequest
     ) {
         try {
             // Validate page and size
-            if (page < 1 || size < 1 || size > 100) {
-                logger.error("Invalid page or size: page=$page, size=$size")
+            if (request.page < 1 || request.size < 1 || request.size > 100) {
+                logger.error("Invalid page or size: page=${request.page}, size=${request.size}")
                 throw IllegalArgumentException("Page must be a positive integer, and size must be between 1 and 100.")
             }
 
-            logger.info("Received request to list all franchises with page: $page and size: $size")
+            logger.info("Received request to list all franchises: {}", request)
 
-            val request = listFranchisesRequestMapper.toDomain(
-                page = page,
-                size = size
-            )
-
-            // Fetch the paginated list of holidays from the service layer
-            val response = franchisesService.listFranchises(request)
+            val response = franchisesService.invoke(request)
 
             logger.info("Successfully retrieved franchises from the service layer")
-
-            // Check if the response is successful
 
             // Return the successful response with data
             call.respond(HttpStatusCode.OK, mapOf("data" to response))
