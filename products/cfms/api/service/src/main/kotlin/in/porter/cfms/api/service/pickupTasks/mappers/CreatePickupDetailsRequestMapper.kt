@@ -11,10 +11,8 @@ class CreatePickupDetailsRequestMapper @Inject constructor() {
         return PickupDetails(
             pickupDetailsId = generatedPickupDetailsId,
             taskId = request.taskId,
-            orderId = request.orderId,
             hlpId = request.hlpId,
             franchiseId = request.franchiseId,
-            status = request.status,
             createdAt = Instant.now(),
             updatedAt = Instant.now()
         )
