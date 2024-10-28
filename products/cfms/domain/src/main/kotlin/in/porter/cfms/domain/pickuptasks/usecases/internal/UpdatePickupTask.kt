@@ -1,6 +1,5 @@
 package `in`.porter.cfms.domain.pickuptasks.usecases.internal
 
-import `in`.porter.cfms.domain.exceptions.CfmsException
 import `in`.porter.cfms.domain.orders.repos.OrderDetailsRepo
 import `in`.porter.cfms.domain.pickuptasks.entities.UpdatePickupTask
 import `in`.porter.cfms.domain.pickuptasks.repos.PickupTasksRepo
@@ -17,13 +16,12 @@ class UpdatePickupTask @Inject constructor(
 
     private val logger = LoggerFactory.getLogger(UpdatePickupTask::class.java)
 
-    suspend fun updatePickupDetailsOrderImage(pickupTask: UpdatePickupTask) {
+    suspend fun updatePickupDetails(pickupTask: UpdatePickupTask) {
 
         taskRepo.findTaskById(pickupTask.taskId)
             ?: throw NoSuchElementException("Task not found for task ID: ${pickupTask.taskId}")
 
         logger.info("Task found for task ID: ${pickupTask.taskId}")
-
 
         pickupTask.orders.forEach { order ->
             orderDetailsRepo.fetchOrderByOrderId(order.orderId)
@@ -33,22 +31,13 @@ class UpdatePickupTask @Inject constructor(
 
         logger.info("Creating pickup image mapping for task ID: ${pickupTask.taskId}")
 
-        // insert order image against task id
-        pickupTasksRepo.updateOrderImageByTaskId(
+        pickupTasksRepo.updateByTaskId(
             taskId = pickupTask.taskId,
-            orderImage = pickupTask.orderImage
+            orderImage = pickupTask.orderImages,
+            packageReceived = pickupTask.noOfPackagesReceived
         )
     }
 
-    // 2. Update Task Status
-    suspend fun updateTaskStatus(pickupTask: UpdatePickupTask) {
-        logger.info("Updating task status for task ID: ${pickupTask.taskId}")
-        pickupTasksRepo.updateTaskStatus(
-            taskId = pickupTask.taskId,
-            noOfPackagesReceived = pickupTask.noOfPackagesReceived,
-            taskStatus = pickupTask.taskStatus
-        )
-    }
 
     // 3. Update Order Status
     suspend fun updateOrderStatus(pickupTask: UpdatePickupTask) {

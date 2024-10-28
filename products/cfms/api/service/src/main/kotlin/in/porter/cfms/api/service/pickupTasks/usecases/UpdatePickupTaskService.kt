@@ -20,37 +20,31 @@ class UpdatePickupTaskService @Inject constructor(
     suspend fun invoke(request: UpdatePickupTaskRequest) {
         try {
             logger.info("Received request to update pickup task: ${request.taskId}")
-
-            // Map the request to the domain entity
             val domainPickupTask = updatePickupTaskRequestMapper.toDomain(request)
+            updatePickupTask.updatePickupDetails(domainPickupTask)
 
-            updatePickupTask.updatePickupDetailsOrderImage(domainPickupTask)
+//            createAuditLogService.createAuditLog(
+//                CreateAuditLogRequest(
+//                    entityId = request.taskId,
+//                    entityType = "Task",
+//                    status = "Updated",
+//                    message = "Task status updated successfully",
+//                    updatedBy = 123 // Replace with actual user ID
+//                )
+//            )
 
-            // 2. Update task status and log the audit
-            updatePickupTask.updateTaskStatus(domainPickupTask)
-            createAuditLogService.createAuditLog(
-                CreateAuditLogRequest(
-                    entityId = request.taskId,
-                    entityType = "Task",
-                    status = domainPickupTask.taskStatus,
-                    message = "Task status updated successfully",
-                    updatedBy = 123 // Replace with actual user ID
-                )
-            )
-
-            // 3. Update order status and log the audit for each order
             updatePickupTask.updateOrderStatus(domainPickupTask)
-            domainPickupTask.orders.forEach { order ->
-                createAuditLogService.createAuditLog(
-                    CreateAuditLogRequest(
-                        entityId = order.orderId,
-                        entityType = "Order",
-                        status = order.status,
-                        message = "Order status updated successfully",
-                        updatedBy = 123 // Replace with actual user ID
-                    )
-                )
-            }
+//            domainPickupTask.orders.forEach { order ->
+//                createAuditLogService.createAuditLog(
+//                    CreateAuditLogRequest(
+//                        entityId = order.orderId,
+//                        entityType = "Order",
+//                        status = order.status,
+//                        message = "Order status updated successfully",
+//                        updatedBy = 123 // Replace with actual user ID
+//                    )
+//                )
+//            }
 
             logger.info("Pickup task updated successfully for ID: ${request.taskId}")
 

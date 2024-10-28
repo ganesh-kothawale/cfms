@@ -6,8 +6,7 @@ import java.util.UUID
 data class UpdatePickupTaskRequest(
     val taskId: String,
     val noOfPackagesReceived: Int,
-    val orderImage: List<UUID>,
-    val taskStatus: String,
+    val orderImages: List<UUID>,
     val orders: List<Order>
 )
 

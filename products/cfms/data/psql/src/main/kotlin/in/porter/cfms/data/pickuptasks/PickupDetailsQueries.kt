@@ -25,10 +25,8 @@ constructor(
         PickupTasksTable.insert { row ->
             row[pickupTaskId] = pickupDetailsRecord.pickupDetailsId
             row[taskId] = pickupDetailsRecord.taskId
-            row[orderId] = pickupDetailsRecord.orderId
             row[hlpId] = pickupDetailsRecord.hlpId
             row[franchiseId] = pickupDetailsRecord.franchiseId
-            row[status] = pickupDetailsRecord.status
             row[createdAt] = pickupDetailsRecord.createdAt
             row[updatedAt] = pickupDetailsRecord.updatedAt
         }

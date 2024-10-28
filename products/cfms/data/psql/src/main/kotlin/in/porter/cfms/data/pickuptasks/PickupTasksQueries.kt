@@ -36,7 +36,6 @@ constructor(
         // Step 1: Fetch all data without applying limit yet
         val results = PickupTasksTable
             .innerJoin(HlpsTable, { PickupTasksTable.hlpId }, { HlpsTable.hlpOrderId })
-            .innerJoin(OrdersTable, { PickupTasksTable.orderId }, { OrdersTable.orderId })
             .selectAll()
             .map { row ->
                 logger.info("Mapping row: $row")
@@ -77,21 +76,12 @@ constructor(
     }
 
 
-    suspend fun updateOrderImageByTaskId(taskId: String, orderImage: List<UUID>) = transact {
+    suspend fun updateByTaskId(taskId: String, orderImage: List<UUID>, noPackageReceived: Int?) = transact {
         addLogger(StdOutSqlLogger)
         logger.info("Inserting order image against taskId: $taskId")
         PickupTasksTable.update({PickupTasksTable.taskId eq taskId}) {
             it[orderImages] = orderImage.joinToString(",")
-            it[updatedAt] = Instant.now()
-        }
-    }
-
-    suspend fun updateTaskStatus(taskId: String, noOfPackagesReceived: Int?, taskStatus: String) = transact {
-        addLogger(StdOutSqlLogger)
-        logger.info("Updating task status for taskId: $taskId")
-        TasksTable.update({ TasksTable.taskId eq taskId }) {
-            it[packageReceived] = noOfPackagesReceived
-            it[status] = taskStatus
+            it[packageReceived] = noPackageReceived
             it[updatedAt] = Instant.now()
         }
     }

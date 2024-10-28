@@ -12,9 +12,8 @@ class UpdatePickupTaskRequestMapper @Inject constructor() {
         return UpdatePickupTask(
             taskId = request.taskId,
             noOfPackagesReceived = request.noOfPackagesReceived,
-            taskStatus = request.taskStatus,
             orders = request.orders.map { toDomainOrder(it) },
-            orderImage = request.orderImage
+            orderImages = request.orderImages
         )
     }
 

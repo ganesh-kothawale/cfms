@@ -64,25 +64,13 @@ class PsqlPickupTasksRepo @Inject constructor(
     }
 
 
-    override suspend fun updateOrderImageByTaskId(taskId: String, orderImage: List<UUID>) {
-        trace("updateOrderImageByTaskId") {
+    override suspend fun updateByTaskId(taskId: String, orderImage: List<UUID>, packageReceived: Int?) {
+        trace("updateByTaskId") {
             try {
-                queries.updateOrderImageByTaskId(taskId, orderImage)
+                queries.updateByTaskId(taskId, orderImage, packageReceived)
             } catch (e: Exception) {
                 logger.error("Error creating pickup image mapping for taskId $taskId: ${e.message}", e)
                 throw CfmsException("Error creating pickup image mapping for taskId $taskId: ${e.message}")
-            }
-        }
-    }
-
-    // Update task status and no_of_packages_received in the tasks table
-    override suspend fun updateTaskStatus(taskId: String, noOfPackagesReceived: Int?, taskStatus: String) {
-        trace("updateTaskStatus") {
-            try {
-                queries.updateTaskStatus(taskId, noOfPackagesReceived, taskStatus)
-            } catch (e: Exception) {
-                logger.error("Error updating task status for taskId $taskId: ${e.message}", e)
-                throw CfmsException("Error updating task status for taskId $taskId: ${e.message}")
             }
         }
     }

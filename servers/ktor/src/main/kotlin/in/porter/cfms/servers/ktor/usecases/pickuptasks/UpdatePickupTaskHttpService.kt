@@ -23,7 +23,7 @@ class UpdatePickupTaskHttpService @Inject constructor(
             updatePickupTaskService.invoke(request)
 
             call.respond(
-                HttpStatusCode.Created,
+                HttpStatusCode.OK,
                 mapOf(
                     "data" to mapOf(
                         "message" to "Pickup task updated successfully",

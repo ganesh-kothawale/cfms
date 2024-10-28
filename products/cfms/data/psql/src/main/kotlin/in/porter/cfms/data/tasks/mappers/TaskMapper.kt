@@ -13,9 +13,6 @@ class TaskMapper @Inject constructor() {
             taskId = taskRecord.taskId,
             flowType = taskRecord.flowType,
             status = taskRecord.status,
-            packageReceived = taskRecord.packageReceived,
-            scheduledSlot = taskRecord.scheduledSlot,
-            teamId = taskRecord.teamId,
             createdAt = taskRecord.createdAt,
             updatedAt = taskRecord.updatedAt
         )
@@ -27,9 +24,6 @@ class TaskMapper @Inject constructor() {
             taskId = task.taskId,
             flowType = task.flowType,
             status = task.status,
-            packageReceived = task.packageReceived,
-            scheduledSlot = task.scheduledSlot,
-            teamId = task.teamId,
             createdAt = task.createdAt,
             updatedAt = task.updatedAt ?: Instant.now()
         )

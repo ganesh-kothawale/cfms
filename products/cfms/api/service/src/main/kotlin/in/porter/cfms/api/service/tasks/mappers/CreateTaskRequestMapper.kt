@@ -12,9 +12,6 @@ class CreateTaskRequestMapper @Inject constructor() {
             taskId = generatedTaskId,
             flowType = request.flowType,
             status = request.status,
-            packageReceived = request.packageReceived,
-            scheduledSlot = request.scheduledSlot,
-            teamId = request.teamId,
             createdAt = Instant.now(),
             updatedAt = Instant.now()
         )

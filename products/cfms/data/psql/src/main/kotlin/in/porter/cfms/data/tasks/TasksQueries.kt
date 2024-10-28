@@ -80,9 +80,6 @@ constructor(
             row[taskId] = taskRecord.taskId
             row[flowType] = taskRecord.flowType
             row[status] = taskRecord.status
-            row[packageReceived] = taskRecord.packageReceived
-            row[scheduledSlot] = taskRecord.scheduledSlot
-            row[teamId] = taskRecord.teamId
             row[createdAt] = taskRecord.createdAt?: Instant.now()
             row[updatedAt] = taskRecord.updatedAt?: Instant.now()
         }
@@ -90,6 +87,7 @@ constructor(
     }
 
     suspend fun findByTaskId(taskId: String): TaskRecord? = transact {
+        logger.info("Task found for task ID: ${taskId}")
         TasksTable
             .select { TasksTable.taskId eq taskId }
             .map { taskRowMapper.toRecord(it) }
@@ -102,9 +100,6 @@ constructor(
         TasksTable.update({ TasksTable.taskId eq taskRecord.taskId }) {
             it[flowType] = taskRecord.flowType
             it[status] = taskRecord.status
-            it[packageReceived] = taskRecord.packageReceived
-            it[scheduledSlot] = taskRecord.scheduledSlot
-            it[teamId] = taskRecord.teamId
             it[updatedAt] = taskRecord.updatedAt?:Instant.now()
         }
     }
