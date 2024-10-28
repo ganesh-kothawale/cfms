@@ -5,6 +5,5 @@ data class PickupTaskOrderResponse(
     val awbNmber: String?,
     val senderName: String?,
     val receiverName: String?,
-    val status: String?,
     val crNumber: String?
 )

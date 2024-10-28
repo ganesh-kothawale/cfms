@@ -16,9 +16,6 @@ class TaskRowMapper @Inject constructor() {
             taskId = row[TasksTable.taskId],
             flowType = row[TasksTable.flowType],
             status = row[TasksTable.status],
-            packageReceived = row[TasksTable.packageReceived],
-            scheduledSlot = row[TasksTable.scheduledSlot],
-            teamId = row[TasksTable.teamId],
             createdAt = row[TasksTable.createdAt],
             updatedAt = row[TasksTable.updatedAt]
         )

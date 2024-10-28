@@ -15,10 +15,8 @@ class PickupDetailsRowMapper @Inject constructor() {
         return PickupDetailsRecord(
             pickupDetailsId = row[PickupTasksTable.pickupTaskId],
             taskId = row[PickupTasksTable.taskId],
-            orderId = row[PickupTasksTable.orderId],
             hlpId = row[PickupTasksTable.hlpId],
             franchiseId = row[PickupTasksTable.franchiseId],
-            status = row[PickupTasksTable.status],
             createdAt = row[PickupTasksTable.createdAt],
             updatedAt = row[PickupTasksTable.updatedAt]
         )

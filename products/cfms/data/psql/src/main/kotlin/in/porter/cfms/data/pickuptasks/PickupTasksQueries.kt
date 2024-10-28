@@ -26,7 +26,6 @@ constructor(
         // Step 1: Fetch all data without applying limit yet
         val results = PickupTasksTable
             .innerJoin(HlpsTable, { PickupTasksTable.hlpId }, { HlpsTable.hlpOrderId })
-            .innerJoin(OrdersTable, { PickupTasksTable.orderId }, { OrdersTable.orderId })
             .selectAll()
             .map { row ->
                 logger.info("Mapping row: $row")
