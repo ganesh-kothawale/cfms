@@ -27,22 +27,24 @@ class FetchPickupTasksResponseMapper @Inject constructor() {
 
     private fun toPickupTaskHlpResponse(hlpWithOrders: HlpWithOrdersRecord): PickupTaskHlpResponse {
         return PickupTaskHlpResponse(
+            taskId = hlpWithOrders.taskId,
             hlpOrderId = hlpWithOrders.hlpId,
             riderName = hlpWithOrders.riderName,
             riderNumber = hlpWithOrders.riderNumber,
             vehicleType = hlpWithOrders.vehicleType,
-            pickupOrders = hlpWithOrders.pickupOrders.map { toPickupTaskOrderResponse(it) } // Map each PickupOrderRecord to PickupTaskOrderResponse
+            pickupOrders = hlpWithOrders.pickupOrders.map { toPickupTaskOrderResponse(it) }
         )
     }
 
     private fun toPickupTaskOrderResponse(pickupOrder: PickupOrder): PickupTaskOrderResponse {
         return PickupTaskOrderResponse(
             orderId = pickupOrder.orderId,
-            awbNmber = pickupOrder.awbNumber,
+            awbNumber = pickupOrder.awbNumber,
             senderName = pickupOrder.senderName,
             receiverName = pickupOrder.receiverName,
             status = pickupOrder.status,
-            crNumber = pickupOrder.crNumber
+            crNumber = pickupOrder.crNumber,
+
         )
     }
 }

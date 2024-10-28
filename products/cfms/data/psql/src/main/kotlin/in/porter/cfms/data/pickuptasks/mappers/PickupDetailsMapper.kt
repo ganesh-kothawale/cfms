@@ -11,10 +11,8 @@ class PickupDetailsMapper @Inject constructor() {
         return PickupDetails(
             pickupDetailsId = pickupDetailsRecord.pickupDetailsId,
             taskId = pickupDetailsRecord.taskId,
-            orderId = pickupDetailsRecord.orderId,
             hlpId = pickupDetailsRecord.hlpId,
             franchiseId = pickupDetailsRecord.franchiseId,
-            status = pickupDetailsRecord.status,
             createdAt = pickupDetailsRecord.createdAt,
             updatedAt = pickupDetailsRecord.updatedAt
         )
@@ -25,10 +23,8 @@ class PickupDetailsMapper @Inject constructor() {
         return PickupDetailsRecord(
             pickupDetailsId = pickupDetails.pickupDetailsId,
             taskId = pickupDetails.taskId,
-            orderId = pickupDetails.orderId,
             hlpId = pickupDetails.hlpId,
             franchiseId = pickupDetails.franchiseId,
-            status = pickupDetails.status,
             createdAt = pickupDetails.createdAt,
             updatedAt = pickupDetails.updatedAt
         )

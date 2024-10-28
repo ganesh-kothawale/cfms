@@ -20,7 +20,6 @@ class FetchPickupTasksHttpService
 @Inject
 constructor(
     private val service: FetchPickupTasksService,
-    private val fetchPickupTasksRequestMapper: FetchPickupTasksRequestMapper
 ) : Traceable {
     companion object : Logging
 

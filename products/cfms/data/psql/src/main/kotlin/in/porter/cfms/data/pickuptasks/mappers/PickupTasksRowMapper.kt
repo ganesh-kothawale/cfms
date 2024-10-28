@@ -20,26 +20,25 @@ class PickupTasksRowMapper @Inject constructor()  {
         val riderNumber = resultRow[HlpsTable.riderNumber] ?: "Unknown Number"
         val vehicleType = resultRow[HlpsTable.vehicleType] ?: "Unknown Vehicle"
 
-        // Mapping the inner `PickupOrderRecord`
         val pickupOrderRecord = toPickupOrderRecord(resultRow)
 
         return HlpWithOrdersRecord(
-            taskId = taskId.toString(),
+            taskId = taskId,
             hlpOrderId = hlpOrderId,
             riderName = riderName,
             riderNumber = riderNumber,
             vehicleType = vehicleType,
-            pickupOrders = listOf(pickupOrderRecord) // A list with one order record
+            pickupOrders = listOf(pickupOrderRecord)
         )
     }
 
     private fun toPickupOrderRecord(resultRow: ResultRow): PickupOrderRecord {
         logger.info("Mapping result row to PickupOrderRecord")
 
-        val orderId = resultRow[OrdersTable.orderNumber] ?: "Unknown Order"
+        val orderId = resultRow[OrdersTable.orderId] ?: "Unknown Order"
         val awbNumber = resultRow[OrdersTable.awbNumber] ?: "Unknown AWB"
-        val crNumber = resultRow[OrdersTable.accountCode] ?: "Unknown CR"
-        val status = resultRow[PickupTasksTable.status] ?: "Unknown Status"
+        val crNumber = resultRow[OrdersTable.orderNumber] ?: "Unknown CR"
+        val status = resultRow[OrdersTable.orderStatus] ?: "Unknown Status"
         val senderName = resultRow[OrdersTable.senderName] ?: "Unknown Sender"
         val receiverName = resultRow[OrdersTable.receiverName] ?: "Unknown Receiver"
 
