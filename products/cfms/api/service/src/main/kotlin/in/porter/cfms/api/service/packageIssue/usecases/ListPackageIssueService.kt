@@ -1,5 +1,6 @@
 package `in`.porter.cfms.api.service.packageIssue.usecases
 
+import `in`.porter.cfms.api.models.packageIssue.ListPackageIssueRequest
 import `in`.porter.cfms.api.models.packageIssue.ListPackageIssueResponse
 import `in`.porter.cfms.api.service.packageIssue.mappers.ListPackageIssueRequestMapper
 import `in`.porter.cfms.api.service.packageIssue.mappers.ListPackageIssueResponseMapper
@@ -17,18 +18,14 @@ constructor(
 
     private val logger = LoggerFactory.getLogger(ListPackageIssueService::class.java)
 
-    suspend fun invoke(page: Int, size: Int, returnRequested: Boolean? = null): ListPackageIssueResponse {
-        logger.info("Received request to list package issues: page = {}, size = {}", page, size)
+    suspend fun invoke(request: ListPackageIssueRequest): ListPackageIssueResponse {
+        logger.info("Received request to list package issues: page = {}, size = {}", request.page, request.size)
 
         // Convert the request to the domain model using the request mapper
-        val domainRequest = requestMapper.toDomain(page, size)
+        val domainRequest = requestMapper.toDomain(request)
 
         // Fetch package issues from the domain service
-        val packageIssueResult = listPackageIssue.invoke(
-            page = domainRequest.page,
-            size = domainRequest.size,
-            returnRequested = returnRequested
-        )
+        val packageIssueResult = listPackageIssue.invoke(domainRequest)
 
         logger.info("Fetched package issue records: {}", packageIssueResult)
 
