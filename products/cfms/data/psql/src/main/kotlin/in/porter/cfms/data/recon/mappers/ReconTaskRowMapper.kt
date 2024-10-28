@@ -15,12 +15,12 @@ class ReconTaskRowMapper @Inject constructor() {
         logger.info("Mapping result row to ReconTaskRecord")
         return ReconTaskRecord(
             taskId = resultRow[ReconTable.taskId],
-            crId = resultRow[OrdersTable.orderNumber],
             cpName = resultRow[OrdersTable.courierPartner],
             cpImageUrl = null,
             shipmentImageUrl = null,
             awb = resultRow[OrdersTable.awbNumber]?.toString() ?: "UNKNOWN",
-            status = resultRow[ReconTable.reconStatus]?.toString() ?: "UNKNOWN"
+            crNumber = resultRow[OrdersTable.orderNumber]?.toString(),
+            action = resultRow[ReconTable.action]
         )
     }
 }
