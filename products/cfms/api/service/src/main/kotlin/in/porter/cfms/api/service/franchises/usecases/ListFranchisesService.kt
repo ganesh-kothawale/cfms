@@ -17,16 +17,13 @@ constructor(
 
     private val logger = LoggerFactory.getLogger(ListFranchisesService::class.java)
 
-    suspend fun listFranchises(request: ListFranchisesRequest): ListFranchisesResponse {
+    suspend fun invoke(request: ListFranchisesRequest): ListFranchisesResponse {
         logger.info("Received request to list franchises: {}", request)
         // Convert the request using the request mapper
-        val domainRequest = requestMapper.toDomain(request.page, request.size)
+        val domainRequest = requestMapper.toDomain(request)
 
         // Fetch the franchise data from the domain layer
-        val franchisesResult = listFranchises.listFranchises(
-            page = domainRequest.page,
-            size = domainRequest.size
-        )
+        val franchisesResult = listFranchises.invoke(domainRequest)
 
         logger.info("Fetched franchises: {}", franchisesResult)
 

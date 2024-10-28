@@ -1,32 +1,46 @@
 package `in`.porter.cfms.servers.ktor.usecases.franchises
 
 import `in`.porter.cfms.api.models.exceptions.CfmsException
+import `in`.porter.cfms.api.models.franchises.ListFranchisesRequest
 import `in`.porter.cfms.servers.ktor.di.HttpComponent
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.*
 import io.ktor.server.response.respond
 import io.ktor.server.routing.*
+import java.time.LocalDate
 
 fun Route.franchiseRoutes(httpComponent: HttpComponent) {
     post("") { httpComponent.createFranchiseRecordHttpService.invoke(call) }
 
     get("") {
         try {
-            // Extract query parameters
-            val page =
-                call.request.queryParameters["page"]?.toIntOrNull() ?: 1
-            val size = call.request.queryParameters["size"]?.toIntOrNull() ?: 10
+            val request = ListFranchisesRequest(
+                page = call.request.queryParameters["page"]?.toIntOrNull() ?: 1,
+                size = call.request.queryParameters["size"]?.toIntOrNull() ?: 10,
+                createdDate = call.request.queryParameters["created_date"]?.let { LocalDate.parse(it) },
+                updatedDate = call.request.queryParameters["updated_date"]?.let { LocalDate.parse(it) },
+                franchiseIds = call.request.queryParameters["franchise_id"]?.split(",")?.map { it.trim() },  // Splits on commas for multiple IDs
+                pocPrimaryNumber = call.request.queryParameters["poc_primary_number"],
+                emailId = call.request.queryParameters["email_id"],
+                porterHubNames = call.request.queryParameters["porter_hub_name"]?.split(",")?.map { it.trim() },  // Splits on commas for multiple Hub Names
+                status = call.request.queryParameters["status"],
+                kams = call.request.queryParameters["kam"]?.split(",")?.map { it.trim() },   // Splits on commas for multiple KAMs
+                cities = call.request.queryParameters["city"]?.split(",")?.map { it.trim() }, // Splits on commas for multiple Cities
+                states = call.request.queryParameters["state"]?.split(",")?.map { it.trim() }, // Splits on commas for multiple States
+                pincode = call.request.queryParameters["pincode"]?.toIntOrNull(),
+                geoRegionId = call.request.queryParameters["geo_region_id"],
+                radiusCoverage = call.request.queryParameters["radius_coverage"]?.toIntOrNull()
+            )
 
-            httpComponent.listFranchisesHttpService.listAllHolidays(call, page, size)
+            httpComponent.listFranchisesHttpService.invoke(call, request)
         } catch (e: CfmsException) {
-            // Handle any validation or service-related exceptions
             call.respond(
                 HttpStatusCode.BadRequest,
                 mapOf(
                     "error" to listOf(
                         mapOf(
-                            "message" to "Invalid page or size parameter",
-                            "details" to "Page must be a positive integer, and size must be between 1 and 100."
+                            "message" to "Invalid query parameters",
+                            "details" to e.message
                         )
                     )
                 )

@@ -17,7 +17,7 @@ class FetchOrdersService @Inject constructor(
         request: FetchOrdersRequest
     ): FetchOrdersResponse = FetchOrdersResponse(
         orders = orders,
-        page = request.page + 1,
+        page = request.page,
         size = request.size,
         totalPages = (totalCount + request.size - 1) / request.size,
         totalRecords = totalCount

@@ -2,6 +2,7 @@ package `in`.porter.cfms.domain.franchise.usecases.internal
 
 import `in`.porter.cfms.domain.franchise.entities.FranchiseResult
 import `in`.porter.cfms.domain.franchise.repos.FranchiseRepo
+import `in`.porter.cfms.domain.franchise.entities.DomainListFranchisesRequest
 import org.slf4j.LoggerFactory
 import javax.inject.Inject
 
@@ -13,14 +14,14 @@ constructor(
 
     private val logger = LoggerFactory.getLogger(ListFranchises::class.java)
 
-    suspend fun listFranchises(page: Int, size: Int): FranchiseResult {
-        logger.info("Listing franchises with page: $page, size: $size")
+    suspend fun invoke(request: DomainListFranchisesRequest): FranchiseResult {
+        logger.info("Listing franchises with request: $request")
 
         // Fetch the total number of records
-        val totalRecords = franchiseRepo.countAll()
+        val totalRecords = franchiseRepo.countAll(request)
 
         // Fetch the paginated list of franchises
-        val franchises = franchiseRepo.findAll(page, size)
+        val franchises = franchiseRepo.findAll(request)
 
         // Log the result
         logger.info("Fetched ${franchises.size} franchises out of $totalRecords total records.")

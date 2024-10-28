@@ -1,4 +1,4 @@
-package `in`.porter.cfms.domain.orders.entities
+package `in`.porter.cfms.api.models.orders
 
 import java.time.LocalDate
 
