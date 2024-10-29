@@ -29,9 +29,6 @@ class ListTasksResponseMapper @Inject constructor() {
             taskId = task.taskId,
             flowType = task.flowType,
             status = task.status,
-            packageReceived = task.packageReceived,
-            scheduledSlot = task.scheduledSlot.toString(),  // Convert LocalDateTime to String
-            teamId = task.teamId,
             createdAt = task.createdAt.toString(),  // Convert LocalDateTime to String
             updatedAt = task.updatedAt.toString()   // Convert LocalDateTime to String
         )

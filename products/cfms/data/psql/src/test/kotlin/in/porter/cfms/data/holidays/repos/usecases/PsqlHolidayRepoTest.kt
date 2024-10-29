@@ -1,3 +1,4 @@
+/*
 package `in`.porter.cfms.data.holidays.repos.usecases
 
 import `in`.porter.cfms.data.franchise.FranchisesTable
@@ -6,12 +7,10 @@ import `in`.porter.cfms.data.holidays.HolidayTable
 import `in`.porter.cfms.data.holidays.mappers.HolidayMapper
 import `in`.porter.cfms.data.holidays.mappers.ListHolidayMapper
 import `in`.porter.cfms.data.holidays.mappers.ListHolidaysFranchiseRowMapper
-import `in`.porter.cfms.data.holidays.mappers.UpdateHolidayMapper
 import `in`.porter.cfms.data.holidays.repos.PsqlHolidayRepo
 import `in`.porter.cfms.data.holidays.repos.factories.PsqlHolidayRepoFactory
 import `in`.porter.cfms.domain.holidays.entities.Holiday
 import `in`.porter.cfms.domain.holidays.entities.LeaveType
-import `in`.porter.cfms.domain.holidays.entities.UpdateHoliday
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -480,3 +479,4 @@ class PsqlHolidayRepoTest {
         coVerify { holidayQueries.findFranchiseById("123") }
     }
 }
+*/

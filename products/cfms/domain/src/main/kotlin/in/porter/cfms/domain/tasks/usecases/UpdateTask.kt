@@ -24,9 +24,6 @@ class UpdateTask @Inject constructor(
         val updatedTask = existingTask.copy(
             flowType = task.flowType,
             status = task.status,
-            packageReceived = task.packageReceived,
-            scheduledSlot = task.scheduledSlot,
-            teamId = task.teamId,
             updatedAt = Instant.now()
         )
 

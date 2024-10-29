@@ -13,9 +13,9 @@ object AuditLogsTable : Table("audit_logs") {
     val status = varchar("status", 50).check { it eq "Created" or (it eq "Updated") or (it eq "Deleted") or (it eq "Pending") or (it eq "Shipped") or (it eq "Delivered") or (it eq "Cancelled") or (it eq "Return Requested") or (it eq "Completed") or (it eq "In Progress")or (it eq "Failed") }
     val message = varchar("message", 255).nullable()
     val updatedBy = integer("updated_by")
-    val changeTimestamp = timestampWithoutTZAsInstant("change_timestamp").defaultExpression(CurrentTimestamp())
-    val createdAt = timestampWithoutTZAsInstant("created_at").defaultExpression(CurrentTimestamp())
-    val updatedAt = timestampWithoutTZAsInstant("updated_at").defaultExpression(CurrentTimestamp())
+    val changeTimestamp = timestampWithoutTZAsInstant("change_timestamp")
+    val createdAt = timestampWithoutTZAsInstant("created_at")
+    val updatedAt = timestampWithoutTZAsInstant("updated_at")
 
     override val primaryKey = PrimaryKey(id, name = "PK_AuditLogs_ID")
     init {

@@ -10,6 +10,7 @@ class HolidayMapper
 constructor() {
 
     fun toDomain(record: HolidayRecord) = Holiday(
+        holidayId = record.holidayId,
         franchiseId = record.franchiseId,
         startDate = record.startDate,
         endDate = record.endDate,
@@ -21,6 +22,7 @@ constructor() {
     )
 
     fun toRecord(holiday: Holiday) = HolidayRecord(
+        holidayId = holiday.holidayId,
         franchiseId = holiday.franchiseId,
         startDate = holiday.startDate,
         endDate = holiday.endDate,

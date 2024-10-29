@@ -95,6 +95,7 @@ class PsqlTasksRepo
         }
 
     override suspend fun findTaskById(taskId: String): Tasks? = trace("findTaskById") {
+        logger.info("Task found for task ID: ${taskId}")
         queries.findByTaskId(taskId)
             ?.let { taskMapper.toDomain(it) }
     }

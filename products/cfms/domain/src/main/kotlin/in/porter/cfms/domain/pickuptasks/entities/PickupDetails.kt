@@ -1,6 +1,7 @@
 package `in`.porter.cfms.domain.pickuptasks.entities
 
 import java.time.Instant
+import java.util.*
 
 data class PickupDetails(
     val pickupDetailsId: String,
@@ -8,5 +9,7 @@ data class PickupDetails(
     val hlpId: String,
     val franchiseId: String,
     val createdAt: Instant,
-    val updatedAt: Instant
+    val updatedAt: Instant,
+    val orderImages: List<UUID>?,
+    val packageReceived: Int?
 )

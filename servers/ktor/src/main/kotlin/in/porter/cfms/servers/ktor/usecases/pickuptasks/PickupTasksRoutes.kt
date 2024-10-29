@@ -23,4 +23,6 @@ fun Route.pickupTasksRoutes(httpComponent: HttpComponent) {
             )
         }
     }
+
+    patch("") { httpComponent.updatePickupTaskHttpService.invoke(call) }
 }
