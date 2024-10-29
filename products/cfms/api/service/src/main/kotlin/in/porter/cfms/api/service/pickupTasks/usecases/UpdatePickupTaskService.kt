@@ -22,7 +22,7 @@ class UpdatePickupTaskService @Inject constructor(
             val domainPickupTask = updatePickupTaskRequestMapper.toDomain(request)
             updatePickupTask.updatePickupDetails(domainPickupTask)
 
-            updatePickupTask.updateOrderStatus(domainPickupTask)
+            updatePickupTask.updateOrderStatuses(domainPickupTask)
 
             logger.info("Pickup task updated successfully for ID: ${request.taskId}")
 
