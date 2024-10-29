@@ -38,6 +38,7 @@ dependencies {
   implementation(Libs.Ktor.clientCio)
   implementation(Libs.Ktor.clientJson)
   implementation(Libs.Ktor.clientJackson)
+  implementation(Libs.Ktor.cors)
 
   implementation(Libs.KotlinUtils.exposed)
   implementation(Libs.hikariCP)

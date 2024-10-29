@@ -37,6 +37,7 @@ import io.ktor.server.plugins.doublereceive.*
 import io.ktor.server.plugins.forwardedheaders.*
 import io.ktor.server.plugins.statuspages.*
 import java.time.Duration
+import io.ktor.server.plugins.cors.routing.*
 
 fun Application.main() {
 
@@ -70,6 +71,16 @@ fun Application.main() {
 
     install(TimeoutFeature) {
         duration = Duration.ofSeconds(20)
+    }
+
+    install(CORS) {
+        allowMethod(HttpMethod.Options)
+        allowHeader(HttpHeaders.XForwardedProto)
+        allowHeader("auth-token")
+        anyHost()
+        allowCredentials = true
+        allowNonSimpleContentTypes = true
+        maxAgeInSeconds = Duration.ofDays(1).seconds
     }
 
     install(SentryKtorFeature) {
