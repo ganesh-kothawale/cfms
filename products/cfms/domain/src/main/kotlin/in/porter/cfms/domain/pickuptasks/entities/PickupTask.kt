@@ -4,7 +4,6 @@ import `in`.porter.cfms.domain.pickuptasks.TasksStatus
 
 data class PickupTask(
     val taskId: String,
-    val status: TasksStatus,
     val hlpId: String,
     val riderName: String?,
     val riderNumber: String?,

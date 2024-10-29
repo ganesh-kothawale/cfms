@@ -1,8 +1,8 @@
-package `in`.porter.cfms.api.models.tasks
+package `in`.porter.cfms.domain.tasks.entities
 
 import java.time.LocalDate
 
-data class ListTasksRequest(
+data class DomainListTasksRequest(
     val page: Int,
     val size: Int,
     val createdDate: LocalDate? = null,

@@ -20,6 +20,7 @@ class PickupTasksRowMapper @Inject constructor()  {
         val riderNumber = resultRow[HlpsTable.riderNumber] ?: "Unknown Number"
         val vehicleType = resultRow[HlpsTable.vehicleType] ?: "Unknown Vehicle"
 
+        // Mapping the inner `PickupOrderRecord`
         val pickupOrderRecord = toPickupOrderRecord(resultRow)
 
         return HlpWithOrdersRecord(

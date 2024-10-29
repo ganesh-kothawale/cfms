@@ -18,17 +18,13 @@ constructor(
 
     private val logger = LoggerFactory.getLogger(ListTasksService::class.java)
 
-    suspend fun listTasks(page:Int , size: Int): ListTasksResponse {
-        logger.info("Received request to list tasks: {}", page, size)
+    suspend fun invoke(request: ListTasksRequest): ListTasksResponse {
+        logger.info("Received request to list tasks: {}", request)
 
         // Convert the request to the domain model using the request mapper
-        val domainRequest = requestMapper.toDomain(page, size)
+        val domainRequest = requestMapper.toDomain(request)
         // Fetch tasks from the domain service
-        val tasksResult = listTasks.listTasks(
-            page = domainRequest.page,
-            size = domainRequest.size
-
-        )
+        val tasksResult = listTasks.invoke(domainRequest)
 
         logger.info("Fetched tasks: {}", tasksResult)
 

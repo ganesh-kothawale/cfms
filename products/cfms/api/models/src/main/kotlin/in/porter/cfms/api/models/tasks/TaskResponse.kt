@@ -1,14 +1,14 @@
 package `in`.porter.cfms.api.models.tasks
 
-import java.time.LocalDateTime
+import `in`.porter.cfms.api.models.pickupTasks.PickupTaskHlpResponse
+import `in`.porter.cfms.api.models.recon.ReconResponse
 
 data class TaskResponse(
     val taskId: String,
     val flowType: String,
     val status: String,
-    val packageReceived: Int?,
-    val scheduledSlot: String?,
-    val teamId: String,
     val createdAt: String,
-    val updatedAt: String
+    val updatedAt: String,
+    val pickupTask: PickupTaskHlpResponse?,
+    val recon: ReconResponse?
 )

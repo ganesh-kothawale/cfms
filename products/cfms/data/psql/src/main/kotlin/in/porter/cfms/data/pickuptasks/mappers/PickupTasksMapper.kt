@@ -10,7 +10,6 @@ class PickupTasksMapper @Inject constructor() {
     fun toDomain(record: HlpWithOrdersRecord): PickupTask {
         return PickupTask(
             taskId = record.taskId,
-            status = TasksStatus.valueOf(record.pickupOrders.first().status),
             hlpId = record.hlpOrderId,
             riderName = record.riderName ?: "Unknown Rider",
             riderNumber = record.riderNumber ?: "Unknown Number",
@@ -21,7 +20,6 @@ class PickupTasksMapper @Inject constructor() {
                     awbNumber = orderRecord.awbNumber ?: "Unknown AWB",
                     senderName = orderRecord.senderName ?: "Unknown Sender",
                     receiverName = orderRecord.receiverName ?: "Unknown Receiver",
-                    status = orderRecord.status,
                     crNumber = orderRecord.crNumber ?: "Unknown CR"
                 )
             }

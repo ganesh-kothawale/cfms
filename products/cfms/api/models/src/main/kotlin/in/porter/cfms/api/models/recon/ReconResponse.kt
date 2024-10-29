@@ -21,6 +21,6 @@ data class ReconResponse(
     val dimensionsPhotoUrls: String?,
     val returnRequested: Boolean? = false,
     val returnImageUrl: String?,
-    val createdAt: Instant,
-    val updatedAt: Instant
+    val createdAt: Instant?,
+    val updatedAt: Instant?
 )
