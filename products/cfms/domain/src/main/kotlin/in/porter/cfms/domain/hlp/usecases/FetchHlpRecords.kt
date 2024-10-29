@@ -14,7 +14,7 @@ constructor(
 
     suspend fun invoke(req: FetchHlpRecordsRequest): FetchHlpRecordsResponse = trace {
         val hlpRecords = hlpsRepo.findAll(req)
-        val totalRecords = hlpsRepo.countAll()
+        val totalRecords = hlpsRepo.countAll(req)
 
         FetchHlpRecordsResponse(
             hlps = hlpRecords,

@@ -36,16 +36,16 @@ constructor(
                 ?.let { mapper.fromRecord(it) }
         }
 
-    override suspend fun countAll(): Int =
+    override suspend fun countAll(req: FetchHlpRecordsRequest): Int =
         trace("countAll") {
-            queries.countAll()
+            queries.countAll(req)
         }
 
     override suspend fun findAll(req: FetchHlpRecordsRequest): List<HlpDetails> =
         trace("findAll") {
             val offset = (req.page - 1) * req.size
 
-            queries.findAll(req.size, offset)
+            queries.findAll(req, offset)
                 .map { mapper.fromRecord(it) }
         }
 

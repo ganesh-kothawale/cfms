@@ -14,7 +14,7 @@ interface HlpsRepo {
 
     suspend fun getByHlpOrderId(hlpOrderId: String): HlpDetails?
 
-    suspend fun countAll(): Int
+    suspend fun countAll(req: FetchHlpRecordsRequest): Int
 
     suspend fun findAll(req: FetchHlpRecordsRequest): List<HlpDetails>
 }

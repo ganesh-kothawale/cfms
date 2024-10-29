@@ -12,7 +12,15 @@ constructor() {
         validateRequest(req)
         return FetchHlpRecordsRequest(
             page = req.page,
-            size = req.size
+            size = req.size,
+            createdDate = req.createdDate,
+            updatedDate = req.updatedDate,
+            driverNames = req.driverNames,
+            driverNumber = req.driverNumber,
+            hlpOrderIds = req.hlpOrderIds,
+            hlpOrderStatus = req.hlpOrderStatus,
+            franchiseIds = req.franchiseIds,
+            vehicleTypes = req.vehicleTypes
         )
     }
 
