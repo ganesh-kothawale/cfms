@@ -52,10 +52,9 @@ class UpdatePickupTask @Inject constructor(
         )
     }
 
-    suspend fun updateOrderStatus(pickupTask: UpdatePickupTask) {
+    suspend fun updateOrderStatuses(pickupTask: UpdatePickupTask) {
         logger.info("Updating order statuses for orders")
-        pickupTask.orders.forEach { order ->
-            pickupTasksRepo.updateOrderStatuses(listOf(order.orderId to order.status))
-        }
+        val orderStatusList = pickupTask.orders.map { it.orderId to it.status }
+        pickupTasksRepo.updateOrderStatuses(orderStatusList)
     }
 }

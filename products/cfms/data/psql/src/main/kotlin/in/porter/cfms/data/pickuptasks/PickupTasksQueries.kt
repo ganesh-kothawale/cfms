@@ -101,15 +101,20 @@ constructor(
     suspend fun updateOrderStatuses(orders: List<Pair<String, String>>) = transact {
         addLogger(StdOutSqlLogger)
         try {
+            //TODO: Bulk Status Update support need to be added
+            logger.info("Starting update of order statuses for ${orders.size} orders")
+
             orders.forEach { (orderId, status) ->
                 OrdersTable.update({ OrdersTable.orderId eq orderId }) {
                     it[orderStatus] = status
                     it[updatedAt] = Instant.now()
                 }
             }
+            logger.info("Successfully updated statuses for ${orders.size} orders")
+            return@transact orders.size
         } catch (e: Exception) {
-            logger.error("Error updating order statuses: ${e.message}", e)
-            throw CfmsException("Error updating order statuses: ${e.message}")
+            logger.error("Error during update of order statuses: ${e.message}", e)
+            throw CfmsException("Error during update of order statuses: ${e.message}")
         }
     }
 
