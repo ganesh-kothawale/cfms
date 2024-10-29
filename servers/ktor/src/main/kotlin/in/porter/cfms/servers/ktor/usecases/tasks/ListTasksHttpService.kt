@@ -1,6 +1,7 @@
 package `in`.porter.cfms.servers.ktor.usecases.tasks
 
 import `in`.porter.cfms.api.models.exceptions.CfmsException
+import `in`.porter.cfms.api.models.tasks.ListTasksRequest
 import `in`.porter.cfms.api.models.tasks.ListTasksResponse
 import `in`.porter.cfms.api.service.tasks.mappers.ListTasksRequestMapper
 import `in`.porter.cfms.api.service.tasks.usecases.ListTasksService
@@ -20,24 +21,18 @@ constructor(
 
     suspend fun invoke(
         call: ApplicationCall,
-        page: Int,
-        size: Int
+        request: ListTasksRequest
     ) {
         try {
             // Validate page and size
-            if (page < 1 || size < 1 || size > 100) {
-                logger.error("Invalid page or size: page=$page, size=$size")
+            if (request.page < 1 || request.size < 1 || request.size > 100) {
+                logger.error("Invalid page or size: page=${request.page}, size=${request.size}")
                 throw IllegalArgumentException("Page must be a positive integer, and size must be between 1 and 100.")
             }
 
-            logger.info("Received request to list all tasks with page: $page and size: $size")
+            logger.info("Received request to list all tasks with page: ${request.page} and size: ${request.size}")
 
-            // Use the mapper to create the request model
-            val request = listTasksRequestMapper.toDomain(page = page, size = size)
-            logger.info("Mapped request for listing tasks: {}", request)
-
-            // Call the service to list tasks
-            val tasksResponse: ListTasksResponse = listTasksService.listTasks(page,size)
+            val tasksResponse: ListTasksResponse = listTasksService.invoke(request)
 
 
             // Respond with the formatted result
@@ -52,6 +47,19 @@ constructor(
                         mapOf(
                             "message" to "Invalid page or limit parameter",
                             "details" to "Page must be a positive integer, and limit must be between 1 and 100."
+                        )
+                    )
+                )
+            )
+        } catch (e: NoSuchElementException) {
+            // Handle cases where no holidays are found
+            call.respond(
+                HttpStatusCode.NotFound,
+                mapOf(
+                    "error" to listOf(
+                        mapOf(
+                            "message" to "No task found",
+                            "details" to "No task are available for the current request parameters."
                         )
                     )
                 )
