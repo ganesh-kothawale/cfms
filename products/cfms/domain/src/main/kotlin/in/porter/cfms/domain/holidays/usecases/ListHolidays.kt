@@ -2,6 +2,7 @@ package `in`.porter.cfms.domain.holidays.usecases
 
 import `in`.porter.cfms.domain.exceptions.CfmsException
 import `in`.porter.cfms.domain.holidays.entities.LeaveType
+import `in`.porter.cfms.domain.holidays.entities.ListHolidaysDomainRequest
 import `in`.porter.cfms.domain.holidays.repos.HolidayRepo
 import org.slf4j.LoggerFactory
 import java.time.LocalDate
@@ -15,29 +16,21 @@ constructor(
 
     private val logger = LoggerFactory.getLogger(ListHolidays::class.java)
 
-    suspend fun invoke(
-        franchiseId: String?,
-        leaveType: String?,
-        startDate: LocalDate?,
-        endDate: LocalDate?,
-        page: Int,
-        size: Int
-    ): HolidaySearchResult {
-        logger.info("Starting listHolidays method for franchiseId: {}, leaveType: {}, startDate: {}, endDate: {}, page: {}, size: {}",
-            franchiseId, leaveType, startDate, endDate, page, size)
+    suspend fun invoke(request : ListHolidaysDomainRequest): HolidaySearchResult {
+        logger.info("Received request to list holidays:{}", request)
 
-        val leaveTypeEnum = validateAndProcessLeaveType(leaveType)
+        validateAndProcessLeaveType(request.leaveType)
 
-        if (startDate != null && endDate != null && startDate.isAfter(endDate)) {
-            logger.error("Start date cannot be after end date: startDate={}, endDate={}", startDate, endDate)
+        if (request.fromDate != null && request.toDate != null && request.fromDate.isAfter(request.toDate)) {
+            logger.error("Start date cannot be after end date: startDate={}, endDate={}", request.fromDate, request.toDate)
             throw CfmsException("Start date cannot be after end date.")
         }
 
         return try {
             // Fetch holidays and count from the repository
-            logger.info("Fetching holidays from repository for franchiseId: {}, leaveTypeEnum: {}", franchiseId, leaveTypeEnum)
-            val holidays = holidayRepo.findHolidays(franchiseId, leaveTypeEnum, startDate, endDate, page, size)
-            val totalRecords = holidayRepo.countHolidays(franchiseId, leaveTypeEnum, startDate, endDate)
+            logger.info("Fetching holidays from repository for request: {}", request)
+            val holidays = holidayRepo.findHolidays(request)
+            val totalRecords = holidayRepo.countHolidays(request)
 
             logger.info("Fetched {} holidays with totalRecords: {}", holidays.size, totalRecords)
 

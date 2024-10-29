@@ -9,6 +9,7 @@ import `in`.porter.cfms.api.models.holidays.HolidayPeriod
 import `in`.porter.cfms.api.models.holidays.HolidayResponse
 import `in`.porter.cfms.api.models.holidays.ListHolidaysRequest
 import `in`.porter.cfms.api.models.holidays.ListHolidaysResponse
+import `in`.porter.cfms.api.service.holidays.mappers.ListHolidaysRequestMapper
 import `in`.porter.cfms.domain.holidays.entities.ListHoliday
 import `in`.porter.cfms.domain.holidays.entities.ListHolidaysFranchise
 import `in`.porter.cfms.domain.holidays.usecases.ListHolidays
@@ -18,21 +19,22 @@ import javax.inject.Inject
 class ListHolidaysService
 @Inject
 constructor(
-    private val listHolidays: ListHolidays
+    private val listHolidays: ListHolidays,
+    private val listHolidaysRequestMapper: ListHolidaysRequestMapper
 ) {
 
     private val logger = LoggerFactory.getLogger(ListHolidaysService::class.java)
     suspend fun invoke(request: ListHolidaysRequest): ListHolidaysResponse {
         try {
+
+            // Use the mapper to create the request model
+            val domainRequest = listHolidaysRequestMapper.toDomain(request)
+            logger.info("Received request to list all holidays with request: {}", domainRequest)
+
+
+
             // Fetch data from domain layer (HolidaySearchResult)
-            val holidaysResult = listHolidays.invoke(
-                franchiseId = request.franchiseId,
-                leaveType = request.leaveType,
-                startDate = request.startDate,
-                endDate = request.endDate,
-                page = request.page,
-                size = request.size
-            )
+            val holidaysResult = listHolidays.invoke(domainRequest)
 
             logger.info("Fetched holidays: {}", holidaysResult)
 

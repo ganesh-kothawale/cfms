@@ -1,6 +1,7 @@
 package `in`.porter.cfms.servers.ktor.usecases.holidays
 
 import `in`.porter.cfms.api.models.exceptions.CfmsException
+import `in`.porter.cfms.api.models.holidays.ListHolidaysRequest
 import `in`.porter.cfms.api.service.holidays.mappers.ListHolidaysRequestMapper
 import `in`.porter.cfms.api.service.holidays.usecases.ListHolidaysService
 import `in`.porter.kotlinutils.instrumentation.opentracing.Traceable
@@ -13,39 +14,23 @@ import javax.inject.Inject
 
 class ListHolidaysHttpService @Inject
 constructor(
-    private val listHolidaysService: ListHolidaysService,
-    private val listHolidaysRequestMapper: ListHolidaysRequestMapper
+    private val listHolidaysService: ListHolidaysService
 ) : Traceable {
     private val logger = LoggerFactory.getLogger(ListHolidaysHttpService::class.java)
 
     suspend fun invoke(
         call: ApplicationCall,
-        page: Int,
-        size: Int,
-        franchiseId: String?,
-        leaveType: String?,
-        startDate: LocalDate?,
-        endDate: LocalDate?
+        request: ListHolidaysRequest
     ) {
         try {
 
-            if (page < 1 || size < 1 || size > 100) {
-                logger.error("Invalid page or size: page=$page, size=$size")
+            if (request.page < 1 || request.size < 1 || request.size > 100) {
+                logger.error("Invalid page or size: page=${request.page}, size=${request.size}")
                 throw IllegalArgumentException("Page must be a positive integer, and size must be between 1 and 100.")
             }
 
             logger.info("Received request to list all holidays")
 
-            // Use the mapper to create the request model
-            val request = listHolidaysRequestMapper.toDomain(
-                page = page,
-                size = size,
-                franchiseId = franchiseId,
-                leaveType = leaveType,
-                startDate = startDate,
-                endDate = endDate
-            )
-            logger.info("Received request to list all holidays with request: {}", request)
 
             // Call the service to list holidays
             val holidaysResponse = listHolidaysService.invoke(request)

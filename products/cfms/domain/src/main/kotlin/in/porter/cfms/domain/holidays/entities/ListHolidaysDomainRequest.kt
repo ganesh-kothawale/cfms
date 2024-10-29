@@ -1,8 +1,8 @@
-package `in`.porter.cfms.api.models.holidays
+package `in`.porter.cfms.domain.holidays.entities
 
 import java.time.LocalDate
 
-data class ListHolidaysRequest(
+data class ListHolidaysDomainRequest(
     val page: Int,
     val size: Int,
     val franchiseIds: List<String>? = null,

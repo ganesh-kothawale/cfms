@@ -1,27 +1,32 @@
 package `in`.porter.cfms.data.holidays
 
 import `in`.porter.cfms.data.franchise.FranchisesTable
+import `in`.porter.cfms.data.hlp.HlpsTable
 import `in`.porter.cfms.data.holidays.mappers.HolidayRowMapper
 import `in`.porter.cfms.data.holidays.mappers.ListHolidayMapper
 import `in`.porter.cfms.data.holidays.mappers.ListHolidaysFranchiseRowMapper
 import `in`.porter.cfms.data.holidays.records.HolidayRecord
 import `in`.porter.cfms.domain.holidays.entities.LeaveType
+import `in`.porter.cfms.domain.holidays.entities.ListHolidaysDomainRequest
 import `in`.porter.kotlinutils.exposed.ExposedRepo
 import kotlinx.coroutines.CoroutineDispatcher
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.StdOutSqlLogger
 import org.jetbrains.exposed.sql.addLogger
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.andWhere
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.or
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
 import java.time.Instant
 import java.time.LocalDate
+import java.time.ZoneOffset
 import javax.inject.Inject
 
 class HolidayQueries
@@ -101,68 +106,62 @@ constructor(
         }
     }
 
-    suspend fun findHolidays(
-        franchiseId: String?,
-        leaveType: LeaveType?,
-        startDate: LocalDate?,
-        endDate: LocalDate?,
-        page: Int,
-        size: Int
-    ): List<ResultRow> {
-        return transact {
-            addLogger(StdOutSqlLogger)
-            (HolidayTable innerJoin FranchisesTable)
+    suspend fun findHolidays(request: ListHolidaysDomainRequest, offset: Int): List<ResultRow> = transact {
+        (HolidayTable innerJoin FranchisesTable)
             .selectAll()
-                .apply {
-                    // Only add franchiseId filter if it's not null
-                    if (franchiseId != null) {
-                        andWhere { HolidayTable.franchiseId eq franchiseId }
-                    }
-                    // Apply other filters if needed
-                    if (leaveType != null) {
-                        andWhere { HolidayTable.leaveType eq leaveType.name }
-                    }
-                    if (startDate != null) {
-                        andWhere { HolidayTable.startDate greaterEq startDate }
-                    }
-                    if (endDate != null) {
-                        andWhere { HolidayTable.endDate lessEq endDate }
+            .apply {
+                request.franchiseIds?.let { ids ->
+                    andWhere {
+                        ids.map { id -> HolidayTable.franchiseId eq id }
+                            .reduce { acc, condition -> acc or condition }
                     }
                 }
-                .limit(size, offset = (page - 1) * size)
-                .toList()
-        }
+
+                request.backupFranchises?.let { ids ->
+                    andWhere {
+                        ids.map { id -> HolidayTable.backupFranchiseIds like "%$id%" }
+                            .reduce { acc, condition -> acc or condition }
+                    }
+                }
+
+                request.leaveType?.let { andWhere { HolidayTable.leaveType eq it } }
+
+                request.createdDate?.let { andWhere { HolidayTable.createdAt greaterEq it.atStartOfDay(ZoneOffset.UTC).toInstant() } }
+                request.updatedDate?.let { andWhere { HolidayTable.updatedAt lessEq it.atStartOfDay(ZoneOffset.UTC).toInstant() } }
+                request.fromDate?.let { andWhere { HolidayTable.startDate greaterEq it } }
+                request.toDate?.let { andWhere { HolidayTable.endDate lessEq it } }
+            }
+            .orderBy(HolidayTable.createdAt, SortOrder.DESC)
+            .limit(request.size, offset)
+            .toList()
     }
 
-
-
-    // Query to count the total number of holidays with filters applied
-    suspend fun countHolidays(
-        franchiseId: String?,
-        leaveType: LeaveType?,
-        startDate: LocalDate?,
-        endDate: LocalDate?
-    ): Int {
-        return transact {  // Use transact to ensure transaction context
-            addLogger(StdOutSqlLogger)
-            HolidayTable
-                .selectAll()
-                .apply {
-                    if (franchiseId != null) {
-                        andWhere { HolidayTable.franchiseId eq franchiseId }
-                    }
-                    if (leaveType != null) {
-                        andWhere { HolidayTable.leaveType eq leaveType.name } // Enum to string
-                    }
-                    if (startDate != null) {
-                        andWhere { HolidayTable.startDate greaterEq startDate }
-                    }
-                    if (endDate != null) {
-                        andWhere { HolidayTable.endDate lessEq endDate }
+    suspend fun countHolidays(request: ListHolidaysDomainRequest): Int = transact {
+        (HolidayTable innerJoin FranchisesTable)
+            .selectAll()
+            .apply {
+                request.franchiseIds?.let { ids ->
+                    andWhere {
+                        ids.map { id -> HolidayTable.franchiseId eq id }
+                            .reduce { acc, condition -> acc or condition }
                     }
                 }
-                .count()
-        }
+
+                request.backupFranchises?.let { ids ->
+                    andWhere {
+                        ids.map { id -> HolidayTable.backupFranchiseIds like "%$id%" }
+                            .reduce { acc, condition -> acc or condition }
+                    }
+                }
+
+                request.leaveType?.let { andWhere { HolidayTable.leaveType eq it } }
+
+                request.createdDate?.let { andWhere { HolidayTable.createdAt greaterEq it.atStartOfDay(ZoneOffset.UTC).toInstant() } }
+                request.updatedDate?.let { andWhere { HolidayTable.updatedAt lessEq it.atStartOfDay(ZoneOffset.UTC).toInstant() } }
+                request.fromDate?.let { andWhere { HolidayTable.startDate greaterEq it } }
+                request.toDate?.let { andWhere { HolidayTable.endDate lessEq it } }
+            }
+            .count()
     }
 
 

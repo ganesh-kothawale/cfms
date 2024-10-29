@@ -8,6 +8,7 @@ import `in`.porter.cfms.data.holidays.mappers.ListHolidaysFranchiseRowMapper
 import `in`.porter.cfms.domain.holidays.entities.Holiday
 import `in`.porter.cfms.domain.holidays.entities.LeaveType
 import `in`.porter.cfms.domain.holidays.entities.ListHoliday
+import `in`.porter.cfms.domain.holidays.entities.ListHolidaysDomainRequest
 import `in`.porter.cfms.domain.holidays.entities.ListHolidaysFranchise
 import `in`.porter.cfms.domain.holidays.repos.HolidayRepo
 import `in`.porter.kotlinutils.instrumentation.opentracing.Traceable
@@ -73,17 +74,10 @@ constructor(
         }
     }
 
-    override suspend fun findHolidays(
-        franchiseId: String?,
-        leaveType: LeaveType?,
-        startDate: LocalDate?,
-        endDate: LocalDate?,
-        page: Int,
-        size: Int
-    ): List<ListHoliday> {
+    override suspend fun findHolidays(request : ListHolidaysDomainRequest): List<ListHoliday> {
         logger.info("Received request to fetch holidays from the DB")
-
-        return queries.findHolidays(franchiseId, leaveType, startDate, endDate, page, size)
+        val offset = (request.page - 1) * request.size
+        return queries.findHolidays(request, offset)
             .map { row ->
                 // Extract franchiseId from the row
                 val franchiseIdFromRow = row[HolidayTable.franchiseId]
@@ -103,14 +97,9 @@ constructor(
 
 
 
-    override suspend fun countHolidays(
-        franchiseId: String?,
-        leaveType: LeaveType?,
-        startDate: LocalDate?,
-        endDate: LocalDate?
-    ): Int {
+    override suspend fun countHolidays(request : ListHolidaysDomainRequest): Int {
         logger.info("Received request to count total number of holidays")
-        return queries.countHolidays(franchiseId, leaveType, startDate, endDate)
+        return queries.countHolidays(request)
     }
 
     // Query to find a franchise by its ID

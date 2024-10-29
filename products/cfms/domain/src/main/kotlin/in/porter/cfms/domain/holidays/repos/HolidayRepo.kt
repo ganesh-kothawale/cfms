@@ -3,6 +3,7 @@ package `in`.porter.cfms.domain.holidays.repos
 import `in`.porter.cfms.domain.holidays.entities.Holiday
 import `in`.porter.cfms.domain.holidays.entities.LeaveType
 import `in`.porter.cfms.domain.holidays.entities.ListHoliday
+import `in`.porter.cfms.domain.holidays.entities.ListHolidaysDomainRequest
 import `in`.porter.cfms.domain.holidays.entities.ListHolidaysFranchise
 import java.time.LocalDate
 
@@ -22,21 +23,9 @@ interface HolidayRepo {
 
     suspend fun deleteById(holidayId: String)
 
-    suspend fun findHolidays(
-        franchiseId: String?,
-        leaveType: LeaveType?,
-        startDate: LocalDate?,
-        endDate: LocalDate?,
-        page: Int,
-        size: Int
-    ): List<ListHoliday>
+    suspend fun findHolidays(request : ListHolidaysDomainRequest): List<ListHoliday>
 
-    suspend fun countHolidays(
-        franchiseId: String?,
-        leaveType: LeaveType?,
-        startDate: LocalDate?,
-        endDate: LocalDate?
-    ): Int
+    suspend fun countHolidays(request : ListHolidaysDomainRequest): Int
 
     suspend fun findFranchiseById(franchiseId: String): ListHolidaysFranchise?
 }
