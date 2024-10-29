@@ -184,8 +184,8 @@ constructor(
             row[taskId] = taskRecord.taskId
             row[flowType] = taskRecord.flowType
             row[status] = taskRecord.status
-            row[createdAt] = taskRecord.createdAt
-            row[updatedAt] = taskRecord.updatedAt
+            row[createdAt] = taskRecord.createdAt?: Instant.now()
+            row[updatedAt] = taskRecord.updatedAt?: Instant.now()
         }
         taskRecord.taskId
     }
@@ -203,7 +203,7 @@ constructor(
         TasksTable.update({ TasksTable.taskId eq taskRecord.taskId }) {
             it[flowType] = taskRecord.flowType
             it[status] = taskRecord.status
-            it[updatedAt] = taskRecord.updatedAt ?: Instant.now()
+            it[updatedAt] = taskRecord.updatedAt?:Instant.now()
         }
     }
 

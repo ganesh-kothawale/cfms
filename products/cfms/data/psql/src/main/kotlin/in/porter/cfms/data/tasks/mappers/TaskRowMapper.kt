@@ -18,6 +18,7 @@ class TaskRowMapper @Inject constructor() {
             status = row[TasksTable.status],
             createdAt = row[TasksTable.createdAt],
             updatedAt = row[TasksTable.updatedAt]
+
         )
     }
 }

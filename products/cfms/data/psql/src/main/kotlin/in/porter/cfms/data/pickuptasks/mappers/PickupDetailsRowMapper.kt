@@ -5,6 +5,7 @@ import `in`.porter.cfms.data.pickuptasks.pickupimagemappings.PickupOrderMappings
 import `in`.porter.cfms.data.pickuptasks.records.PickupDetailsRecord
 import org.jetbrains.exposed.sql.ResultRow
 import org.slf4j.LoggerFactory
+import java.util.*
 import javax.inject.Inject
 
 class PickupDetailsRowMapper @Inject constructor() {
@@ -19,7 +20,11 @@ class PickupDetailsRowMapper @Inject constructor() {
             hlpId = row[PickupTasksTable.hlpId],
             franchiseId = row[PickupTasksTable.franchiseId],
             createdAt = row[PickupTasksTable.createdAt],
-            updatedAt = row[PickupTasksTable.updatedAt]
+            updatedAt = row[PickupTasksTable.updatedAt],
+            orderImages = row[PickupTasksTable.orderImages]
+                ?.split(",")
+                ?.map { UUID.fromString(it.trim()) },
+            packageReceived = row[PickupTasksTable.packageReceived]
         )
     }
 }

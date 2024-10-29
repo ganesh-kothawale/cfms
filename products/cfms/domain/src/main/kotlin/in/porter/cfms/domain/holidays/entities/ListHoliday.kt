@@ -3,7 +3,7 @@ package `in`.porter.cfms.domain.holidays.entities
 import java.time.LocalDate
 
 data class ListHoliday(
-    val holidayId: Int,
+    val holidayId: String,
     val franchiseId: String,
     val holidayPeriod: HolidayPeriod,            // Nested class for holiday period
     val holidayDetails: HolidayDetails,          // Nested class for holiday details

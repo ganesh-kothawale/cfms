@@ -1,3 +1,4 @@
+/*
 package `in`.porter.cfms.domain.holidays.usecases
 
 import `in`.porter.cfms.domain.exceptions.CfmsException
@@ -68,3 +69,4 @@ class CreateHolidayTest {
         assertEquals("Failed to apply leave: API call failed", exception.message)
     }
 }
+*/

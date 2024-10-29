@@ -297,4 +297,11 @@ constructor(
         }
         orderId
     }
+
+    suspend fun fetchOrderDetailsByOrderId(orderIds: List<String>): List<`in`.porter.cfms.data.orders.entities.Order>? {
+        return transaction {
+            OrdersTable.select { OrdersTable.orderId inList orderIds }
+                .mapNotNull { row -> mapper.fromResultRow(row) }
+        }
+    }
 }
