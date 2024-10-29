@@ -10,6 +10,8 @@ object PickupOrderMappingsTable : Table("pickup_order_mappings") {
     val pickupTaskId = varchar("pickup_details_id", 10).references(PickupTasksTable.pickupTaskId)
     val mappingId = varchar("mapping_id", 10).uniqueIndex()
     val orderId = varchar("order_id", 10).references(OrdersTable.orderId)
+    val orderImages = varchar("order_images", 1000)
+    val packageReceived = integer("package_received")
     val createdAt = timestampWithoutTZAsInstant("created_at")
     val updatedAt = timestampWithoutTZAsInstant("updated_at")
 }

@@ -4,10 +4,11 @@ import `in`.porter.cfms.data.exceptions.CfmsException
 import `in`.porter.cfms.data.pickuptasks.PickupTasksQueries
 import `in`.porter.cfms.data.pickuptasks.mappers.PickupTasksMapper
 import `in`.porter.cfms.data.pickuptasks.records.HlpWithOrdersRecord
-import `in`.porter.cfms.domain.pickuptasks.repos.PickupTasksRepo
 import `in`.porter.cfms.domain.pickuptasks.entities.PickupTask
+import `in`.porter.cfms.domain.pickuptasks.repos.PickupTasksRepo
 import `in`.porter.kotlinutils.instrumentation.opentracing.Traceable
 import org.slf4j.LoggerFactory
+import java.util.UUID
 import javax.inject.Inject
 
 class PsqlPickupTasksRepo @Inject constructor(
@@ -15,6 +16,7 @@ class PsqlPickupTasksRepo @Inject constructor(
     private val pickupTasksMapper: PickupTasksMapper,
 ) : Traceable, PickupTasksRepo {
     private val logger = LoggerFactory.getLogger(PsqlPickupTasksRepo::class.java)
+
     override suspend fun findAllPickupTasks(page: Int, size: Int): List<PickupTask> =
         trace("findAllPickupTasks") { _: io.opentracing.Span ->
             try {
@@ -31,6 +33,7 @@ class PsqlPickupTasksRepo @Inject constructor(
                 throw CfmsException("Failed to retrieve tasks: ${e.message}")
             }
         }
+
     override suspend fun countAllPickupTasks(): Int =
         trace("countAllPickupTasks") {
             try {
@@ -49,4 +52,39 @@ class PsqlPickupTasksRepo @Inject constructor(
         TODO("Not yet implemented")
     }
 
+    override suspend fun getPickupDetailsIdByTaskId(taskId: String): String? {
+        return trace("getPickupDetailsIdByTaskId") {
+            try {
+                queries.findPickupDetailsIdByTaskId(taskId)
+            } catch (e: Exception) {
+                logger.error("Error fetching pickup details ID for taskId $taskId: ${e.message}", e)
+                throw CfmsException("Error fetching pickup details ID for taskId $taskId: ${e.message}")
+            }
+        }
+    }
+
+
+    override suspend fun updateByTaskId(taskId: String, orderImage: List<UUID>, packageReceived: Int?) {
+        trace("updateByTaskId") {
+            try {
+                queries.updateByTaskId(taskId, orderImage, packageReceived)
+            } catch (e: Exception) {
+                logger.error("Error creating pickup image mapping for taskId $taskId: ${e.message}", e)
+                throw CfmsException("Error creating pickup image mapping for taskId $taskId: ${e.message}")
+            }
+        }
+    }
+
+      override suspend fun updateOrderStatuses(orders: List<Pair<String, String>>) {
+        trace("updateOrderStatuses") {
+            try {
+                orders.forEach { (orderId, status) ->
+                    queries.updateOrderStatuses(orders)
+                }
+            } catch (e: Exception) {
+                logger.error("Error updating order statuses: ${e.message}", e)
+                throw CfmsException("Error updating order statuses: ${e.message}")
+            }
+        }
+    }
 }
