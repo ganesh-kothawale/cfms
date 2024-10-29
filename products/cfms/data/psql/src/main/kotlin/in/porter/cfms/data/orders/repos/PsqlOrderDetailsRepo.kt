@@ -39,8 +39,9 @@ class PsqlOrderDetailsRepo
             ?.let { queries.updateStatus(orderId, it) }
             ?: throw IllegalArgumentException("Invalid order status: $status")
 
-    override suspend fun fetchOrderByOrderId(orderId: String): Order? {
-        return queries.fetchOrderDetailsByOrderId(orderId)
-            .let { it?.let { mapper.toDomain(it) } }
+    override suspend fun fetchOrderByOrderId(orderIds: List<String>):  Map<String, Order>? {
+        return queries.fetchOrderDetailsByOrderId(orderIds)
+            ?.associateBy { it.basicDetails.orderId }
+            ?.mapValues { (_, entity) -> mapper.toDomain(entity) }
     }
 }

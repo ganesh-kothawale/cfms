@@ -13,6 +13,8 @@ class CreatePickupDetailsRequestMapper @Inject constructor() {
             taskId = request.taskId,
             hlpId = request.hlpId,
             franchiseId = request.franchiseId,
+            orderImages = request.orderImages,
+            packageReceived = request.packageReceived,
             createdAt = Instant.now(),
             updatedAt = Instant.now()
         )

@@ -1,4 +1,4 @@
- package `in`.porter.cfms.data.pickuptasks
+package `in`.porter.cfms.data.pickuptasks
 
 import `in`.porter.cfms.data.exceptions.CfmsException
 import `in`.porter.cfms.data.hlp.HlpsTable
@@ -37,7 +37,10 @@ constructor(
         // Step 1: Fetch all data without applying limit yet
         val results = PickupTasksTable
             .innerJoin(HlpsTable, { PickupTasksTable.hlpId }, { HlpsTable.hlpOrderId })
-            .innerJoin(PickupOrderMappingsTable, { PickupTasksTable.pickupTaskId }, { PickupOrderMappingsTable.pickupTaskId })
+            .innerJoin(
+                PickupOrderMappingsTable,
+                { PickupTasksTable.pickupTaskId },
+                { PickupOrderMappingsTable.pickupTaskId })
             .innerJoin(OrdersTable, { PickupOrderMappingsTable.orderId }, { OrdersTable.orderId })
             .selectAll()
             .map { row ->
@@ -66,7 +69,10 @@ constructor(
         logger.info("Counting all pickup-tasks")
         PickupTasksTable
             .innerJoin(HlpsTable, { PickupTasksTable.hlpId }, { HlpsTable.hlpOrderId })
-            .innerJoin(PickupOrderMappingsTable, { PickupTasksTable.pickupTaskId }, { PickupOrderMappingsTable.pickupTaskId })
+            .innerJoin(
+                PickupOrderMappingsTable,
+                { PickupTasksTable.pickupTaskId },
+                { PickupOrderMappingsTable.pickupTaskId })
             .innerJoin(OrdersTable, { PickupOrderMappingsTable.orderId }, { OrdersTable.orderId })
             .selectAll()
             .count()
@@ -85,12 +91,28 @@ constructor(
     suspend fun updateByTaskId(taskId: String, orderImage: List<UUID>, noPackageReceived: Int?) = transact {
         addLogger(StdOutSqlLogger)
         logger.info("Inserting order image against taskId: $taskId")
-        PickupTasksTable.update({PickupTasksTable.taskId eq taskId}) {
+        PickupTasksTable.update({ PickupTasksTable.taskId eq taskId }) {
             it[orderImages] = orderImage.joinToString(",")
             it[packageReceived] = noPackageReceived
             it[updatedAt] = Instant.now()
         }
     }
+
+    suspend fun updateOrderStatuses(orders: List<Pair<String, String>>) = transact {
+        addLogger(StdOutSqlLogger)
+        try {
+            orders.forEach { (orderId, status) ->
+                OrdersTable.update({ OrdersTable.orderId eq orderId }) {
+                    it[orderStatus] = status
+                    it[updatedAt] = Instant.now()
+                }
+            }
+        } catch (e: Exception) {
+            logger.error("Error updating order statuses: ${e.message}", e)
+            throw CfmsException("Error updating order statuses: ${e.message}")
+        }
+    }
+
 
     suspend fun updateOrderStatus(orderId: String, status: String) = transact {
         addLogger(StdOutSqlLogger)

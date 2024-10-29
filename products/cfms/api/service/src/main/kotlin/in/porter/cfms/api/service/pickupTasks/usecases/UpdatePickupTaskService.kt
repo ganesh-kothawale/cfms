@@ -22,28 +22,7 @@ class UpdatePickupTaskService @Inject constructor(
             val domainPickupTask = updatePickupTaskRequestMapper.toDomain(request)
             updatePickupTask.updatePickupDetails(domainPickupTask)
 
-//            createAuditLogService.createAuditLog(
-//                CreateAuditLogRequest(
-//                    entityId = request.taskId,
-//                    entityType = "Task",
-//                    status = "Updated",
-//                    message = "Task status updated successfully",
-//                    updatedBy = 123 // Replace with actual user ID
-//                )
-//            )
-
             updatePickupTask.updateOrderStatus(domainPickupTask)
-//            domainPickupTask.orders.forEach { order ->
-//                createAuditLogService.createAuditLog(
-//                    CreateAuditLogRequest(
-//                        entityId = order.orderId,
-//                        entityType = "Order",
-//                        status = order.status,
-//                        message = "Order status updated successfully",
-//                        updatedBy = 123 // Replace with actual user ID
-//                    )
-//                )
-//            }
 
             logger.info("Pickup task updated successfully for ID: ${request.taskId}")
 
