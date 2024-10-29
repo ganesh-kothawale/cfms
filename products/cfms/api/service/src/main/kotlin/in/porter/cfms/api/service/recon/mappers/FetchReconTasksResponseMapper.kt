@@ -26,12 +26,12 @@ class FetchReconTasksResponseMapper @Inject constructor() {
     private fun toReconTaskResponse(reconTask: ReconTask): ReconTaskResponse {
         return ReconTaskResponse(
             task_id = reconTask.taskId,
-            cr_id = reconTask.crId,
             cp_name = reconTask.cpName,
             cp_image_url = reconTask.cpImageUrl,
             shipment_image_url = reconTask.shipmentImageUrl,
             awb = reconTask.awb,
-            status = reconTask.status
+            cr_number = reconTask.crNumber,
+            action = reconTask.action
         )
     }
 }

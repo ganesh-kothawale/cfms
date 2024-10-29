@@ -54,7 +54,7 @@ object Libs {
 
     const val serializationKotlinxJson = "$group:ktor-serialization-kotlinx-json:$version"
     const val ktorServerTest = "io.ktor:ktor-server-tests:$version"
-
+    const val cors = "$group:ktor-server-cors:$version"
   }
 
   object Log4j {
