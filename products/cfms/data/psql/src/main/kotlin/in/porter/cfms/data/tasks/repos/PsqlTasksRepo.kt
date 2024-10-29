@@ -1,9 +1,15 @@
 package `in`.porter.cfms.data.tasks.repos
 
 import `in`.porter.cfms.data.exceptions.CfmsException
+import `in`.porter.cfms.data.pickuptasks.mappers.PickupTasksMapper
+import `in`.porter.cfms.data.recon.mappers.ReconMapper
 import `in`.porter.cfms.data.tasks.TasksQueries
+import `in`.porter.cfms.data.tasks.mappers.ListTaskMapper
+import `in`.porter.cfms.data.tasks.mappers.ListTaskRowMapper
 import `in`.porter.cfms.data.tasks.mappers.TaskMapper
 import `in`.porter.cfms.data.tasks.records.TaskRecord
+import `in`.porter.cfms.domain.tasks.entities.DomainListTasksRequest
+import `in`.porter.cfms.domain.tasks.entities.ListTasks
 import `in`.porter.cfms.domain.tasks.entities.Tasks
 import `in`.porter.cfms.domain.tasks.repos.TasksRepo
 import `in`.porter.kotlinutils.instrumentation.opentracing.Traceable
@@ -13,25 +19,25 @@ import javax.inject.Inject
 class PsqlTasksRepo
 @Inject constructor(
     private val queries: TasksQueries,
-    private val taskMapper: TaskMapper
+    private val taskMapper: TaskMapper,
+    private val listTaskMapper: ListTaskMapper,
 ) : Traceable, TasksRepo {
 
     private val logger = LoggerFactory.getLogger(PsqlTasksRepo::class.java)
 
-    override suspend fun findAllTasks(page: Int, size: Int): List<Tasks> =
-
+    override suspend fun findAllTasks(request: DomainListTasksRequest): List<ListTasks> =
         trace("findAllTasks") { _: io.opentracing.Span ->
             try {
-                logger.info("Retrieving tasks with page: $page, size: $size")
-                val offset = (page - 1) * size
-                val records = queries.findAll(size, offset)
+                logger.info("Retrieving tasks with page: ${request.page}, size: ${request.size}")
+                val offset = (request.page - 1) * request.size
+                val records = queries.findAll(request, offset)
 
                 logger.info("Found ${records.size} tasks")
                 logger.info("Mapping records to domain objects")
-                records.map { record: TaskRecord ->
 
-                    logger.info("Received request to map record: $record")
-                    taskMapper.toDomain(record)
+                records.map { record ->
+                    logger.info("Mapping record: $record")
+                    listTaskMapper.toDomain(record) // Use ListTaskMapper for direct conversion to ListTasks entity
                 }
             } catch (e: Exception) {
                 logger.error("Error occurred while retrieving tasks: ${e.message}", e)
@@ -39,11 +45,11 @@ class PsqlTasksRepo
             }
         }
 
-    override suspend fun countAllTasks(): Int =
+    override suspend fun countAllTasks(request: DomainListTasksRequest): Int =
         trace("countAllTasks") {
             try {
                 logger.info("Counting all tasks")
-                queries.countAll()
+                queries.countAll(request)
             } catch (e: CfmsException) {
                 throw CfmsException("Failed to count tasks: ${e.message}")
             }

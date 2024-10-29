@@ -42,7 +42,6 @@ class FetchPickupTasksResponseMapper @Inject constructor() {
             awbNumber = pickupOrder.awbNumber,
             senderName = pickupOrder.senderName,
             receiverName = pickupOrder.receiverName,
-            status = pickupOrder.status,
             crNumber = pickupOrder.crNumber,
 
         )

@@ -1,5 +1,7 @@
 package `in`.porter.cfms.domain.tasks.usecases
 
+import `in`.porter.cfms.domain.tasks.entities.DomainListTasksRequest
+import `in`.porter.cfms.domain.tasks.entities.TaskResult
 import `in`.porter.cfms.domain.tasks.entities.Tasks
 import `in`.porter.cfms.domain.tasks.repos.TasksRepo
 import org.slf4j.LoggerFactory
@@ -13,13 +15,13 @@ constructor(
 
     private val logger = LoggerFactory.getLogger(Tasks::class.java)
 
-    suspend fun listTasks(page: Int, size: Int): TaskResult {
-        logger.info("Listing tasks with page: $page, size: $size")
+    suspend fun invoke(request: DomainListTasksRequest): TaskResult {
+        logger.info("Listing tasks with request: {}", request)
 
         // Fetch the total number of task records
-        val totalRecords = tasksRepo.countAllTasks()
+        val totalRecords = tasksRepo.countAllTasks(request)
 
-        val tasks = tasksRepo.findAllTasks(page, size)
+        val tasks = tasksRepo.findAllTasks(request)
 
         // Log the result
         logger.info("Fetched ${tasks.size} tasks out of $totalRecords total records.")
@@ -32,7 +34,4 @@ constructor(
     }
 }
 
-data class TaskResult(
-    val data: List<Tasks>,
-    val totalRecords: Int
-)
+
