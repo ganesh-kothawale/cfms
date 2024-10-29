@@ -13,7 +13,10 @@ constructor() {
         return FetchCPConnectionsRequest(
             page = req.page,
             size = req.size,
-            franchiseId = req.franchiseId
+            createdDate = req.createdDate,
+            updatedDate = req.updatedDate,
+            courierPartners = req.courierPartners,
+            franchiseIds = req.franchiseIds
         )
     }
 

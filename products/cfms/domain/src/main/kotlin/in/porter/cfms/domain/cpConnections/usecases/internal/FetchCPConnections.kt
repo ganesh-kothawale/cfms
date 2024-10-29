@@ -14,8 +14,8 @@ constructor(
 ) : Traceable {
 
   suspend fun invoke(request: FetchCPConnectionsRequest): FetchCPConnectionsResponse {
-    val totalRecords = request.franchiseId ?.let { repo.getAllCountByFranchiseId(it) } ?: repo.getAllCount()
-    val cpConnections = request.franchiseId ?.let { repo.getByPaginationByFranchiseId(request) } ?: repo.getByPagination(request)
+    val totalRecords = repo.getAllCount(request)
+    val cpConnections = repo.getByPagination(request)
     val cpIds = cpConnections.map { it.cpId }.distinct()
     val cps = courierPartnersRepo.getByIds(cpIds)
 

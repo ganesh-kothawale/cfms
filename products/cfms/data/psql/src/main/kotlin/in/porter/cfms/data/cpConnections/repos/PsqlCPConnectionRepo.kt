@@ -24,24 +24,24 @@ constructor(
     override suspend fun getByPagination(request: FetchCPConnectionsRequest): List<CPConnection> =
         trace("getByPagination") {
             val offset = request.size * (request.page - 1)
-            queries.getByPagination(request.size, offset)
+            queries.getByPagination(request, offset)
                 .map { mapper.fromRecord(it) }
         }
 
-    override suspend fun getByPaginationByFranchiseId(request: FetchCPConnectionsRequest): List<CPConnection> =
+    /*override suspend fun getByPaginationByFranchiseId(request: FetchCPConnectionsRequest): List<CPConnection> =
         trace("getByPaginationByFranchiseId") {
             val offset = request.size * (request.page - 1)
             queries.getByPaginationByFranchiseId(request.size, offset, request.franchiseId!!)
                 .map { mapper.fromRecord(it) }
-        }
+        }*/
 
 
-    override suspend fun getAllCount(): Int = trace("getAllCount") {
-        queries.getCpCount()
+    override suspend fun getAllCount(request: FetchCPConnectionsRequest): Int = trace("getAllCount") {
+        queries.getCpCount(request)
     }
 
-    override suspend fun getAllCountByFranchiseId(franchiseId: String): Int = trace("getAllCountByFranchiseId") {
+    /*override suspend fun getAllCountByFranchiseId(franchiseId: String): Int = trace("getAllCountByFranchiseId") {
         queries.getCpCountByFranchiseId(franchiseId)
-    }
+    }*/
 
 }

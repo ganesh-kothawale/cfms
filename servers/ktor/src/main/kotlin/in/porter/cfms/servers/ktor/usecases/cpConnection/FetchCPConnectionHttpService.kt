@@ -6,9 +6,11 @@ import `in`.porter.cfms.api.models.cpConnections.FetchCPConnectionsApiResponse
 import `in`.porter.kotlinutils.instrumentation.opentracing.Traceable
 import io.ktor.http.*
 import io.ktor.server.application.*
+import io.ktor.server.application.call
 import io.ktor.server.response.*
 import io.ktor.server.util.*
 import org.apache.logging.log4j.kotlin.Logging
+import java.time.LocalDate
 import javax.inject.Inject
 
 class FetchCPConnectionHttpService
@@ -25,8 +27,12 @@ constructor(
                 val request = try {
                     val page = call.request.queryParameters["page"]?.toInt() ?: 1
                     val size = call.request.queryParameters["size"]?.toInt() ?: 10
-                    val franchiseId = call.request.queryParameters["franchiseId"]
-                    FetchCPConnectionsApiRequest(page, size, franchiseId)
+                    val createdDate = call.request.queryParameters["created_date"]?.let { LocalDate.parse(it) }
+                    val updatedDate = call.request.queryParameters["updated_date"]?.let { LocalDate.parse(it) }
+                    val courierPartners = call.request.queryParameters["courier_partner"]?.split(",")?.map { it.trim() }
+                    val franchiseIds = call.request.queryParameters["franchise_id"]?.split(",")?.map { it.trim() }
+
+                    FetchCPConnectionsApiRequest(page, size, createdDate, updatedDate, courierPartners, franchiseIds)
                 } catch (e: Exception) {
                     logger.error("Failed to convert request body to FetchCPConnectionHttpService: ${e.message}")
 
