@@ -18,6 +18,9 @@ class UpdatePickupTaskService @Inject constructor(
     private val logger = LoggerFactory.getLogger(UpdatePickupTaskService::class.java)
     suspend fun invoke(request: UpdatePickupTaskRequest) {
         try {
+            request.orders.map { order ->
+                order.copy(status = "Reached To Porter Hub")
+            }
             logger.info("Received request to update pickup task: ${request.taskId}")
             val domainPickupTask = updatePickupTaskRequestMapper.toDomain(request)
             updatePickupTask.updatePickupDetails(domainPickupTask)
