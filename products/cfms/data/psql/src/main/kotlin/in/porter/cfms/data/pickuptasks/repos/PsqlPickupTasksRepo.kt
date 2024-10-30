@@ -75,12 +75,10 @@ class PsqlPickupTasksRepo @Inject constructor(
         }
     }
 
-      override suspend fun updateOrderStatuses(orders: List<Pair<String, String>>) {
+      override suspend fun updateOrderStatuses(orders: List<Pair<String, String?>>) {
         trace("updateOrderStatuses") {
             try {
-                orders.forEach { (orderId, status) ->
-                    queries.updateOrderStatuses(orders)
-                }
+                queries.updateOrderStatuses(orders)
             } catch (e: Exception) {
                 logger.error("Error updating order statuses: ${e.message}", e)
                 throw CfmsException("Error updating order statuses: ${e.message}")

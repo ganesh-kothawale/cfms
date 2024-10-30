@@ -2,7 +2,6 @@ package `in`.porter.cfms.domain.pickuptasks.usecases.internal
 
 import `in`.porter.cfms.domain.orders.repos.OrderDetailsRepo
 import `in`.porter.cfms.domain.pickuptasks.entities.PickupDetails
-import `in`.porter.cfms.domain.pickuptasks.entities.PickupTask
 import `in`.porter.cfms.domain.pickuptasks.entities.UpdatePickupTask
 import `in`.porter.cfms.domain.pickuptasks.repos.PickupDetailsRepo
 import `in`.porter.cfms.domain.pickuptasks.repos.PickupTasksRepo
@@ -42,20 +41,18 @@ class UpdatePickupTask @Inject constructor(
             }
         }
         logger.info("Creating pickup image mapping for task ID: ${pickupTask.taskId}")
-        val updatedOrderImages = pickupDetails.orderImages?.toMutableList()
-        updatedOrderImages?.addAll(pickupTask.orderImages)
-
+        val updatedOrderImages = (pickupDetails.orderImages ?: emptyList()) + pickupTask.orderImages
+        val totalPackages = (pickupDetails.packageReceived ?: 0) + (pickupTask.noOfPackagesReceived ?: 0)
         pickupTasksRepo.updateByTaskId(
             taskId = pickupTask.taskId,
             orderImages = updatedOrderImages!!,
-            packageReceived = pickupDetails.packageReceived?.plus(pickupTask.noOfPackagesReceived!!)
+            packageReceived = totalPackages
         )
     }
 
-    suspend fun updateOrderStatus(pickupTask: UpdatePickupTask) {
+    suspend fun updateOrderStatuses(pickupTask: UpdatePickupTask) {
         logger.info("Updating order statuses for orders")
-        pickupTask.orders.forEach { order ->
-            pickupTasksRepo.updateOrderStatuses(listOf(order.orderId to order.status))
-        }
+        val orderStatusList = pickupTask.orders.map { it.orderId to it.status }
+        pickupTasksRepo.updateOrderStatuses(orderStatusList)
     }
 }

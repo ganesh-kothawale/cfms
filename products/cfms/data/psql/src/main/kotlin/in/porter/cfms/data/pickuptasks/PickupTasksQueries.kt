@@ -8,12 +8,10 @@ import `in`.porter.cfms.data.pickuptasks.mappers.PickupTasksRowMapper
 import `in`.porter.cfms.data.pickuptasks.pickupimagemappings.PickupOrderMappingsTable
 import `in`.porter.cfms.data.pickuptasks.records.HlpWithOrdersRecord
 
-import `in`.porter.cfms.data.tasks.TasksTable
 import `in`.porter.cfms.data.tasks.mappers.TaskRowMapper
 import `in`.porter.kotlinutils.exposed.ExposedRepo
 import kotlinx.coroutines.CoroutineDispatcher
 import org.jetbrains.exposed.sql.*
-import org.jetbrains.exposed.sql.`java-time`.CurrentTimestamp
 import org.slf4j.LoggerFactory
 import java.time.Instant
 import java.util.UUID
@@ -98,29 +96,24 @@ constructor(
         }
     }
 
-    suspend fun updateOrderStatuses(orders: List<Pair<String, String>>) = transact {
+    suspend fun updateOrderStatuses(orders: List<Pair<String, String?>>) = transact {
         addLogger(StdOutSqlLogger)
         try {
+            //TODO: Bulk Status Update support need to be added
+            logger.info("Starting update of order statuses for ${orders.size} orders")
+
             orders.forEach { (orderId, status) ->
                 OrdersTable.update({ OrdersTable.orderId eq orderId }) {
-                    it[orderStatus] = status
+                    it[orderStatus] = status!!
                     it[updatedAt] = Instant.now()
                 }
             }
+            logger.info("Successfully updated statuses for ${orders.size} orders")
+            return@transact orders.size
         } catch (e: Exception) {
-            logger.error("Error updating order statuses: ${e.message}", e)
-            throw CfmsException("Error updating order statuses: ${e.message}")
+            logger.error("Error during update of order statuses: ${e.message}", e)
+            throw CfmsException("Error during update of order statuses: ${e.message}")
         }
     }
-
-
-    suspend fun updateOrderStatus(orderId: String, status: String) = transact {
-        addLogger(StdOutSqlLogger)
-        logger.info("Updating order status for orderId: $orderId")
-        OrdersTable.update({ OrdersTable.orderId eq orderId }) {
-            it[orderStatus] = status
-            it[updatedAt] = Instant.now()
-        }
-    }
-
 }
+
