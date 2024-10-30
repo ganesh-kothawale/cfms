@@ -12,5 +12,5 @@ data class UpdatePickupTask(
 
 data class Order(
     val orderId: String,
-    val status: String
+    val status: String?
 )
