@@ -10,6 +10,7 @@ import `in`.porter.cfms.data.recon.records.ReconRecord
 import `in`.porter.cfms.data.recon.records.ReconTaskRecord
 import `in`.porter.cfms.domain.packageIssue.entities.DomainListAllPackageIssueRequest
 import `in`.porter.cfms.domain.packageIssue.entities.PackageIssue
+import `in`.porter.cfms.domain.packageIssue.entities.UpdatePackageIssue
 import `in`.porter.cfms.domain.packageIssue.repos.PackageIssueRepo
 import `in`.porter.cfms.domain.recon.entities.Recon
 import `in`.porter.cfms.domain.recon.entities.ReconTask
@@ -128,4 +129,15 @@ class PsqlReconRepo
             throw CfmsException("Failed to retrieve package issues: ${e.message}")
         }
     }
+
+    override suspend fun findByTaskId(taskId: String): Boolean =
+        trace("findByTaskId") { _: io.opentracing.Span ->
+            queries.findByTaskId(taskId)
+        }
+
+    override suspend fun updateAction(request : UpdatePackageIssue) =
+        trace("updateAction") { _: io.opentracing.Span ->
+                logger.info("Updating package issue action with request: {}", request)
+                queries.updateAction(request)
+        }
 }

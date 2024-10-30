@@ -9,10 +9,12 @@ import `in`.porter.cfms.data.packageIssue.records.PackageIssueRecord
 import `in`.porter.cfms.data.recon.records.ReconRecord
 import `in`.porter.cfms.data.recon.records.ReconTaskRecord
 import `in`.porter.cfms.domain.packageIssue.entities.DomainListAllPackageIssueRequest
+import `in`.porter.cfms.domain.packageIssue.entities.UpdatePackageIssue
 import `in`.porter.kotlinutils.exposed.ExposedRepo
 import kotlinx.coroutines.CoroutineDispatcher
 import org.jetbrains.exposed.sql.*
 import org.slf4j.LoggerFactory
+import java.time.Instant
 import java.time.ZoneOffset
 import javax.inject.Inject
 
@@ -221,4 +223,22 @@ constructor(
                     packageIssueRowMapper.toRecord(row)
                 }
         }
+
+    suspend fun findByTaskId(taskId: String): Boolean = transact {
+        addLogger(StdOutSqlLogger)
+        logger.info("Fetching package issue record with task ID: {}", taskId)
+        ReconTable
+            .select { ReconTable.taskId eq taskId }
+            .empty().not()
+    }
+
+    suspend fun updateAction(request: UpdatePackageIssue): Int = transact {
+        addLogger(StdOutSqlLogger)
+        logger.info("Updating package issue action for task ID: {}", request.taskId)
+        ReconTable
+            .update({ ReconTable.taskId eq request.taskId }) {
+                it[action] = request.action
+                it[updatedAt] = Instant.now() // Update timestamp
+            }
+    }
 }
