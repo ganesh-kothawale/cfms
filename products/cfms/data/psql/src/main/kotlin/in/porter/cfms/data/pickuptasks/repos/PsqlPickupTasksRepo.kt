@@ -75,7 +75,7 @@ class PsqlPickupTasksRepo @Inject constructor(
         }
     }
 
-      override suspend fun updateOrderStatuses(orders: List<Pair<String, String>>) {
+      override suspend fun updateOrderStatuses(orders: List<Pair<String, String?>>) {
         trace("updateOrderStatuses") {
             try {
                 queries.updateOrderStatuses(orders)

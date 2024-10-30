@@ -2,7 +2,6 @@ package `in`.porter.cfms.domain.pickuptasks.usecases.internal
 
 import `in`.porter.cfms.domain.orders.repos.OrderDetailsRepo
 import `in`.porter.cfms.domain.pickuptasks.entities.PickupDetails
-import `in`.porter.cfms.domain.pickuptasks.entities.PickupTask
 import `in`.porter.cfms.domain.pickuptasks.entities.UpdatePickupTask
 import `in`.porter.cfms.domain.pickuptasks.repos.PickupDetailsRepo
 import `in`.porter.cfms.domain.pickuptasks.repos.PickupTasksRepo
