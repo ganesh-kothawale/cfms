@@ -9,8 +9,9 @@ import javax.inject.Inject
 class CreateHolidaysRequestMapper
 @Inject
 constructor() {
-    fun toDomain(request: CreateHolidaysRequest): Holiday {
+    fun toDomain(request: CreateHolidaysRequest, holidayId: String): Holiday {
         return Holiday(
+            holidayId = holidayId,
             franchiseId = request.franchiseId,
             startDate = request.startDate,
             endDate = request.endDate,

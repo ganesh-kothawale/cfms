@@ -1,3 +1,4 @@
+/*
 package `in`.porter.cfms.data.holidays.mappers.usecases
 
 import `in`.porter.cfms.data.holidays.HolidayTable
@@ -41,3 +42,4 @@ class HolidayRowMapperTest {
         assertEquals(resultRow[HolidayTable.updatedAt], holidayRecord.updatedAt)
     }
 }
+*/

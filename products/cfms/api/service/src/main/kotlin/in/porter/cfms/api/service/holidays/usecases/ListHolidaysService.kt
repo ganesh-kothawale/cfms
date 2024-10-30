@@ -1,5 +1,6 @@
 package `in`.porter.cfms.api.service.holidays.usecases
 
+import `in`.porter.cfms.api.models.exceptions.CfmsException
 import `in`.porter.cfms.api.models.holidays.FranchiseAddress
 import `in`.porter.cfms.api.models.holidays.FranchisePoc
 import `in`.porter.cfms.api.models.holidays.FranchiseResponse
@@ -21,29 +22,37 @@ constructor(
 ) {
 
     private val logger = LoggerFactory.getLogger(ListHolidaysService::class.java)
-    suspend fun listHolidays(request: ListHolidaysRequest): ListHolidaysResponse {
-        // Fetch data from domain layer (HolidaySearchResult)
-        val holidaysResult = listHolidays.listHolidays(
-            franchiseId = request.franchiseId,
-            leaveType = request.leaveType,
-            startDate = request.startDate,
-            endDate = request.endDate,
-            page = request.page,
-            size = request.size
-        )
+    suspend fun invoke(request: ListHolidaysRequest): ListHolidaysResponse {
+        try {
+            // Fetch data from domain layer (HolidaySearchResult)
+            val holidaysResult = listHolidays.invoke(
+                franchiseId = request.franchiseId,
+                leaveType = request.leaveType,
+                startDate = request.startDate,
+                endDate = request.endDate,
+                page = request.page,
+                size = request.size
+            )
 
-        logger.info("Fetched holidays: {}", holidaysResult)
+            logger.info("Fetched holidays: {}", holidaysResult)
 
-        // Ensure holidaysResult has totalRecords and data
-        return ListHolidaysResponse(
-            page = request.page,
-            size = request.size,
-            totalPages = calculateTotalPages(holidaysResult.totalRecords, request.size),
-            totalRecords = holidaysResult.totalRecords,  // This property must be defined in holidaysResult
-            holidays = holidaysResult.data.map { holiday ->
-                mapToHolidayResponse(holiday)  // Map each holiday to HolidayResponse
-            }
-        )
+            // Ensure holidaysResult has totalRecords and data
+            return ListHolidaysResponse(
+                page = request.page,
+                size = request.size,
+                totalPages = calculateTotalPages(holidaysResult.totalRecords, request.size),
+                totalRecords = holidaysResult.totalRecords,  // This property must be defined in holidaysResult
+                holidays = holidaysResult.data.map { holiday ->
+                    mapToHolidayResponse(holiday)  // Map each holiday to HolidayResponse
+                }
+            )
+        } catch (e: CfmsException) {
+            logger.error("Holiday listing failed: ${e.message}", e)
+            throw e
+        } catch (e: Exception) {
+            logger.error("Unexpected error: ${e.message}", e)
+            throw CfmsException("An unexpected error occurred while retrieving holidays.")
+        }
     }
 
     private fun calculateTotalPages(totalRecords: Int, pageSize: Int): Int {

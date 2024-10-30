@@ -39,7 +39,6 @@ class PickupTasksRowMapper @Inject constructor()  {
         val orderId = resultRow[OrdersTable.orderId] ?: "Unknown Order"
         val awbNumber = resultRow[OrdersTable.awbNumber] ?: "Unknown AWB"
         val crNumber = resultRow[OrdersTable.orderNumber] ?: "Unknown CR"
-        val status = resultRow[OrdersTable.orderStatus] ?: "Unknown Status"
         val senderName = resultRow[OrdersTable.senderName] ?: "Unknown Sender"
         val receiverName = resultRow[OrdersTable.receiverName] ?: "Unknown Receiver"
 
@@ -47,7 +46,6 @@ class PickupTasksRowMapper @Inject constructor()  {
             orderId = orderId,
             awbNumber = awbNumber,
             crNumber = crNumber,
-            status = status,
             senderName = senderName,
             receiverName = receiverName
         )

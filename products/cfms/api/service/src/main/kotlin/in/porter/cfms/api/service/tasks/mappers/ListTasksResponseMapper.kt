@@ -49,7 +49,8 @@ class ListTasksResponseMapper @Inject constructor() {
                 riderName = it.riderName,
                 riderNumber = it.riderNumber,
                 vehicleType = it.vehicleType,
-                pickupOrders = it.pickupOrders.map { order -> toPickupTaskOrderResponse(order) }
+                pickupOrders = it.pickupOrders.map { order -> toPickupTaskOrderResponse(order) },
+                taskId = it.taskId
             )
         }
     }
@@ -57,7 +58,7 @@ class ListTasksResponseMapper @Inject constructor() {
     private fun toPickupTaskOrderResponse(pickupOrder: PickupOrder?): PickupTaskOrderResponse {
         return PickupTaskOrderResponse(
             orderId = pickupOrder?.orderId.toString(),
-            awbNmber = pickupOrder?.awbNumber,
+            awbNumber = pickupOrder?.awbNumber,
             senderName = pickupOrder?.senderName,
             receiverName = pickupOrder?.receiverName,
             crNumber = pickupOrder?.crNumber
@@ -88,5 +89,3 @@ class ListTasksResponseMapper @Inject constructor() {
         )
     }
 }
-
-

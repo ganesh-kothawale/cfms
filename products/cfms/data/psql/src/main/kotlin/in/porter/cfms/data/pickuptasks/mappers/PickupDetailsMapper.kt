@@ -14,7 +14,9 @@ class PickupDetailsMapper @Inject constructor() {
             hlpId = pickupDetailsRecord.hlpId,
             franchiseId = pickupDetailsRecord.franchiseId,
             createdAt = pickupDetailsRecord.createdAt,
-            updatedAt = pickupDetailsRecord.updatedAt
+            updatedAt = pickupDetailsRecord.updatedAt,
+            orderImages = pickupDetailsRecord.orderImages,
+            packageReceived = pickupDetailsRecord.packageReceived
         )
     }
 
@@ -26,7 +28,9 @@ class PickupDetailsMapper @Inject constructor() {
             hlpId = pickupDetails.hlpId,
             franchiseId = pickupDetails.franchiseId,
             createdAt = pickupDetails.createdAt,
-            updatedAt = pickupDetails.updatedAt
+            updatedAt = pickupDetails.updatedAt,
+            orderImages = pickupDetails.orderImages,
+            packageReceived = pickupDetails.packageReceived
         )
     }
 }

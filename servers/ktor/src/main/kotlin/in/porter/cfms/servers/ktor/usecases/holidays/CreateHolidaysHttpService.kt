@@ -30,8 +30,12 @@ constructor(
                 } catch (e: Exception) {
                     logger.error("Failed to convert request body: ${e.message}")
                     call.respond(HttpStatusCode.BadRequest, mapOf(
-                        "error" to "Invalid request format.",
-                        "details" to e.message
+                        "error" to listOf(
+                            mapOf(
+                                "message" to "Invalid input data",
+                                "details" to e.message
+                            )
+                        )
                     ))
                     return@trace
                 }
@@ -43,22 +47,32 @@ constructor(
 
                 // On success, respond with 201 Created and the holiday ID
                 call.respond(HttpStatusCode.Created, mapOf(
-                    "message" to "Holiday created successfully",
-                    "holiday_id" to holidayId
+                    "data" to mapOf(
+                        "message" to "Holidays created successfully"
+                    ),
+                    "error" to emptyList<String>()
                 ))
 
             } catch (e: CfmsException) {
                 logger.error("Validation error occurred: ${e.message}")
                 call.respond(HttpStatusCode.BadRequest, mapOf(
-                    "error" to "Invalid input data",
-                    "details" to e.message
+                    "error" to listOf(
+                        mapOf(
+                            "message" to "Invalid input data",
+                            "details" to e.message
+                        )
+                    )
                 ))
 
             } catch (e: Exception) {
                 logger.error("Internal server error: ${e.message}", e)
                 call.respond(HttpStatusCode.InternalServerError, mapOf(
-                    "error" to "Holiday creation failed",
-                    "details" to "Failed to store holiday in DB, rolling back transaction"
+                    "error" to listOf(
+                        mapOf(
+                            "message" to "Failed to create holiday",
+                            "details" to "Error applying leave: ${e.message}"
+                        )
+                    )
                 ))
             }
         }

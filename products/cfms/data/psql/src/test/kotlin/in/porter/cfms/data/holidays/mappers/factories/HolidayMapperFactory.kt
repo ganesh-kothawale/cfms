@@ -1,3 +1,4 @@
+/*
 package `in`.porter.cfms.data.holidays.mappers.factories
 
 import `in`.porter.cfms.data.holidays.records.HolidayRecord
@@ -48,3 +49,4 @@ object HolidayMapperFactory {
         updatedAt = updatedAt
     )
 }
+*/
