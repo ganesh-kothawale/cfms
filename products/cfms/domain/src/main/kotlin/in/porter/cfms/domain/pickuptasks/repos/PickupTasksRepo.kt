@@ -11,5 +11,5 @@ interface PickupTasksRepo {
     suspend fun updateStatusForPickupTasks(taskIds: List<Int>, status: String)
     suspend fun getPickupDetailsIdByTaskId(taskId: String): String?
     suspend fun updateByTaskId(taskId: String, orderImages: List<UUID>, packageReceived: Int?)
-    suspend fun updateOrderStatuses(orders: List<Pair<String, String>>)
+    suspend fun updateOrderStatuses(orders: List<Pair<String, String?>>)
 }
